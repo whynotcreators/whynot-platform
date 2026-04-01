@@ -1021,7 +1021,7 @@ function renderOFEditar(){
 
 function renderOFCorreccion(){
   var items=EDICIONES.filter(function(e){
-    return e.aprobada===false&&e.estado==="pendiente";
+    return e.aprobada===false;
   });
   var cnt=document.getElementById("count-of-correccion");if(cnt)cnt.textContent=items.length+(items.length===1?" item":" items");
   var el=document.getElementById("list-of-correccion");if(!el)return;
@@ -1049,9 +1049,17 @@ function renderOFCorreccion(){
 
 function renderOFDemorados(){
   var items=EDICIONES.filter(function(e){
-    if(e.estado!=="pendiente")return false;
-    var s=e.solicitudes;
-    return s&&s.fecha_entrega&&s.fecha_entrega<todayStrEd();
+    // Demorado: pendiente y vencio fecha de entrega
+    if(e.estado==="pendiente"&&e.aprobada!==false){
+      var s=e.solicitudes;
+      return s&&s.fecha_entrega&&s.fecha_entrega<todayStrEd();
+    }
+    // Tambien demorado: correccion desaprobada y pasaron 3 dias
+    if(e.aprobada===false&&e.fecha_desaprobacion){
+      var dias=Math.floor((new Date()-new Date(e.fecha_desaprobacion))/86400000);
+      return dias>3;
+    }
+    return false;
   });
   var cnt=document.getElementById("count-of-dem");if(cnt)cnt.textContent=items.length+(items.length===1?" item":" items");
   var el=document.getElementById("list-of-demorados");if(!el)return;
