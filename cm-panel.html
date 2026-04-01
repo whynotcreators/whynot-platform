@@ -132,6 +132,22 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
 .boveda-row:last-child{border-bottom:none;}
 .toast{position:fixed;bottom:22px;right:22px;background:var(--sidebar);color:var(--gold2);border:1px solid rgba(201,169,110,0.25);padding:10px 18px;border-radius:20px;font-size:12px;font-weight:600;box-shadow:var(--shadow-lg);z-index:999;opacity:0;transform:translateY(6px);transition:all 0.2s;pointer-events:none;}
 .toast.show{opacity:1;transform:translateY(0);}
+.instructivo{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);}
+.instructivo-hd{padding:14px 18px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;background:var(--surface);user-select:none;}
+.instructivo-hd:hover{background:var(--bg2);}
+.instructivo-title{font-family:"Fraunces",serif;font-size:15px;font-weight:500;color:var(--text);}
+.instructivo-arrow{font-size:11px;color:var(--text3);transition:transform 0.2s;}
+.instructivo-arrow.open{transform:rotate(180deg);}
+.instructivo-body{display:none;padding:20px 22px;border-top:1px solid var(--border);}
+.instructivo-body.open{display:block;}
+.inst-step{display:flex;gap:14px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);}
+.inst-step:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
+.inst-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;margin-top:2px;}
+.inst-content{}
+.inst-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:5px;}
+.inst-desc{font-size:12px;color:var(--text2);line-height:1.7;}
+.inst-tag{display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;margin-right:4px;margin-top:4px;}
+.inst-note{background:var(--gold-bg);border:1px solid rgba(201,169,110,0.2);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--amber);margin-top:10px;line-height:1.6;}
 
 .back-admin-btn{position:fixed;bottom:22px;left:calc(var(--sidebar-w,220px) + 16px);z-index:100;display:none;align-items:center;gap:6px;padding:8px 14px;background:var(--sidebar);color:var(--gold2);border:1px solid rgba(201,169,110,0.25);border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,0.2);transition:all 0.15s;font-family:'Plus Jakarta Sans',sans-serif;}
 .back-admin-btn:hover{background:rgba(30,26,20,0.9);transform:translateY(-1px);}
@@ -166,17 +182,30 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
   </div>
   <div class="nav-scroll">
     <div class="nav-group">
-      <div class="nav-label">Contenido OF</div>
-      <div class="nav-item active" onclick="nav('dashboard',this)"><span class="nav-ico">&#8862;</span> Dashboard</div>
-      <div class="nav-item" onclick="nav('solicitar',this)"><span class="nav-ico">&#43;</span> Nueva solicitud</div>
-      <div class="nav-item" onclick="nav('seguimiento',this)"><span class="nav-ico">&#9776;</span> Seguimiento<span class="nav-badge nb-amber" id="badge-pend">0</span></div>
-      <div class="nav-item" onclick="nav('demorados',this)"><span class="nav-ico">&#9888;</span> Demorados<span class="nav-badge nb-red" id="badge-dem">0</span></div>
-      <div class="nav-item" onclick="nav('boveda',this)"><span class="nav-ico">&#128190;</span> B&oacute;veda<span class="nav-badge nb-gold" id="badge-bov">0</span></div>
+      <div class="nav-label">General</div>
+      <div class="nav-item active" onclick="nav('dashboard',this)">&#8862; Dashboard</div>
+      <div class="nav-item" onclick="nav('mapa',this)">&#9783; Mapa / Historial</div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-label">Flujo OF</div>
+      <div class="nav-item" onclick="nav('solicitar',this)">&#43; Nueva solicitud</div>
+      <div class="nav-item" onclick="nav('analisis',this)">&#9881; En an&aacute;lisis<span class="nav-badge nb-amber" id="badge-analisis">0</span></div>
+      <div class="nav-item" onclick="nav('reentregas',this)">&#8635; Re-entregas<span class="nav-badge nb-amber" id="badge-reentregas">0</span></div>
+      <div class="nav-item" onclick="nav('enedicion',this)">&#9988; En edición<span class="nav-badge" id="badge-enedicion" style="background:rgba(42,95,168,0.25);color:#6a9adb">0</span></div>
+      <div class="nav-item" onclick="nav('desaprobados',this)">&#10007; Desaprobados<span class="nav-badge nb-red" id="badge-desap">0</span></div>
+      <div class="nav-item" onclick="nav('descartados',this)">&#128465; Descartados</div>
+      <div class="nav-item" onclick="nav('aprobados',this)">&#10003; Contenido aprobado<span class="nav-badge nb-gold" id="badge-aprobados">0</span></div>
+      <div class="nav-item" onclick="nav('boveda',this)">&#128190; B&oacute;veda<span class="nav-badge nb-gold" id="badge-bov">0</span></div>
     </div>
     <div class="nav-group">
       <div class="nav-label">Calendarios</div>
-      <div class="nav-item" onclick="nav('cal-entregas',this)"><span class="nav-ico">&#128197;</span> Entregas</div>
-      <div class="nav-item" onclick="nav('cal-reuniones',this)"><span class="nav-ico">&#128205;</span> Reuniones</div>
+      <div class="nav-item" onclick="nav('cal-entregas',this)">&#128197; Entregas</div>
+      <div class="nav-item" onclick="nav('cal-reuniones',this)">&#128205; Reuniones</div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-label">Config</div>
+      <div class="nav-item" onclick="nav('config',this)">&#9965; Plantillas</div>
+      <div class="nav-item" onclick="nav('guia',this)">&#128218; Guía del panel</div>
     </div>
   </div>
   <div class="sidebar-footer">
@@ -433,13 +462,240 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
       <div id="list-proximas-reu"><div class="empty-state">Sin reuniones pr&oacute;ximas</div></div>
     </div>
 
+    <!-- MAPA / HISTORIAL -->
+    <div class="view" id="view-mapa">
+      <div class="sec-hd"><div class="sec-hd-title">Mapa de situaci&oacute;n</div><div class="sec-hd-line"></div>
+        <select class="filter-select" id="mapa-mes" onchange="renderMapa()" style="font-size:10px;padding:4px 26px 4px 10px;margin-left:8px">
+          <option value="all">Todos los meses</option>
+          <option value="0">Ene</option><option value="1">Feb</option><option value="2">Mar</option><option value="3">Abr</option>
+          <option value="4">May</option><option value="5">Jun</option><option value="6">Jul</option><option value="7">Ago</option>
+          <option value="8">Sep</option><option value="9">Oct</option><option value="10">Nov</option><option value="11">Dic</option>
+        </select>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:16px" id="mapa-stats"></div>
+      <div id="mapa-hoy-wrap" style="display:none;margin-bottom:14px">
+        <div class="sec-hd" style="margin-top:0"><div class="sec-hd-title" style="color:var(--gold)">&#9650; Subir a b&oacute;veda hoy</div><div class="sec-hd-line"></div></div>
+        <div class="card"><div id="mapa-hoy-list"></div></div>
+      </div>
+      <div class="sec-hd" style="margin-top:4px"><div class="sec-hd-title">Estado por modelo</div><div class="sec-hd-line"></div></div>
+      <div class="card" style="margin-bottom:14px">
+        <div style="display:grid;grid-template-columns:130px 60px 60px 60px 60px 60px;gap:8px;padding:8px 14px 6px;border-bottom:1px solid var(--border);background:var(--surface)">
+          <div style="font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase">Modelo</div>
+          <div style="font-size:9px;color:var(--text3);text-align:center">Solicit.</div>
+          <div style="font-size:9px;color:var(--text3);text-align:center">An&aacute;lisis</div>
+          <div style="font-size:9px;color:var(--text3);text-align:center">Aprobados</div>
+          <div style="font-size:9px;color:var(--text3);text-align:center">Desaprobados</div>
+          <div style="font-size:9px;color:var(--text3);text-align:center">B&oacute;veda</div>
+        </div>
+        <div id="mapa-por-modelo"></div>
+      </div>
+      <div class="sec-hd"><div class="sec-hd-title">Historial &mdash; subidos a b&oacute;veda</div><div class="sec-hd-line"></div></div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title">Contenido ya cargado a Infloww</div><span id="mapa-hist-count" style="margin-left:auto;font-size:10px;color:var(--text3)"></span></div>
+        <div id="mapa-hist-list"><div class="empty-state">Sin contenido subido todav&iacute;a</div></div>
+      </div>
+    </div>
+
+    <!-- EN ANALISIS -->
+    <div class="view" id="view-analisis">
+      <div class="filter-bar">
+        <span class="filter-label">Nicho:</span>
+        <select class="filter-select" id="filt-nicho-analisis" onchange="onFlowNichoChange('analisis')"><option value="all">Todos los nichos</option></select>
+        <span class="filter-label">Modelo:</span>
+        <select class="filter-select" id="filt-modelo-analisis" onchange="renderFlow('analisis')"><option value="all">Todas</option></select>
+        <span class="filter-label">Mes:</span>
+        <select class="filter-select" id="filt-mes-analisis" onchange="renderFlow('analisis')">
+          <option value="all">Todos</option>
+          <option value="0">Ene</option><option value="1">Feb</option><option value="2">Mar</option><option value="3">Abr</option>
+          <option value="4">May</option><option value="5">Jun</option><option value="6">Jul</option><option value="7">Ago</option>
+          <option value="8">Sep</option><option value="9">Oct</option><option value="10">Nov</option><option value="11">Dic</option>
+        </select>
+        <span class="filter-label">Semana:</span>
+        <select class="filter-select" id="filt-sem-analisis" onchange="renderFlow('analisis')">
+          <option value="all">Todas</option><option value="1">S1 (1-7)</option><option value="2">S2 (8-14)</option>
+          <option value="3">S3 (15-21)</option><option value="4">S4 (22-31)</option>
+        </select>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title">&#9881; Contenido entregado &mdash; pendiente de an&aacute;lisis</div><span id="count-analisis" style="margin-left:auto;font-size:10px;color:var(--text3)"></span></div>
+        <div id="list-analisis"><div class="empty-state">Sin contenido por analizar</div></div>
+      </div>
+    </div>
+
+    <!-- RE-ENTREGAS -->
+    <div class="view" id="view-reentregas">
+      <div class="filter-bar">
+        <span class="filter-label">Nicho:</span>
+        <select class="filter-select" id="filt-nicho-reentregas" onchange="onFlowNichoChange('reentregas')"><option value="all">Todos los nichos</option></select>
+        <span class="filter-label">Modelo:</span>
+        <select class="filter-select" id="filt-modelo-reentregas" onchange="renderFlow('reentregas')"><option value="all">Todas</option></select>
+        <span class="filter-label">Mes:</span>
+        <select class="filter-select" id="filt-mes-reentregas" onchange="renderFlow('reentregas')">
+          <option value="all">Todos</option>
+          <option value="0">Ene</option><option value="1">Feb</option><option value="2">Mar</option><option value="3">Abr</option>
+          <option value="4">May</option><option value="5">Jun</option><option value="6">Jul</option><option value="7">Ago</option>
+          <option value="8">Sep</option><option value="9">Oct</option><option value="10">Nov</option><option value="11">Dic</option>
+        </select>
+        <span class="filter-label">Semana:</span>
+        <select class="filter-select" id="filt-sem-reentregas" onchange="renderFlow('reentregas')">
+          <option value="all">Todas</option><option value="1">S1 (1-7)</option><option value="2">S2 (8-14)</option>
+          <option value="3">S3 (15-21)</option><option value="4">S4 (22-31)</option>
+        </select>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title">&#8635; Re-entregas &mdash; pendientes de an&aacute;lisis</div><span id="count-reentregas" style="margin-left:auto;font-size:10px;color:var(--text3)"></span></div>
+        <div id="list-reentregas"><div class="empty-state">Sin re-entregas</div></div>
+      </div>
+    </div>
+
+    <!-- EN EDICION -->
+    <div class="view" id="view-enedicion">
+      <div class="filter-bar">
+        <span class="filter-label">Nicho:</span>
+        <select class="filter-select" id="filt-nicho-enedicion" onchange="onFlowNichoChange('enedicion')"><option value="all">Todos los nichos</option></select>
+        <span class="filter-label">Modelo:</span>
+        <select class="filter-select" id="filt-modelo-enedicion" onchange="renderFlow('enedicion')"><option value="all">Todas</option></select>
+        <span class="filter-label">Mes:</span>
+        <select class="filter-select" id="filt-mes-enedicion" onchange="renderFlow('enedicion')">
+          <option value="all">Todos</option>
+          <option value="0">Ene</option><option value="1">Feb</option><option value="2">Mar</option><option value="3">Abr</option>
+          <option value="4">May</option><option value="5">Jun</option><option value="6">Jul</option><option value="7">Ago</option>
+          <option value="8">Sep</option><option value="9">Oct</option><option value="10">Nov</option><option value="11">Dic</option>
+        </select>
+        <span class="filter-label">Semana:</span>
+        <select class="filter-select" id="filt-sem-enedicion" onchange="renderFlow('enedicion')">
+          <option value="all">Todas</option><option value="1">S1 (1-7)</option><option value="2">S2 (8-14)</option>
+          <option value="3">S3 (15-21)</option><option value="4">S4 (22-31)</option>
+        </select>
+      </div>
+
+      <!-- Subseccion: Listo para revisar (editora terminó) -->
+      <div id="revisar-wrap" style="margin-bottom:16px">
+        <div class="sec-hd" style="margin-top:0">
+          <div class="sec-hd-title" style="color:var(--amber)">&#9888; Listo para revisar</div>
+          <div class="sec-hd-line"></div>
+          <span id="count-revisar" style="font-size:10px;color:var(--amber);margin-left:8px"></span>
+        </div>
+        <div class="card">
+          <div class="card-hd"><div class="card-title">La editora terminó &mdash; esperando aprobación del CM</div></div>
+          <div id="list-revisar"><div class="empty-state">Sin ediciones listas para revisar</div></div>
+        </div>
+      </div>
+
+      <!-- Subseccion: En proceso (editora trabajando) -->
+      <div class="sec-hd"><div class="sec-hd-title">Editando</div><div class="sec-hd-line"></div><span id="count-enedicion" style="font-size:10px;color:var(--blue);margin-left:8px"></span></div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title">&#9988; La editora está trabajando</div></div>
+        <div id="list-enedicion"><div class="empty-state">Sin contenido en edición</div></div>
+      </div>
+    </div>
+
+    <!-- DESAPROBADOS -->
+    <div class="view" id="view-desaprobados">
+      <div class="filter-bar">
+        <span class="filter-label">Nicho:</span>
+        <select class="filter-select" id="filt-nicho-desap" onchange="onFlowNichoChange('desap')"><option value="all">Todos los nichos</option></select>
+        <span class="filter-label">Modelo:</span>
+        <select class="filter-select" id="filt-modelo-desap" onchange="renderFlow('desap')"><option value="all">Todas</option></select>
+        <span class="filter-label">Mes:</span>
+        <select class="filter-select" id="filt-mes-desap" onchange="renderFlow('desap')">
+          <option value="all">Todos</option>
+          <option value="0">Ene</option><option value="1">Feb</option><option value="2">Mar</option><option value="3">Abr</option>
+          <option value="4">May</option><option value="5">Jun</option><option value="6">Jul</option><option value="7">Ago</option>
+          <option value="8">Sep</option><option value="9">Oct</option><option value="10">Nov</option><option value="11">Dic</option>
+        </select>
+        <span class="filter-label">Semana:</span>
+        <select class="filter-select" id="filt-sem-desap" onchange="renderFlow('desap')">
+          <option value="all">Todas</option><option value="1">S1 (1-7)</option><option value="2">S2 (8-14)</option>
+          <option value="3">S3 (15-21)</option><option value="4">S4 (22-31)</option>
+        </select>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title">&#10007; Desaprobados &mdash; esperando recrear</div><span id="count-desap" style="margin-left:auto;font-size:10px;color:var(--red)"></span></div>
+        <div id="list-desaprobados"><div class="empty-state">Sin desaprobados</div></div>
+      </div>
+    </div>
+
+    <!-- DESCARTADOS -->
+    <div class="view" id="view-descartados">
+      <div class="filter-bar">
+        <span class="filter-label">Nicho:</span>
+        <select class="filter-select" id="filt-nicho-descartados" onchange="onFlowNichoChange('descartados')"><option value="all">Todos los nichos</option></select>
+        <span class="filter-label">Modelo:</span>
+        <select class="filter-select" id="filt-modelo-descartados" onchange="renderFlow('descartados')"><option value="all">Todas</option></select>
+        <span class="filter-label">Mes:</span>
+        <select class="filter-select" id="filt-mes-descartados" onchange="renderFlow('descartados')">
+          <option value="all">Todos</option>
+          <option value="0">Ene</option><option value="1">Feb</option><option value="2">Mar</option><option value="3">Abr</option>
+          <option value="4">May</option><option value="5">Jun</option><option value="6">Jul</option><option value="7">Ago</option>
+          <option value="8">Sep</option><option value="9">Oct</option><option value="10">Nov</option><option value="11">Dic</option>
+        </select>
+        <span class="filter-label">Semana:</span>
+        <select class="filter-select" id="filt-sem-descartados" onchange="renderFlow('descartados')">
+          <option value="all">Todas</option><option value="1">S1 (1-7)</option><option value="2">S2 (8-14)</option>
+          <option value="3">S3 (15-21)</option><option value="4">S4 (22-31)</option>
+        </select>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title">&#128465; Material descartado</div><span id="count-descartados" style="margin-left:auto;font-size:10px;color:var(--text3)"></span></div>
+        <div id="list-descartados"><div class="empty-state">Sin material descartado</div></div>
+      </div>
+    </div>
+
+    <!-- CONTENIDO APROBADO -->
+    <div class="view" id="view-aprobados">
+      <div class="filter-bar">
+        <span class="filter-label">Nicho:</span>
+        <select class="filter-select" id="filt-nicho-aprobados" onchange="onFlowNichoChange('aprobados')"><option value="all">Todos los nichos</option></select>
+        <span class="filter-label">Modelo:</span>
+        <select class="filter-select" id="filt-modelo-aprobados" onchange="renderFlow('aprobados')"><option value="all">Todas</option></select>
+        <span class="filter-label">Mes:</span>
+        <select class="filter-select" id="filt-mes-aprobados" onchange="renderFlow('aprobados')">
+          <option value="all">Todos</option>
+          <option value="0">Ene</option><option value="1">Feb</option><option value="2">Mar</option><option value="3">Abr</option>
+          <option value="4">May</option><option value="5">Jun</option><option value="6">Jul</option><option value="7">Ago</option>
+          <option value="8">Sep</option><option value="9">Oct</option><option value="10">Nov</option><option value="11">Dic</option>
+        </select>
+        <span class="filter-label">Semana:</span>
+        <select class="filter-select" id="filt-sem-aprobados" onchange="renderFlow('aprobados')">
+          <option value="all">Todas</option><option value="1">S1 (1-7)</option><option value="2">S2 (8-14)</option>
+          <option value="3">S3 (15-21)</option><option value="4">S4 (22-31)</option>
+        </select>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title">&#10003; Contenido aprobado &mdash; listo para subir a b&oacute;veda</div><span id="count-aprobados" style="margin-left:auto;font-size:10px;color:var(--text3)"></span></div>
+        <div id="list-aprobados"><div class="empty-state">Sin contenido aprobado pendiente</div></div>
+      </div>
+    </div>
+
+    <!-- PLANTILLAS / CONFIG -->
+    <div class="view" id="view-config">
+      <div class="sec-hd">
+        <div class="sec-hd-title">Plantillas de solicitud</div>
+        <div class="sec-hd-line"></div>
+        <button onclick="openModalPlantilla(null)" class="btn-primary" style="font-size:11px;margin-left:8px">+ Nueva plantilla</button>
+      </div>
+      <p style="font-size:12px;color:var(--text3);margin-bottom:14px">Guard&aacute; plantillas predeterminadas por categor&iacute;a. Al crear una solicitud, pod&eacute;s cargar una y editarla si hace falta.</p>
+      <div id="list-plantillas"><div class="empty-state">Cargando...</div></div>
+
+
+    </div>
+
+    <!-- GUIA DEL PANEL -->
+    <div class="view" id="view-guia">
+      <div class="sec-hd"><div class="sec-hd-title">&#128218; Guía del panel</div><div class="sec-hd-line"></div></div>
+      <p style="font-size:12px;color:var(--text3);margin-bottom:20px">Esta guía fue preparada por el equipo WHYnot. Si tenés dudas sobre cómo funciona algún paso, encontrás la explicación acá.</p>
+      <div id="guia-loading" class="empty-state">Cargando guía...</div>
+      <div id="guia-content" style="display:none"></div>
+    </div>
+
   </div>
 </div>
 
 <!-- MODAL DETALLE -->
 <div class="modal-overlay" id="det-modal" onclick="if(event.target===this)closeModal()">
   <div class="modal">
-    <div class="modal-hd"><span id="det-title">Detalle</span><button class="modal-close" onclick="closeModal()">&#215;</button></div>
+    <div class="modal-hd"><span id="det-title">Detalle</span><button class="modal-close" onclick="closeModal('det-modal')">&#215;</button></div>
     <div class="info-grid" id="det-info"></div>
     <div class="form-group">
       <label class="form-label">Concepto</label>
@@ -457,13 +713,194 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
   </div>
 </div>
 
+<!-- MODAL ANALISIS -->
+<div class="modal-overlay" id="modal-analisis" onclick="if(event.target===this)closeModal('modal-analisis')">
+  <div class="modal">
+    <div class="modal-hd"><span id="ma-title">Analizar contenido</span><button class="modal-close" onclick="closeModal('modal-analisis')">&#215;</button></div>
+    <input type="hidden" id="ma-sol-id">
+    <div class="info-grid" id="ma-info"></div>
+    <div id="ma-imgs-wrap" style="display:none;margin-bottom:13px">
+      <label class="form-label">Im&aacute;genes de referencia</label>
+      <div class="img-ref-grid" id="ma-imgs"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Brief original</label>
+      <div id="ma-concepto" style="font-size:12px;color:var(--text2);line-height:1.6;background:var(--bg);border-radius:8px;padding:10px 12px;min-height:36px;"></div>
+    </div>
+    <div id="ma-drive-wrap" style="display:none;margin-bottom:13px">
+      <label class="form-label">Material entregado (Drive)</label>
+      <div class="drive-box" id="ma-drive">&#8212;</div>
+    </div>
+    <!-- Opciones de analisis -->
+    <div style="border-top:1px solid var(--border);padding-top:16px;margin-top:4px">
+      <div id="ma-opciones">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+          <button onclick="maOpcion('aprobado_sin_edicion')" id="ma-btn-ase" class="btn-ghost" style="padding:10px;border-radius:10px;font-size:11px;font-weight:700;color:var(--green);border-color:rgba(61,107,63,0.3)">&#10003; Aprobar<br><span style="font-weight:400;font-size:10px">Sin edici&oacute;n</span></button>
+          <button onclick="maOpcion('aprobado_con_edicion')" id="ma-btn-ace" class="btn-ghost" style="padding:10px;border-radius:10px;font-size:11px;font-weight:700;color:var(--blue);border-color:rgba(42,95,168,0.3)">&#10003; Aprobar<br><span style="font-weight:400;font-size:10px">Requiere edici&oacute;n</span></button>
+          <button onclick="maOpcion('desaprobado_rehacer')" id="ma-btn-dr" class="btn-ghost" style="padding:10px;border-radius:10px;font-size:11px;font-weight:700;color:var(--amber);border-color:rgba(192,120,32,0.3)">&#10007; Desaprobar<br><span style="font-weight:400;font-size:10px">Rehacer (3 d&iacute;as)</span></button>
+          <button onclick="maOpcion('descartado')" id="ma-btn-desc" class="btn-ghost" style="padding:10px;border-radius:10px;font-size:11px;font-weight:700;color:var(--red);border-color:rgba(184,50,50,0.3)">&#128465; Descartar<br><span style="font-weight:400;font-size:10px">Material descartado</span></button>
+        </div>
+      </div>
+      <!-- Formulario segun opcion -->
+      <div id="ma-form-edicion" style="display:none;margin-bottom:12px">
+        <div class="form-group">
+          <label class="form-label">Indicaciones para la editora</label>
+          <textarea class="form-textarea" id="ma-ind-editora" placeholder="Qu&eacute; debe hacer la editora con este material..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Editora asignada</label>
+          <select class="form-select" id="ma-editora-sel"></select>
+        </div>
+      </div>
+      <div id="ma-form-desaprobado" style="display:none;margin-bottom:12px">
+        <div class="form-group">
+          <label class="form-label">Motivo del rechazo *</label>
+          <textarea class="form-textarea" id="ma-motivo" placeholder="Qu&eacute; est&aacute; mal y por qu&eacute;..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Indicaciones para recrear</label>
+          <textarea class="form-textarea" id="ma-indicaciones" placeholder="C&oacute;mo debe recrearse correctamente..."></textarea>
+        </div>
+      </div>
+      <div id="ma-form-descartar" style="display:none;margin-bottom:12px">
+        <div class="form-group">
+          <label class="form-label">Motivo del descarte</label>
+          <textarea class="form-textarea" id="ma-motivo-desc" placeholder="Por qu&eacute; se descarta este material..."></textarea>
+        </div>
+      </div>
+      <div id="ma-btn-confirmar-wrap" style="display:none;justify-content:flex-end;gap:8px">
+        <button class="btn-ghost" onclick="maOpcion(null)">Cancelar</button>
+        <button class="btn-primary" id="ma-btn-confirmar" onclick="confirmarAnalisis()">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL SUBIR A BOVEDA -->
+<div class="modal-overlay" id="modal-boveda-subir" onclick="if(event.target===this)closeModal('modal-boveda-subir')">
+  <div class="modal">
+    <div class="modal-hd"><span>Subir a b&oacute;veda Infloww</span><button class="modal-close" onclick="closeModal('modal-boveda-subir')">&#215;</button></div>
+    <input type="hidden" id="mbs-sol-id">
+    <div class="info-grid" id="mbs-info"></div>
+    <div class="form-group">
+      <label class="form-label">Link del material en Drive</label>
+      <div class="drive-box" id="mbs-drive" style="cursor:pointer" onclick="window.open(document.getElementById('mbs-drive').dataset.url,'_blank')">&#8212;</div>
+    </div>
+    <div style="background:var(--amber-bg);border:1px solid rgba(192,120,32,0.3);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--amber);margin-bottom:14px">
+      &#9432; Descargu&eacute; el material del Drive y subilo a la b&oacute;veda de Infloww, luego confirm&aacute; ac&aacute;.
+    </div>
+    <div class="form-actions">
+      <button class="btn-ghost" onclick="closeModal('modal-boveda-subir')">Cancelar</button>
+      <button class="btn-primary" id="mbs-btn" onclick="confirmarSubidaBoveda()">&#10003; Confirmar &mdash; subido a Infloww</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PLANTILLA -->
+<div class="modal-overlay" id="modal-plantilla" onclick="if(event.target===this)closeModal('modal-plantilla')">
+  <div class="modal">
+    <div class="modal-hd"><span id="mp-title">Nueva plantilla</span><button class="modal-close" onclick="closeModal('modal-plantilla')">&#215;</button></div>
+    <input type="hidden" id="mp-id">
+    <div class="form-row" style="margin-bottom:13px">
+      <div class="form-group" style="margin:0">
+        <label class="form-label">Nombre de la plantilla *</label>
+        <input class="form-input" id="mp-nombre" placeholder="ej: Video Trasero semanal">
+      </div>
+      <div class="form-group" style="margin:0">
+        <label class="form-label">Categor&iacute;a *</label>
+        <select class="form-select" id="mp-categoria">
+          <option>Contenido del Trasero</option><option>Lencer&iacute;a</option><option>Fitness</option>
+          <option>Lifestyle</option><option>Script Content</option><option>PPV</option>
+          <option>Banner / Perfil</option><option>Otro</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row" style="margin-bottom:13px">
+      <div class="form-group" style="margin:0">
+        <label class="form-label">Formato *</label>
+        <select class="form-select" id="mp-formato">
+          <option>Foto</option><option>Video</option><option>Pack (Fotos + Video)</option><option>Audio</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin:0">
+        <label class="form-label">D&iacute;as de entrega por defecto</label>
+        <input class="form-input" type="number" id="mp-dias" value="7" min="1">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Concepto / Brief predeterminado</label>
+      <textarea class="form-textarea" id="mp-concepto" placeholder="Describ&iacute; el tipo de contenido..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Indicaciones predeterminadas</label>
+      <textarea class="form-textarea" id="mp-indicaciones" placeholder="Indicaciones que suelen repetirse..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Requiere edici&oacute;n por defecto</label>
+      <select class="form-select" id="mp-edicion">
+        <option value="false">No requiere</option>
+        <option value="true">S&iacute;, requiere edici&oacute;n</option>
+      </select>
+    </div>
+    <div class="form-actions">
+      <button class="btn-ghost" onclick="closeModal('modal-plantilla')">Cancelar</button>
+      <button class="btn-danger" id="mp-btn-del" onclick="eliminarPlantilla()" style="display:none">Eliminar</button>
+      <button class="btn-primary" id="mp-btn-save" onclick="guardarPlantilla()">Guardar plantilla</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL REVISAR EDICION -->
+<div class="modal-overlay" id="modal-revisar" onclick="if(event.target===this)closeModal('modal-revisar')">
+  <div class="modal">
+    <div class="modal-hd"><span id="mr-title">Revisar edición</span><button class="modal-close" onclick="closeModal('modal-revisar')">&#215;</button></div>
+    <input type="hidden" id="mrv-sol-id">
+    <input type="hidden" id="mrv-edicion-id">
+    <div class="info-grid" id="mrv-info"></div>
+    <div class="form-group">
+      <label class="form-label">Indicaciones originales para la editora</label>
+      <div id="mrv-indicaciones" style="font-size:12px;color:var(--text2);line-height:1.6;background:var(--bg);border-radius:8px;padding:10px 12px;min-height:36px;"></div>
+    </div>
+    <div id="mrv-drive-wrap" style="margin-bottom:13px">
+      <label class="form-label">Material editado (Drive)</label>
+      <div class="drive-box" id="mrv-drive" style="cursor:pointer">&#8212;</div>
+    </div>
+    <div id="mrv-notas-wrap" style="margin-bottom:14px;display:none">
+      <label class="form-label">Notas de la editora</label>
+      <div id="mrv-notas-editora" style="font-size:12px;color:var(--text2);background:var(--bg);border-radius:8px;padding:10px 12px;"></div>
+    </div>
+    <div style="border-top:1px solid var(--border);padding-top:16px;margin-top:4px">
+      <div id="mrv-opciones">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+          <button onclick="mrvOpcion('aprobado')" class="btn-ghost" style="padding:10px;border-radius:10px;font-size:11px;font-weight:700;color:var(--green);border-color:rgba(61,107,63,0.3)">&#10003; Aprobar edición<br><span style="font-weight:400;font-size:10px">Pasa a contenido aprobado</span></button>
+          <button onclick="mrvOpcion('desaprobado')" class="btn-ghost" style="padding:10px;border-radius:10px;font-size:11px;font-weight:700;color:var(--red);border-color:rgba(184,50,50,0.3)">&#10007; Desaprobar<br><span style="font-weight:400;font-size:10px">Vuelve a la editora (3 días)</span></button>
+        </div>
+      </div>
+      <div id="mrv-form-desap" style="display:none;margin-bottom:12px">
+        <div class="form-group">
+          <label class="form-label">Motivo del rechazo *</label>
+          <textarea class="form-textarea" id="mrv-motivo" placeholder="Qué está mal en la edición..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Indicaciones para corregir</label>
+          <textarea class="form-textarea" id="mrv-indicaciones-new" placeholder="Cómo debe corregirse..."></textarea>
+        </div>
+      </div>
+      <div id="mrv-btn-wrap" style="display:none;justify-content:flex-end;gap:8px">
+        <button class="btn-ghost" onclick="mrvOpcion(null)">Cancelar</button>
+        <button class="btn-primary" id="mrv-btn-confirmar" onclick="confirmarRevision()">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 var SB="https://mltzngfkhsuwpwuuyfim.supabase.co";
 var KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1sdHpuZ2ZraHN1d3B3dXV5ZmltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwMDk0OTcsImV4cCI6MjA5MDU4NTQ5N30.mU7K8Tf7tNOQoebxktbMLMgmFhKGzLLR0YEemo0jams";
 var H={"apikey":KEY,"Authorization":"Bearer "+KEY,"Content-Type":"application/json","Prefer":"return=representation"};
-var SESSION=null,MIS_MODELOS=[],SOLICITUDES=[],BOVEDA_ITEMS=[],REUNIONES=[],SOL_IMGS=[];
+var SESSION=null,MIS_MODELOS=[],SOLICITUDES=[],BOVEDA_ITEMS=[],REUNIONES=[],SOL_IMGS=[],PLANTILLAS=[],EDITORAS_ASIG=[],GUIA=[];
 var calEntY=new Date().getFullYear(),calEntM=new Date().getMonth(),calEntSelDay=null;
 var calReuY=new Date().getFullYear(),calReuM=new Date().getMonth(),calReuSelDay=null;
 var MN=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
@@ -499,7 +936,68 @@ function initDemo(){
   document.getElementById("sb-avatar").textContent="CM";
   document.getElementById("today-date").textContent=new Date().toLocaleDateString("es-AR",{day:"numeric",month:"short",year:"numeric"});
   setDefaultMonths();
-  loadData();
+  // Load demo data instead of Supabase
+  loadDemoData();
+}
+
+function loadDemoData(){
+  var today=todayStr();
+  var in7=new Date(Date.now()+7*86400000).toISOString().split("T")[0];
+  var ago3=new Date(Date.now()-3*86400000).toISOString().split("T")[0];
+  var yesterday=new Date(Date.now()-86400000).toISOString().split("T")[0];
+  var ago5=new Date(Date.now()-5*86400000).toISOString().split("T")[0];
+
+  MIS_MODELOS=[
+    {id:"m1",nombre:"Sofia M.",niche:"Talking Girl",activa:true,foto_url:null},
+    {id:"m2",nombre:"Angelica Santanna",niche:"Fitness",activa:true,foto_url:null},
+    {id:"m3",nombre:"Juli Mussi",niche:"Lifestyle",activa:true,foto_url:null},
+    {id:"m4",nombre:"Camila R.",niche:"Talking Girl",activa:true,foto_url:null}
+  ];
+
+  SOLICITUDES=[
+    // 1. Pendiente - modelo tiene que entregar
+    {id:"s1",modelo_id:"m1",tipo:"of",categoria:"Contenido del Trasero",formato:"Foto",estado:"pendiente",sub_estado:null,fecha_entrega:in7,concepto:"Set 15 fotos trasero. Ropa interior negra, fondo neutro, buena iluminacion.",solicita_quien:"cm",es_reentrega:false,modelos:{nombre:"Sofia M.",niche:"Talking Girl"},entregas:[]},
+    // 2. Pendiente demorado
+    {id:"s2",modelo_id:"m2",tipo:"of",categoria:"Lenceria",formato:"Video",estado:"pendiente",sub_estado:null,fecha_entrega:ago3,concepto:"Video lenceria roja, 60 segundos. Ambiente romantico.",solicita_quien:"cm",es_reentrega:false,modelos:{nombre:"Angelica Santanna",niche:"Fitness"},entregas:[]},
+    // 3. Entregado - en analisis
+    {id:"s3",modelo_id:"m1",tipo:"of",categoria:"Fitness",formato:"Foto",estado:"entregado",sub_estado:null,fecha_entrega:yesterday,concepto:"Set fitness 12 fotos, ropa deportiva, fondo blanco.",solicita_quien:"cm",es_reentrega:false,updated_at:new Date().toISOString(),modelos:{nombre:"Sofia M.",niche:"Talking Girl"},entregas:[{drive_url:"https://drive.google.com/drive/folders/demo-fitness-sofia",notas:"Adjunto 12 fotos en carpeta"}],imagenes_ref:[]},
+    // 4. Re-entrega - en analisis
+    {id:"s4",modelo_id:"m3",tipo:"of",categoria:"Lifestyle",formato:"Foto",estado:"entregado",sub_estado:null,fecha_entrega:yesterday,concepto:"Pack lifestyle exterior, 10 fotos.",solicita_quien:"cm",es_reentrega:true,reentrega_numero:1,motivo_desaprobacion:"Iluminacion insuficiente",indicaciones_rehacer:"Usar luz natural 9-11am.",updated_at:new Date().toISOString(),modelos:{nombre:"Juli Mussi",niche:"Lifestyle"},entregas:[{drive_url:"https://drive.google.com/drive/folders/demo-lifestyle-juli",notas:"Re-entrega con mejor iluminacion"}]},
+    // 5. Desaprobado - rehacer
+    {id:"s5",modelo_id:"m2",tipo:"of",categoria:"Script Content",formato:"Video",estado:"pendiente",sub_estado:"desaprobado_rehacer",fecha_entrega:yesterday,concepto:"Video script 90 segundos.",solicita_quien:"cm",es_reentrega:false,motivo_desaprobacion:"Audio con ruido de fondo y encuadre incorrecto.",indicaciones_rehacer:"Grabar en silencio, encuadre medio a la altura de los ojos.",fecha_desaprobacion:new Date(Date.now()-86400000).toISOString(),modelos:{nombre:"Angelica Santanna",niche:"Fitness"},entregas:[]},
+    // 6. Aprobado listo - subir a boveda
+    {id:"s6",modelo_id:"m4",tipo:"of",categoria:"PPV",formato:"Pack (Fotos + Video)",estado:"listo",sub_estado:"aprobado_listo",fecha_entrega:yesterday,concepto:"Pack PPV exclusivo suscriptores VIP.",solicita_quien:"cm",es_reentrega:false,modelos:{nombre:"Camila R.",niche:"Talking Girl"},entregas:[{drive_url:"https://drive.google.com/drive/folders/demo-ppv-camila",notas:"Pack completo 8 fotos + 2 videos"}]},
+    // 7. En edicion (aprobado con edicion)
+    {id:"s7",modelo_id:"m1",tipo:"of",categoria:"Banner / Perfil",formato:"Foto",estado:"en_edicion",sub_estado:"aprobado_edicion",fecha_entrega:ago3,concepto:"Foto perfil y banner OF. Edicion color y retoque.",indicaciones_editora:"Filtro calido, retocar piel, ajustar contraste.",solicita_quien:"cm",es_reentrega:false,modelos:{nombre:"Sofia M.",niche:"Talking Girl"},entregas:[{drive_url:"https://drive.google.com/drive/folders/demo-banner-sofia"}],ediciones:[{drive_url_editado:null}]},
+    // 8. Descartado
+    {id:"s8",modelo_id:"m3",tipo:"of",categoria:"Contenido del Trasero",formato:"Video",estado:"publicado",sub_estado:"descartado",fecha_entrega:ago3,concepto:"Video especial descartado.",solicita_quien:"cm",motivo_desaprobacion:"No cumple con la estetica del perfil.",updated_at:new Date(Date.now()-2*86400000).toISOString(),es_reentrega:false,modelos:{nombre:"Juli Mussi",niche:"Lifestyle"},entregas:[]},
+    // 9. En boveda (historial)
+    {id:"s9",modelo_id:"m2",tipo:"of",categoria:"Lenceria",formato:"Foto",estado:"publicado",sub_estado:"en_boveda",fecha_entrega:ago3,concepto:"Set lenceria negra.",solicita_quien:"cm",subido_boveda_at:new Date(Date.now()-2*86400000).toISOString(),es_reentrega:false,modelos:{nombre:"Angelica Santanna",niche:"Fitness"},entregas:[{drive_url:"https://drive.google.com/drive/folders/demo-lenceria"}]},
+    // 10. En boveda (historial)
+    {id:"s10",modelo_id:"m1",tipo:"of",categoria:"Fitness",formato:"Video",estado:"publicado",sub_estado:"en_boveda",fecha_entrega:ago5,concepto:"Video fitness rutina manana.",solicita_quien:"cm",subido_boveda_at:new Date(Date.now()-5*86400000).toISOString(),es_reentrega:false,modelos:{nombre:"Sofia M.",niche:"Talking Girl"},entregas:[{drive_url:"https://drive.google.com/drive/folders/demo-fitness-video"}]}
+  ];
+
+  BOVEDA_ITEMS=[
+    {id:"b1",modelo_id:"m2",categoria:"Lenceria",formato:"Foto",fecha_subida:ago3,modelos:{nombre:"Angelica Santanna",niche:"Fitness"},solicitudes:{categoria:"Lenceria",formato:"Foto"}},
+    {id:"b2",modelo_id:"m1",categoria:"Fitness",formato:"Video",fecha_subida:ago5,modelos:{nombre:"Sofia M.",niche:"Talking Girl"},solicitudes:{categoria:"Fitness",formato:"Video"}}
+  ];
+
+  PLANTILLAS=[
+    {id:"p1",nombre:"Video Trasero Semanal",categoria:"Contenido del Trasero",formato:"Video",dias_entrega:5,concepto:"Video trasero 60-90 segundos. Ropa interior sugerida. Fondo neutro, buena iluminacion.",indicaciones:"Grabar en HD. Sin ruido. Encuadre cuerpo entero y plano detalle.",requiere_edicion:false},
+    {id:"p2",nombre:"Set Fotos Lenceria",categoria:"Lenceria",formato:"Foto",dias_entrega:4,concepto:"15-20 fotos lenceria. Variedad de poses. Ambiente intimo.",indicaciones:"Iluminacion calida. Plano entero y detalles. Fondo limpio.",requiere_edicion:true},
+    {id:"p3",nombre:"Pack PPV Mensual",categoria:"PPV",formato:"Pack (Fotos + Video)",dias_entrega:7,concepto:"Pack exclusivo: 10 fotos + 1 video 90s. Contenido premium VIP.",indicaciones:"Alta calidad. Consistencia estetica. Video con buena narrativa.",requiere_edicion:true},
+    {id:"p4",nombre:"Foto Perfil y Banner",categoria:"Banner / Perfil",formato:"Foto",dias_entrega:3,concepto:"Foto de perfil y banner para OF.",indicaciones:"Perfil: cuadrada, primer plano. Banner: horizontal, cuerpo entero.",requiere_edicion:true}
+  ];
+
+  REUNIONES=[];
+  EDITORAS_ASIG=[{id:"u-editora",nombre:"Editora Demo"}];
+  GUIA=[{orden:1,titulo:"CREAR PLANTILLAS",contenido:"Creá plantillas por categoría para no repetir siempre el mismo brief."},{orden:2,titulo:"SOLICITAR CONTENIDO",contenido:"Seleccioná modelo, cargá plantilla y completá la fecha de entrega."},{orden:3,titulo:"LA MODELO ENTREGA",contenido:"Cuando entrega, aparece en En análisis."},{orden:4,titulo:"ANALIZAR",contenido:"Tenés 4 opciones: Aprobar sin edición, Aprobar con edición, Desaprobar (rehacer en 3 días) o Descartar."},{orden:5,titulo:"EDICIÓN",contenido:"Cuando aprobás con edición, la editora trabaja el material y lo devuelve para tu revisión."},{orden:6,titulo:"SUBIR A BÓVEDA",contenido:"Desde Contenido aprobado, descargá el material, subilo a Infloww y confirmá acá."},{orden:7,titulo:"MAPA / HISTORIAL",contenido:"Tu visión de control: stats por etapa, % compromiso por modelo e historial completo."}];
+  // Add en_edicion example to demo solicitudes
+  // s11: editora todavia editando
+  SOLICITUDES.push({id:"s11",modelo_id:"m4",tipo:"of",categoria:"Lenceria",formato:"Video",estado:"en_edicion",sub_estado:"aprobado_edicion",fecha_entrega:new Date(Date.now()-2*86400000).toISOString().split("T")[0],concepto:"Video lenceria con color grading.",indicaciones_editora:"Aplicar LUT warm, suavizar piel. Exportar 1080p.",solicita_quien:"cm",es_reentrega:false,modelos:{nombre:"Camila R.",niche:"Talking Girl"},entregas:[{drive_url:"https://drive.google.com/folders/demo-lenceria-edit"}],ediciones:[{id:"e11",estado:"pendiente",drive_url_editado:null,notas:null}]});
+  // s12: editora ya termino, esperando revision del CM
+  SOLICITUDES.push({id:"s12",modelo_id:"m3",tipo:"of",categoria:"Fitness",formato:"Video",estado:"en_edicion",sub_estado:"aprobado_edicion",fecha_entrega:new Date(Date.now()-3*86400000).toISOString().split("T")[0],concepto:"Video fitness con musica y transiciones.",indicaciones_editora:"Agregar musica motivacional, cortes rapidos entre ejercicios.",solicita_quien:"cm",es_reentrega:false,modelos:{nombre:"Juli Mussi",niche:"Lifestyle"},entregas:[{drive_url:"https://drive.google.com/folders/demo-fitness-edit"}],ediciones:[{id:"e12",estado:"editado",editora_id:"u-editora",drive_url_editado:"https://drive.google.com/folders/demo-fitness-editado",notas:"Listo! Aplique los cortes y la musica. Quedaron 45 segundos."}]});
+  renderAll();
 }
 
 function setDefaultMonths(){
@@ -516,13 +1014,28 @@ async function loadData(){
   SOLICITUDES=await sbFetch("solicitudes?"+sFilt+"tipo=eq.of&select=*,modelos(nombre,niche),entregas(drive_url),ediciones(drive_url_editado)&order=created_at.desc");
   BOVEDA_ITEMS=await sbFetch("boveda?"+sFilt+"select=*,modelos(nombre,niche),solicitudes(categoria,formato)&order=created_at.desc");
   REUNIONES=await sbFetch("reuniones?para_usuario_id=eq."+SESSION.id+"&select=*&order=fecha,hora");
+  PLANTILLAS=await sbFetch("plantillas_solicitud?cm_id=eq."+SESSION.id+"&select=*&order=created_at.desc");
+  GUIA=await sbFetch("guia_panel?select=*&order=orden");
+  // Load editoras assigned to my models
+  var modelIds=MIS_MODELOS.map(function(m){return m.id;});
+  if(modelIds.length){
+    var asigEditoras=await sbFetch("asignaciones?modelo_id=in.("+modelIds.join(",")+")"+"&select=*,usuarios(id,nombre,rol)");
+    EDITORAS_ASIG=asigEditoras.filter(function(a){return a.usuarios&&a.usuarios.rol==="editora";}).map(function(a){return a.usuarios;});
+    // Deduplicate
+    var seen={};
+    EDITORAS_ASIG=EDITORAS_ASIG.filter(function(u){if(seen[u.id])return false;seen[u.id]=true;return true;});
+  }
   renderAll();
 }
 
 function renderAll(){
   populateNichos();["seg","dem","bov"].forEach(function(v){populateModelos(v);});
   populateSolModelo();
-  renderDashboard();renderSeguimiento();renderDemorados();renderBoveda();updateBadges();
+  populateFlowFilters();
+  renderDashboard();renderSeguimiento();renderDemorados();renderBoveda();
+  renderAnalisis();renderReentregas();renderEnEdicion();renderDesaprobados();renderDescartados();renderAprobados();renderGuia();
+  renderMapa();renderPlantillas();
+  updateBadges();
   renderCalEntregas();renderCalReuniones();renderProximasReu();
 }
 
@@ -557,6 +1070,12 @@ function populateSolModelo(){
   populateSolNicho();
   var el=document.getElementById("sol-modelo");if(!el)return;
   el.innerHTML=MIS_MODELOS.map(function(m){return "<option value='"+m.id+"'>"+m.nombre+"</option>";}).join("");
+  // Populate plantilla select
+  var ps=document.getElementById("sol-plantilla-sel");
+  if(ps)ps.innerHTML="<option value=''>Sin plantilla</option>"+PLANTILLAS.map(function(p){return "<option value='"+p.id+"'>"+p.nombre+" ("+p.categoria+")</option>";}).join("");
+  // Populate modelo filter in desaprobados
+  var md=document.getElementById("filt-modelo-desap");
+  if(md)md.innerHTML="<option value='all'>Todas las modelos</option>"+MIS_MODELOS.map(function(m){return "<option value='"+m.id+"'>"+m.nombre+"</option>";}).join("");
 }
 
 function onNichoChange(vista){
@@ -577,12 +1096,22 @@ function updateBadges(){
   document.getElementById("badge-pend").textContent=SOLICITUDES.filter(function(s){return s.estado==="pendiente";}).length;
   document.getElementById("badge-dem").textContent=SOLICITUDES.filter(function(s){return isLate(s);}).length;
   document.getElementById("badge-bov").textContent=BOVEDA_ITEMS.length;
+  var analisis=SOLICITUDES.filter(function(s){return s.estado==="entregado"&&!s.es_reentrega;}).length;
+  var reentregas=SOLICITUDES.filter(function(s){return s.estado==="entregado"&&s.es_reentrega;}).length;
+  var desap=SOLICITUDES.filter(function(s){return s.sub_estado==="desaprobado_rehacer";}).length;
+  var aprobados=SOLICITUDES.filter(function(s){return s.sub_estado==="aprobado_listo";}).length;
+  var enEdicion=SOLICITUDES.filter(function(s){return s.estado==="en_edicion";}).length;
+  var b=document.getElementById("badge-analisis");if(b)b.textContent=analisis;
+  var b0=document.getElementById("badge-enedicion");if(b0)b0.textContent=enEdicion;
+  var b2=document.getElementById("badge-reentregas");if(b2)b2.textContent=reentregas;
+  var b3=document.getElementById("badge-desap");if(b3)b3.textContent=desap;
+  var b4=document.getElementById("badge-aprobados");if(b4)b4.textContent=aprobados;
 }
 
 function renderDashboard(){
   var sols=SOLICITUDES.filter(function(s){return matchMes(s.fecha_entrega,"filt-mes-dash");});
-  var pend=sols.filter(function(s){return s.estado==="pendiente";}).length;
-  var dem=sols.filter(function(s){return isLate(s);}).length;
+  var pend=sols.filter(function(s){return s.estado==="pendiente"&&!isLate(s)&&!s.sub_estado;}).length;
+  var dem=sols.filter(function(s){return isLate(s)||s.sub_estado==="desaprobado_rehacer";}).length;
   var bov=BOVEDA_ITEMS.filter(function(b){return matchMes(b.fecha_subida,"filt-mes-dash");}).length;
   var total=sols.length;var pct=total?Math.round((total-pend)/total*100):0;
   document.getElementById("stat-pend").textContent=pend;
@@ -595,8 +1124,8 @@ function renderDashboard(){
   if(!MIS_MODELOS.length){el.innerHTML="<div class='empty-state'>Sin modelos asignadas</div>";return;}
   el.innerHTML=MIS_MODELOS.map(function(m){
     var ms=sols.filter(function(s){return s.modelo_id===m.id;});
-    var mPend=ms.filter(function(s){return s.estado==="pendiente";}).length;
-    var mDem=ms.filter(function(s){return isLate(s);}).length;
+    var mPend=ms.filter(function(s){return s.estado==="pendiente"&&!isLate(s)&&!s.sub_estado;}).length;
+    var mDem=ms.filter(function(s){return isLate(s)||s.sub_estado==="desaprobado_rehacer";}).length;
     var mListo=ms.filter(function(s){return s.estado==="listo"||s.estado==="publicado"||s.estado==="entregado";}).length;
     var mBov=BOVEDA_ITEMS.filter(function(b){return b.modelo_id===m.id&&matchMes(b.fecha_subida,"filt-mes-dash");}).length;
     var mTotal=ms.length;var mPct=mTotal?Math.round((mTotal-mPend)/mTotal*100):0;
@@ -718,6 +1247,20 @@ function renderImgPreviews(){
 document.addEventListener("click",function(e){
   var delBtn=e.target.closest("[data-img-idx]");
   if(delBtn){SOL_IMGS.splice(parseInt(delBtn.dataset.imgIdx),1);renderImgPreviews();return;}
+  // Analizar button
+  var revisarBtn=e.target.closest("[data-revisar-id]");
+  if(revisarBtn){openModalRevisar(revisarBtn.dataset.revisarId);return;}
+  var analizarBtn=e.target.closest("[data-analizar-id]");
+  if(analizarBtn){openModalAnalisis(analizarBtn.dataset.analizarId);return;}
+  // Subir a boveda button
+  var subirBtn=e.target.closest("[data-subir-id]");
+  if(subirBtn){openModalSubirBoveda(subirBtn.dataset.subirId);return;}
+  // Open drive link
+  var driveLink=e.target.closest("[data-open-drive]");
+  if(driveLink){window.open(driveLink.dataset.openDrive,"_blank");return;}
+  // Edit plantilla
+  var editPlant=e.target.closest("[data-edit-plantilla]");
+  if(editPlant){openModalPlantilla(editPlant.dataset.editPlantilla);return;}
   var row=e.target.closest("[data-sol-id]");
   if(row&&!e.target.closest("button"))openDetalle(row.dataset.solId);
 });
@@ -793,7 +1336,11 @@ async function moverBoveda(s){
   }catch(err){showToast("Error.");}
 }
 
-function closeModal(){document.getElementById("det-modal").classList.remove("open");}
+function openModal(id){document.getElementById(id).classList.add("open");}
+function closeModal(id){
+  if(id){document.getElementById(id).classList.remove("open");}
+  else{document.getElementById("det-modal").classList.remove("open");}
+}
 
 // CALENDARIO ENTREGAS
 function buildCal(calId,year,month,selDay,items,getDay,renderChips,onDayClick){
@@ -824,7 +1371,8 @@ function buildCal(calId,year,month,selDay,items,getDay,renderChips,onDayClick){
 }
 
 function renderCalEntregas(){
-  buildCal("cal-ent-grid",calEntY,calEntM,calEntSelDay,SOLICITUDES,
+  var solsOF=SOLICITUDES.filter(function(s){return s.tipo==="of";});
+  buildCal("cal-ent-grid",calEntY,calEntM,calEntSelDay,solsOF,
     function(s){return s.fecha_entrega;},
     function(items){
       var late=items.filter(function(s){return isLate(s);});
@@ -835,7 +1383,7 @@ function renderCalEntregas(){
       if(late.length)h+="<div class='cal-chip' style='background:var(--red-bg);color:var(--red)'>"+late.length+" demor.</div>";
       if(pend.length)h+="<div class='cal-chip' style='background:var(--amber-bg);color:var(--amber)'>"+pend.length+" pend.</div>";
       if(ent.length)h+="<div class='cal-chip' style='background:var(--green-bg);color:var(--green)'>"+ent.length+" entregado</div>";
-      if(pub.length)h+="<div class='cal-chip' style='background:var(--gold-light);color:#7a5520'>"+pub.length+" en bóveda</div>";
+      if(pub.length)h+="<div class='cal-chip' style='background:var(--gold-light);color:#7a5520'>"+pub.length+" en b\u00f3veda</div>";
       return h;
     },"calEntDay");
   if(calEntSelDay)calEntDay(calEntSelDay);
@@ -845,7 +1393,7 @@ function calEntDay(day){
   calEntSelDay=day;
   document.getElementById("cal-ent-day-title").textContent=day+" de "+MN[calEntM]+" "+calEntY;
   var sols=SOLICITUDES.filter(function(s){
-    if(!s.fecha_entrega)return false;
+    if(!s.fecha_entrega||s.tipo!=="of")return false;
     var d=new Date(s.fecha_entrega+"T12:00");
     return d.getDate()===day&&d.getMonth()===calEntM&&d.getFullYear()===calEntY;
   });
@@ -926,7 +1474,693 @@ function calToday(cal){
   else{calReuY=new Date().getFullYear();calReuM=new Date().getMonth();calReuSelDay=null;document.getElementById("cal-reu-detail").style.display="none";renderCalReuniones();}
 }
 
-var VMAP={dashboard:"Dashboard",solicitar:"Nueva solicitud",seguimiento:"Seguimiento",demorados:"Demorados",boveda:"Boveda","cal-entregas":"Calendario de entregas","cal-reuniones":"Reuniones"};
+// \u2500\u2500 FLUJO OF \u2500\u2500
+
+function analisisRow(s, tipo){
+  var modelo=s.modelos?s.modelos.nombre:"-";
+  var fecha=s.fecha_entrega?new Date(s.fecha_entrega+"T12:00").toLocaleDateString("es-AR",{day:"numeric",month:"short"}):"";
+  var entregadoAt=s.updated_at?new Date(s.updated_at).toLocaleDateString("es-AR",{day:"numeric",month:"short"}):"";
+  var esReentrega=s.es_reentrega;
+  var div=document.createElement("div");div.className="task-row";div.dataset.analisisId=s.id;
+  div.innerHTML="<div class='task-modelo'>"+modelo+(esReentrega?"<div style='font-size:9px;color:var(--amber);font-weight:700'>RE-ENTREGA #"+s.reentrega_numero+"</div>":"")+"</div>"
+    +"<div class='task-name'><div class='task-title'>"+(s.categoria||"Contenido")+"</div>"
+    +"<div class='task-meta'>"+(s.formato||"-")+" \u00b7 Entregado: "+entregadoAt+"</div></div>"
+    +"<button class='btn-primary' style='font-size:10px;padding:4px 14px;flex-shrink:0' data-analizar-id='"+s.id+"'>Analizar</button>";
+  return div.outerHTML;
+}
+
+function renderAnalisis(){
+  var f=getFlowFilters("analisis");
+  var items=SOLICITUDES.filter(function(s){
+    if(s.estado!=="entregado"||s.es_reentrega)return false;
+    if(f.nicho!=="all"&&(!s.modelos||s.modelos.niche!==f.nicho))return false;
+    if(f.modelo!=="all"&&s.modelo_id!==f.modelo)return false;
+    if(!matchFlowPeriodo(s.fecha_entrega,f.mes,f.sem))return false;
+    return true;
+  });
+  var el=document.getElementById("list-analisis");
+  var cnt=document.getElementById("count-analisis");
+  if(cnt)cnt.textContent=items.length+(items.length===1?" item":" items");
+  if(el)el.innerHTML=items.length?items.map(function(s){return analisisRow(s);}).join(""):"<div class='empty-state'>Sin contenido por analizar \u2713</div>";
+}
+
+function renderReentregas(){
+  var f=getFlowFilters("reentregas");
+  var items=SOLICITUDES.filter(function(s){
+    if(s.estado!=="entregado"||!s.es_reentrega)return false;
+    if(f.nicho!=="all"&&(!s.modelos||s.modelos.niche!==f.nicho))return false;
+    if(f.modelo!=="all"&&s.modelo_id!==f.modelo)return false;
+    if(!matchFlowPeriodo(s.fecha_entrega,f.mes,f.sem))return false;
+    return true;
+  });
+  var el=document.getElementById("list-reentregas");
+  var cnt=document.getElementById("count-reentregas");
+  if(cnt)cnt.textContent=items.length+(items.length===1?" item":" items");
+  if(el)el.innerHTML=items.length?items.map(function(s){return analisisRow(s,"reentrega");}).join(""):"<div class='empty-state'>Sin re-entregas pendientes \u2713</div>";
+}
+
+function renderEnEdicion(){
+  var f=getFlowFilters("enedicion");
+  var items=SOLICITUDES.filter(function(s){
+    if(s.estado!=="en_edicion")return false;
+    if(f.nicho!=="all"&&(!s.modelos||s.modelos.niche!==f.nicho))return false;
+    if(f.modelo!=="all"&&s.modelo_id!==f.modelo)return false;
+    if(!matchFlowPeriodo(s.fecha_entrega,f.mes,f.sem))return false;
+    return true;
+  });
+  var cnt=document.getElementById("count-enedicion");
+  if(cnt)cnt.textContent=items.length+(items.length===1?" item":" items");
+  var el=document.getElementById("list-enedicion");if(!el)return;
+  if(!items.length){el.innerHTML="<div class='empty-state'>Sin contenido en edición</div>";return;}
+  el.innerHTML=items.map(function(s){
+    var modelo=s.modelos?s.modelos.nombre:"-";
+    var fecha=s.fecha_entrega?new Date(s.fecha_entrega+"T12:00").toLocaleDateString("es-AR",{day:"numeric",month:"short"}):"";
+    var indEdit=s.indicaciones_editora||"Sin indicaciones extra";
+    var div=document.createElement("div");div.className="task-row";
+    div.innerHTML="<div class='task-modelo'>"+modelo+"</div>"
+      +"<div class='task-name'>"
+      +"<div class='task-title'>"+(s.categoria||"Contenido")+"</div>"
+      +"<div class='task-meta'>"+(s.formato||"-")+" · Entrega: "+fecha+"</div>"
+      +"<div class='task-meta' style='color:var(--blue);margin-top:2px'>Editora: "+indEdit.substring(0,60)+(indEdit.length>60?"...":"")+"</div>"
+      +"</div>"
+      +"<span class='status-pill sp-entregado'>En edición</span>";
+    return div.outerHTML;
+  }).join("");
+}
+
+function renderDesaprobados(){
+  var f=getFlowFilters("desap");
+  var items=SOLICITUDES.filter(function(s){
+    if(s.sub_estado!=="desaprobado_rehacer")return false;
+    if(f.nicho!=="all"&&(!s.modelos||s.modelos.niche!==f.nicho))return false;
+    if(f.modelo!=="all"&&s.modelo_id!==f.modelo)return false;
+    if(!matchFlowPeriodo(s.fecha_entrega,f.mes,f.sem))return false;
+    return true;
+  });
+  items.sort(function(a,b){return (a.fecha_desaprobacion||"").localeCompare(b.fecha_desaprobacion||"");});
+  var cnt=document.getElementById("count-desap");if(cnt)cnt.textContent=items.length+(items.length===1?" item":" items");
+  var el=document.getElementById("list-desaprobados");if(!el)return;
+  if(!items.length){el.innerHTML="<div class='empty-state'>Sin desaprobados \u2713</div>";return;}
+  el.innerHTML=items.map(function(s){
+    var modelo=s.modelos?s.modelos.nombre:"-";
+    var fechaDesap=s.fecha_desaprobacion?new Date(s.fecha_desaprobacion).toLocaleDateString("es-AR",{day:"numeric",month:"short"}):"";
+    var diasRestantes=s.fecha_desaprobacion?3-Math.floor((new Date()-new Date(s.fecha_desaprobacion))/86400000):3;
+    var esDemorado=diasRestantes<0;
+    var div=document.createElement("div");div.className="task-row";
+    div.innerHTML="<div class='task-modelo'>"+modelo+"</div>"
+      +"<div class='task-name'><div class='task-title'>"+(s.categoria||"Contenido")+"</div>"
+      +"<div class='task-meta'>"+(s.motivo_desaprobacion||"Sin motivo indicado")+"</div>"
+      +(s.indicaciones_rehacer?"<div class='task-meta' style='color:var(--blue)'>Indicaciones: "+s.indicaciones_rehacer+"</div>":"")
+      +"</div>"
+      +"<span class='status-pill "+(esDemorado?"sp-demorado":"sp-pendiente")+"'>"+(esDemorado?"Demorado +"+Math.abs(diasRestantes)+"d":diasRestantes+"d restantes")+"</span>";
+    return div.outerHTML;
+  }).join("");
+}
+
+function renderDescartados(){
+  var f=getFlowFilters("descartados");
+  var items=SOLICITUDES.filter(function(s){
+    if(s.sub_estado!=="descartado")return false;
+    if(f.nicho!=="all"&&(!s.modelos||s.modelos.niche!==f.nicho))return false;
+    if(f.modelo!=="all"&&s.modelo_id!==f.modelo)return false;
+    if(!matchFlowPeriodo(s.fecha_entrega,f.mes,f.sem))return false;
+    return true;
+  });
+  var cnt=document.getElementById("count-descartados");if(cnt)cnt.textContent=items.length+(items.length===1?" item":" items");
+  var el=document.getElementById("list-descartados");if(!el)return;
+  if(!items.length){el.innerHTML="<div class='empty-state'>Sin material descartado</div>";return;}
+  el.innerHTML=items.map(function(s){
+    var modelo=s.modelos?s.modelos.nombre:"-";
+    var fecha=s.updated_at?new Date(s.updated_at).toLocaleDateString("es-AR",{day:"numeric",month:"short"}):"";
+    var div=document.createElement("div");div.className="task-row";
+    div.innerHTML="<div class='task-modelo'>"+modelo+"</div>"
+      +"<div class='task-name'><div class='task-title'>"+(s.categoria||"Contenido")+"</div>"
+      +"<div class='task-meta'>Descartado el "+fecha+(s.motivo_desaprobacion?" \u00b7 "+s.motivo_desaprobacion:"")+"</div></div>"
+      +"<span class='status-pill' style='background:var(--bg2);color:var(--text3)'>Descartado</span>";
+    return div.outerHTML;
+  }).join("");
+}
+
+function renderAprobados(){
+  var f=getFlowFilters("aprobados");
+  var items=SOLICITUDES.filter(function(s){
+    if(s.sub_estado!=="aprobado_listo")return false;
+    if(f.nicho!=="all"&&(!s.modelos||s.modelos.niche!==f.nicho))return false;
+    if(f.modelo!=="all"&&s.modelo_id!==f.modelo)return false;
+    if(!matchFlowPeriodo(s.fecha_entrega,f.mes,f.sem))return false;
+    return true;
+  });
+  var cnt=document.getElementById("count-aprobados");if(cnt)cnt.textContent=items.length+(items.length===1?" item":" items");
+  var el=document.getElementById("list-aprobados");if(!el)return;
+  if(!items.length){el.innerHTML="<div class='empty-state'>Sin contenido aprobado pendiente</div>";return;}
+  el.innerHTML=items.map(function(s){
+    var modelo=s.modelos?s.modelos.nombre:"-";
+    var entrega=s.entregas&&s.entregas[0];
+    var div=document.createElement("div");div.className="task-row";
+    div.innerHTML="<div class='task-modelo'>"+modelo+"</div>"
+      +"<div class='task-name'><div class='task-title'>"+(s.categoria||"Contenido")+"</div>"
+      +"<div class='task-meta'>"+(s.formato||"-")+(entrega&&entrega.drive_url?" \u00b7 <span style='color:var(--blue);cursor:pointer' data-open-drive='"+entrega.drive_url+"'>Ver Drive</span>":"")+"</div></div>"
+      +"<span class='status-pill sp-listo'>Aprobado</span>"
+      +"<button class='btn-primary' style='font-size:10px;padding:4px 14px;flex-shrink:0' data-subir-id='"+s.id+"'>Subir a b\u00f3veda</button>";
+    return div.outerHTML;
+  }).join("");
+}
+
+// \u2500\u2500 MAPA \u2500\u2500
+function renderMapa(){
+  var mesId=(document.getElementById("mapa-mes")||{}).value||"all";
+  function matchM(fecha){if(mesId==="all")return true;if(!fecha)return false;return new Date(fecha+"T12:00").getMonth()===parseInt(mesId);}
+  var sols=SOLICITUDES.filter(function(s){return matchM(s.fecha_entrega);});
+  
+  // Stats
+  var stats=[
+    {label:"Solicitadas",value:sols.length,color:"var(--text)"},
+    {label:"En an\u00e1lisis",value:sols.filter(function(s){return s.estado==="entregado";}).length,color:"var(--amber)"},
+    {label:"Aprobadas",value:sols.filter(function(s){return s.sub_estado==="aprobado_listo"||s.subido_boveda_at;}).length,color:"var(--green)"},
+    {label:"Desaprobadas",value:sols.filter(function(s){return s.sub_estado==="desaprobado_rehacer";}).length,color:"var(--red)"},
+    {label:"En b\u00f3veda",value:sols.filter(function(s){return s.subido_boveda_at;}).length,color:"var(--gold)"}
+  ];
+  var statsEl=document.getElementById("mapa-stats");
+  if(statsEl)statsEl.innerHTML=stats.map(function(st){
+    return "<div class='stat-card' style='padding:12px 14px'>"
+      +"<div class='stat-label'>"+st.label+"</div>"
+      +"<div style='font-family:Fraunces,serif;font-size:26px;font-weight:300;color:"+st.color+";line-height:1'>"+st.value+"</div>"
+      +"</div>";
+  }).join("");
+
+  // Subir hoy
+  var hoy=todayStr();
+  var paraHoy=sols.filter(function(s){return s.sub_estado==="aprobado_listo"&&s.fecha_entrega===hoy;});
+  var hw=document.getElementById("mapa-hoy-wrap");
+  if(hw){
+    if(paraHoy.length){
+      hw.style.display="block";
+      var hl=document.getElementById("mapa-hoy-list");
+      if(hl)hl.innerHTML=paraHoy.map(function(s){
+        var modelo=s.modelos?s.modelos.nombre:"-";
+        return "<div class='task-row'><div class='task-modelo'>"+modelo+"</div>"
+          +"<div class='task-name'><div class='task-title'>"+(s.categoria||"Contenido")+"</div></div>"
+          +"<button class='btn-primary' style='font-size:10px;padding:4px 14px' data-subir-id='"+s.id+"'>Subir a b\u00f3veda</button></div>";
+      }).join("");
+    }else{hw.style.display="none";}
+  }
+
+  // Por modelo
+  var pm=document.getElementById("mapa-por-modelo");
+  if(pm){
+    pm.innerHTML=MIS_MODELOS.map(function(m){
+      var ms=sols.filter(function(s){return s.modelo_id===m.id;});
+      var total=ms.length;
+      var analisis=ms.filter(function(s){return s.estado==="entregado";}).length;
+      var aprobados=ms.filter(function(s){return s.sub_estado==="aprobado_listo"||s.subido_boveda_at;}).length;
+      var desap=ms.filter(function(s){return s.sub_estado==="desaprobado_rehacer";}).length;
+      var boveda=ms.filter(function(s){return s.subido_boveda_at;}).length;
+      return "<div style='display:grid;grid-template-columns:130px 60px 60px 60px 60px 60px;gap:8px;align-items:center;padding:9px 14px;border-bottom:1px solid var(--border)'>"
+        +"<div style='font-size:12px;font-weight:600;color:var(--text)'>"+m.nombre+"</div>"
+        +"<div style='text-align:center;font-size:13px;font-weight:700;color:var(--text)'>"+total+"</div>"
+        +"<div style='text-align:center;font-size:13px;font-weight:700;color:"+(analisis?"var(--amber)":"var(--text3)")+"'>"+analisis+"</div>"
+        +"<div style='text-align:center;font-size:13px;font-weight:700;color:"+(aprobados?"var(--green)":"var(--text3)")+"'>"+aprobados+"</div>"
+        +"<div style='text-align:center;font-size:13px;font-weight:700;color:"+(desap?"var(--red)":"var(--text3)")+"'>"+desap+"</div>"
+        +"<div style='text-align:center;font-size:13px;font-weight:700;color:"+(boveda?"var(--gold)":"var(--text3)")+"'>"+boveda+"</div>"
+        +"</div>";
+    }).join("")||"<div class='empty-state'>Sin modelos asignadas</div>";
+  }
+
+  // Historial
+  var hist=SOLICITUDES.filter(function(s){return s.subido_boveda_at&&matchM(s.fecha_entrega);});
+  hist.sort(function(a,b){return (b.subido_boveda_at||"").localeCompare(a.subido_boveda_at||"");});
+  var hc=document.getElementById("mapa-hist-count");if(hc)hc.textContent=hist.length+" items";
+  var hl2=document.getElementById("mapa-hist-list");
+  if(hl2){
+    hl2.innerHTML=hist.length?hist.map(function(s){
+      var modelo=s.modelos?s.modelos.nombre:"-";
+      var fechaSub=new Date(s.subido_boveda_at).toLocaleDateString("es-AR",{day:"numeric",month:"short",year:"numeric"});
+      return "<div class='task-row'>"
+        +"<div class='task-modelo'>"+modelo+"</div>"
+        +"<div class='task-name'><div class='task-title'>"+(s.categoria||"Contenido")+"</div>"
+        +"<div class='task-meta'>"+(s.formato||"-")+" \u00b7 Subido el "+fechaSub+"</div></div>"
+        +"<span class='status-pill sp-boveda'>En b\u00f3veda</span>"
+        +"</div>";
+    }).join(""):"<div class='empty-state'>Sin historial todav\u00eda</div>";
+  }
+}
+
+// \u2500\u2500 MODAL ANALISIS \u2500\u2500
+var maOpcionActual=null;
+
+function openModalAnalisis(id){
+  var s=SOLICITUDES.find(function(x){return x.id===id;});if(!s)return;
+  document.getElementById("ma-sol-id").value=id;
+  document.getElementById("ma-title").textContent=(s.es_reentrega?"Re-entrega":"Analizar")+" \u2014 "+(s.categoria||"Contenido");
+  var modelo=s.modelos?s.modelos.nombre:"-";
+  var fecha=s.fecha_entrega?new Date(s.fecha_entrega+"T12:00").toLocaleDateString("es-AR"):"";
+  document.getElementById("ma-info").innerHTML=
+    "<div class='info-item'><div class='info-key'>Modelo</div><div class='info-val'>"+modelo+"</div></div>"
+    +"<div class='info-item'><div class='info-key'>Formato</div><div class='info-val'>"+(s.formato||"-")+"</div></div>"
+    +"<div class='info-item'><div class='info-key'>Fecha entrega</div><div class='info-val'>"+fecha+"</div></div>"
+    +"<div class='info-item'><div class='info-key'>Tipo</div><div class='info-val'>"+(s.es_reentrega?"Re-entrega #"+s.reentrega_numero:"Primera entrega")+"</div></div>";
+  document.getElementById("ma-concepto").textContent=s.concepto||"Sin brief.";
+  var imgs=s.imagenes_ref||[];
+  var iw=document.getElementById("ma-imgs-wrap");var ie=document.getElementById("ma-imgs");
+  if(imgs.length){iw.style.display="block";ie.innerHTML=imgs.map(function(src){return "<div class='img-ref-item'><img src='"+src+"'></div>";}).join("");}
+  else{iw.style.display="none";}
+  var entrega=s.entregas&&s.entregas[0];
+  var dw=document.getElementById("ma-drive-wrap");var dd=document.getElementById("ma-drive");
+  if(entrega&&entrega.drive_url){dw.style.display="block";dd.textContent=entrega.drive_url;dd.onclick=function(){window.open(entrega.drive_url,"_blank");};}
+  else{dw.style.display="none";}
+  // Populate editoras
+  var edSel=document.getElementById("ma-editora-sel");
+  edSel.innerHTML="<option value=''>Sin editora asignada</option>"+EDITORAS_ASIG.map(function(u){return "<option value='"+u.id+"'>"+u.nombre+"</option>";}).join("");
+  maOpcion(null);
+  openModal("modal-analisis");
+}
+
+function maOpcion(tipo){
+  maOpcionActual=tipo;
+  var formEd=document.getElementById("ma-form-edicion");
+  var formDesap=document.getElementById("ma-form-desaprobado");
+  var formDesc=document.getElementById("ma-form-descartar");
+  var btnWrap=document.getElementById("ma-btn-confirmar-wrap");
+  formEd.style.display="none";formDesap.style.display="none";formDesc.style.display="none";
+  if(tipo){
+    btnWrap.style.display="flex";
+    if(tipo==="aprobado_con_edicion")formEd.style.display="block";
+    if(tipo==="desaprobado_rehacer")formDesap.style.display="block";
+    if(tipo==="descartado")formDesc.style.display="block";
+    var btn=document.getElementById("ma-btn-confirmar");
+    if(tipo==="aprobado_sin_edicion")btn.textContent="\u2713 Confirmar aprobaci\u00f3n";
+    if(tipo==="aprobado_con_edicion")btn.textContent="\u2713 Aprobar y asignar editora";
+    if(tipo==="desaprobado_rehacer")btn.textContent="Desaprobar y notificar";
+    if(tipo==="descartado")btn.textContent="Descartar material";
+  }else{
+    btnWrap.style.display="none";
+  }
+}
+
+async function confirmarAnalisis(){
+  var solId=document.getElementById("ma-sol-id").value;
+  var s=SOLICITUDES.find(function(x){return x.id===solId;});if(!s)return;
+  var btn=document.getElementById("ma-btn-confirmar");btn.disabled=true;btn.textContent="Guardando...";
+  
+  try{
+    if(maOpcionActual==="aprobado_sin_edicion"){
+      // Aprobar sin edicion: sub_estado = aprobado_listo
+      await sbPatch("solicitudes",solId,{sub_estado:"aprobado_listo",estado:"listo"});
+      // Notificar a la modelo
+      var modeloUser=await sbFetch("usuarios?modelo_id=eq."+s.modelo_id+"&rol=eq.modelo&select=id");
+      if(modeloUser.length){
+        await sbPost("notificaciones",{para_usuario_id:modeloUser[0].id,tipo:"aprobado",titulo:"\u2713 Contenido aprobado",mensaje:"Aprobado"});
+      }
+      closeModal("modal-analisis");showToast("\u2713 Aprobado \u2014 listo para subir a b\u00f3veda");
+    }
+    else if(maOpcionActual==="aprobado_con_edicion"){
+      var editoraId=document.getElementById("ma-editora-sel").value;
+      var indEditora=document.getElementById("ma-ind-editora").value.trim();
+      // Aprobar pero va a edicion
+      await sbPatch("solicitudes",solId,{sub_estado:"aprobado_edicion",estado:"en_edicion",indicaciones_editora:indEditora||null});
+      // Crear registro edicion
+      await sbPost("ediciones",{solicitud_id:solId,editora_id:editoraId||null,indicaciones_cm:indEditora||null,estado:"pendiente"});
+      // Notificar modelo que fue aprobado
+      var modeloUser2=await sbFetch("usuarios?modelo_id=eq."+s.modelo_id+"&rol=eq.modelo&select=id");
+      if(modeloUser2.length){
+        await sbPost("notificaciones",{para_usuario_id:modeloUser2[0].id,tipo:"aprobado",titulo:"\u2713 Contenido aprobado",mensaje:"Tu contenido fue aprobado y pasa a edici\u00f3n."});
+      }
+      // Notificar editora
+      if(editoraId){
+        await sbPost("notificaciones",{para_usuario_id:editoraId,tipo:"edicion",titulo:"Nuevo material para editar",mensaje:"Hay nuevo material de "+(s.modelos?s.modelos.nombre:"una modelo")+" listo para editar."});
+      }
+      closeModal("modal-analisis");showToast("\u2713 Aprobado \u2014 asignado a editora");
+    }
+    else if(maOpcionActual==="desaprobado_rehacer"){
+      var motivo=document.getElementById("ma-motivo").value.trim();
+      var indicaciones=document.getElementById("ma-indicaciones").value.trim();
+      if(!motivo){showToast("Ingres\u00e1 el motivo del rechazo");btn.disabled=false;btn.textContent="Desaprobar y notificar";return;}
+      var fechaDesap=new Date().toISOString();
+      await sbPatch("solicitudes",solId,{
+        sub_estado:"desaprobado_rehacer",estado:"pendiente",
+        motivo_desaprobacion:motivo,
+        indicaciones_rehacer:indicaciones||null,
+        fecha_desaprobacion:fechaDesap
+      });
+      // Notificar modelo
+      var modeloUser3=await sbFetch("usuarios?modelo_id=eq."+s.modelo_id+"&rol=eq.modelo&select=id");
+      if(modeloUser3.length){
+        await sbPost("notificaciones",{para_usuario_id:modeloUser3[0].id,tipo:"desaprobado",titulo:"\u26a0 Contenido desaprobado \u2014 rehacer",mensaje:"Motivo: "+motivo+(indicaciones?" / "+indicaciones:""),solicitud_id:solId});
+      }
+      closeModal("modal-analisis");showToast("Desaprobado \u2014 la modelo fue notificada");
+    }
+    else if(maOpcionActual==="descartado"){
+      var motivoDesc=document.getElementById("ma-motivo-desc").value.trim();
+      await sbPatch("solicitudes",solId,{sub_estado:"descartado",estado:"publicado",motivo_desaprobacion:motivoDesc||null});
+      closeModal("modal-analisis");showToast("Material descartado");
+    }
+    await loadData();
+  }catch(e){showToast("Error al guardar.");}
+  finally{btn.disabled=false;}
+}
+
+// \u2500\u2500 SUBIR A BOVEDA \u2500\u2500
+function openModalSubirBoveda(id){
+  var s=SOLICITUDES.find(function(x){return x.id===id;});if(!s)return;
+  document.getElementById("mbs-sol-id").value=id;
+  var modelo=s.modelos?s.modelos.nombre:"-";
+  document.getElementById("mbs-info").innerHTML=
+    "<div class='info-item'><div class='info-key'>Modelo</div><div class='info-val'>"+modelo+"</div></div>"
+    +"<div class='info-item'><div class='info-key'>Contenido</div><div class='info-val'>"+(s.categoria||"Contenido")+"</div></div>";
+  var entrega=s.entregas&&s.entregas[0];var edicion=s.ediciones&&s.ediciones[0];
+  var driveUrl=(edicion&&edicion.drive_url_editado)||(entrega&&entrega.drive_url)||"";
+  var dd=document.getElementById("mbs-drive");
+  dd.textContent=driveUrl||"Sin link disponible";
+  dd.dataset.url=driveUrl;
+  openModal("modal-boveda-subir");
+}
+
+async function confirmarSubidaBoveda(){
+  var solId=document.getElementById("mbs-sol-id").value;
+  var s=SOLICITUDES.find(function(x){return x.id===solId;});if(!s)return;
+  var btn=document.getElementById("mbs-btn");btn.disabled=true;btn.textContent="Guardando...";
+  try{
+    var now=new Date().toISOString();
+    await sbPatch("solicitudes",solId,{sub_estado:"en_boveda",estado:"publicado",subido_boveda_at:now});
+    // Crear registro en boveda
+    var entrega=s.entregas&&s.entregas[0];
+    await sbPost("boveda",{solicitud_id:solId,modelo_id:s.modelo_id,categoria:s.categoria,
+      drive_url:(entrega&&entrega.drive_url)||"",fecha_subida:todayStr(),estado:"disponible"});
+    closeModal("modal-boveda-subir");await loadData();showToast("\u2713 Subido a la b\u00f3veda de Infloww");
+  }catch(e){showToast("Error al guardar.");}
+  finally{btn.disabled=false;btn.textContent="\u2713 Confirmar \u2014 subido a Infloww";}
+}
+
+// \u2500\u2500 PLANTILLAS \u2500\u2500
+function renderGuia(){
+  var loading=document.getElementById("guia-loading");
+  var gc=document.getElementById("guia-content");
+  if(!loading||!gc)return;
+  if(!GUIA.length){
+    loading.textContent="Sin guía configurada. El admin puede agregarla desde el panel de admin.";
+    loading.style.display="block";
+    gc.style.display="none";
+    return;
+  }
+  loading.style.display="none";
+  gc.style.display="block";
+  var colors=[
+    {bg:"var(--gold-bg)",color:"var(--amber)",num:"var(--amber)"},
+    {bg:"var(--blue-bg)",color:"var(--blue)",num:"var(--blue)"},
+    {bg:"var(--amber-bg)",color:"var(--amber)",num:"var(--amber)"},
+    {bg:"var(--green-bg)",color:"var(--green)",num:"var(--green)"},
+    {bg:"var(--blue-bg)",color:"var(--blue)",num:"var(--blue)"},
+    {bg:"var(--gold-bg)",color:"var(--amber)",num:"var(--amber)"},
+    {bg:"var(--purple-bg)",color:"var(--purple)",num:"var(--purple)"}
+  ];
+  gc.innerHTML="<div style='background:var(--gold-bg);border:1px solid rgba(201,169,110,0.25);border-radius:10px;padding:12px 16px;font-size:12px;color:var(--amber);margin-bottom:20px;line-height:1.7'>"
+    +"&#9432; Como Content Manager, tu función es solicitar contenido a las modelos, analizarlo, aprobarlo o desaprobarlo, coordinarlo con la editora si necesita edición, y finalmente subirlo a la bóveda de Infloww."
+    +"</div>"
+    +GUIA.map(function(paso,i){
+      var c=colors[i%colors.length];
+      var num=paso.orden||i+1;
+      // Convert line breaks to <br>
+      var texto=paso.contenido.replace(/\n/g,"<br>");
+      return "<div class='card' style='margin-bottom:12px'>"
+        +"<div class='card-hd' style='background:"+c.bg+"'>"
+        +"<div style='width:24px;height:24px;border-radius:50%;background:"+c.num+";color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0'>"+num+"</div>"
+        +"<div class='card-title' style='color:"+c.color+";margin-left:8px'>"+paso.titulo+"</div>"
+        +"</div>"
+        +"<div style='padding:14px 16px;font-size:12px;color:var(--text2);line-height:1.8'>"+texto+"</div>"
+        +"</div>";
+    }).join("")
+    +"<div style='background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;margin-top:4px'>"
+    +"<div style='font-size:10px;font-weight:700;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px'>Resumen del flujo</div>"
+    +"<div style='display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:11px;margin-bottom:8px'>"
+    +"<span style='background:var(--blue-bg);color:var(--blue);padding:3px 9px;border-radius:20px;font-weight:600'>Solicitud</span>"
+    +"<span style='color:var(--text3)'>&#8594;</span>"
+    +"<span style='background:var(--amber-bg);color:var(--amber);padding:3px 9px;border-radius:20px;font-weight:600'>Modelo entrega</span>"
+    +"<span style='color:var(--text3)'>&#8594;</span>"
+    +"<span style='background:var(--amber-bg);color:var(--amber);padding:3px 9px;border-radius:20px;font-weight:600'>CM analiza</span>"
+    +"<span style='color:var(--text3)'>&#8594;</span>"
+    +"<span style='background:var(--green-bg);color:var(--green);padding:3px 9px;border-radius:20px;font-weight:600'>Aprobado</span>"
+    +"<span style='color:var(--text3)'>&#8594;</span>"
+    +"<span style='background:var(--gold-light);color:#7a5520;padding:3px 9px;border-radius:20px;font-weight:600'>Bóveda Infloww</span>"
+    +"</div>"
+    +"<div style='display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:11px'>"
+    +"<span style='background:var(--green-bg);color:var(--green);padding:3px 9px;border-radius:20px;font-weight:600'>Con edición</span>"
+    +"<span style='color:var(--text3)'>&#8594;</span>"
+    +"<span style='background:var(--blue-bg);color:var(--blue);padding:3px 9px;border-radius:20px;font-weight:600'>Editora edita</span>"
+    +"<span style='color:var(--text3)'>&#8594;</span>"
+    +"<span style='background:var(--amber-bg);color:var(--amber);padding:3px 9px;border-radius:20px;font-weight:600'>CM revisa</span>"
+    +"<span style='color:var(--text3)'>&#8594;</span>"
+    +"<span style='background:var(--gold-light);color:#7a5520;padding:3px 9px;border-radius:20px;font-weight:600'>Bóveda Infloww</span>"
+    +"</div>"
+    +"</div>";
+}
+
+function renderPlantillas(){
+  var el=document.getElementById("list-plantillas");if(!el)return;
+  if(!PLANTILLAS.length){el.innerHTML="<div class='empty-state'>No ten\u00e9s plantillas todav\u00eda. Cre\u00e1 tu primera plantilla arriba.</div>";return;}
+  el.innerHTML="<div style='display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;padding:14px'>"
+    +PLANTILLAS.map(function(p){
+      return "<div class='card' style='padding:14px;cursor:pointer' data-edit-plantilla='"+p.id+"'>"
+        +"<div style='display:flex;align-items:center;justify-content:space-between;margin-bottom:8px'>"
+        +"<div style='font-size:12px;font-weight:700;color:var(--text)'>"+p.nombre+"</div>"
+        +"<span class='status-pill sp-pendiente' style='font-size:8px'>"+p.categoria+"</span></div>"
+        +"<div style='font-size:10px;color:var(--text3);margin-bottom:6px'>"+p.formato+" \u00b7 "+p.dias_entrega+" d\u00edas \u00b7 "+(p.requiere_edicion?"Con edici\u00f3n":"Sin edici\u00f3n")+"</div>"
+        +(p.concepto?"<div style='font-size:11px;color:var(--text2);line-height:1.4'>"+p.concepto.substring(0,80)+(p.concepto.length>80?"...":"")+"</div>":"")
+        +"</div>";
+    }).join("")
+    +"</div>";
+}
+
+function openModalPlantilla(id){
+  var p=id?PLANTILLAS.find(function(x){return x.id===id;}):null;
+  document.getElementById("mp-title").textContent=p?"Editar plantilla":"Nueva plantilla";
+  document.getElementById("mp-id").value=p?p.id:"";
+  document.getElementById("mp-nombre").value=p?p.nombre||"":"";
+  document.getElementById("mp-categoria").value=p?p.categoria:"Contenido del Trasero";
+  document.getElementById("mp-formato").value=p?p.formato:"Foto";
+  document.getElementById("mp-dias").value=p?p.dias_entrega||7:7;
+  document.getElementById("mp-concepto").value=p?p.concepto||"":"";
+  document.getElementById("mp-indicaciones").value=p?p.indicaciones||"":"";
+  document.getElementById("mp-edicion").value=p?(p.requiere_edicion?"true":"false"):"false";
+  document.getElementById("mp-btn-del").style.display=p?"inline-flex":"none";
+  openModal("modal-plantilla");
+}
+
+async function guardarPlantilla(){
+  var id=document.getElementById("mp-id").value;
+  var nombre=document.getElementById("mp-nombre").value.trim();
+  if(!nombre){showToast("El nombre es requerido");return;}
+  var data={
+    cm_id:SESSION.id,nombre:nombre,
+    categoria:document.getElementById("mp-categoria").value,
+    formato:document.getElementById("mp-formato").value,
+    dias_entrega:parseInt(document.getElementById("mp-dias").value)||7,
+    concepto:document.getElementById("mp-concepto").value.trim()||null,
+    indicaciones:document.getElementById("mp-indicaciones").value.trim()||null,
+    requiere_edicion:document.getElementById("mp-edicion").value==="true"
+  };
+  var btn=document.getElementById("mp-btn-save");btn.disabled=true;btn.textContent="Guardando...";
+  try{
+    if(id){await sbPatch("plantillas_solicitud",id,data);}
+    else{await sbPost("plantillas_solicitud",data);}
+    closeModal("modal-plantilla");
+    PLANTILLAS=await sbFetch("plantillas_solicitud?cm_id=eq."+SESSION.id+"&select=*&order=created_at.desc");
+  GUIA=await sbFetch("guia_panel?select=*&order=orden");
+    renderPlantillas();showToast("\u2713 Plantilla guardada");
+  }catch(e){showToast("Error al guardar.");}
+  finally{btn.disabled=false;btn.textContent="Guardar plantilla";}
+}
+
+async function eliminarPlantilla(){
+  var id=document.getElementById("mp-id").value;
+  if(!confirm("Eliminar esta plantilla?"))return;
+  await sbDelete("plantillas_solicitud",id);
+  closeModal("modal-plantilla");
+  PLANTILLAS=await sbFetch("plantillas_solicitud?cm_id=eq."+SESSION.id+"&select=*&order=created_at.desc");
+  GUIA=await sbFetch("guia_panel?select=*&order=orden");
+  renderPlantillas();showToast("Plantilla eliminada");
+}
+
+async function sbDelete(t,id){await fetch(SB+"/rest/v1/"+t+"?id=eq."+id,{method:"DELETE",headers:H});}
+
+// Cargar plantilla en nueva solicitud
+function cargarPlantilla(id){
+  var p=PLANTILLAS.find(function(x){return x.id===id;});if(!p)return;
+  document.getElementById("sol-categoria").value=p.categoria;
+  document.getElementById("sol-formato").value=p.formato;
+  document.getElementById("sol-concepto").value=p.concepto||"";
+  document.getElementById("sol-edicion").value=p.requiere_edicion?"true":"false";
+  // Set fecha based on dias_entrega
+  var d=new Date();d.setDate(d.getDate()+p.dias_entrega);
+  document.getElementById("sol-fecha").value=d.toISOString().split("T")[0];
+  showToast("\u2713 Plantilla cargada \u2014 edit\u00e1 si hace falta");
+}
+
+// \u2500\u2500 EVENT DELEGATION updates \u2500\u2500
+// ── FILTROS FLUJO OF ──
+var FLOW_VIEWS=["analisis","reentregas","enedicion","desap","descartados","aprobados"];
+var mrvOpcionActual=null;
+
+function openModalRevisar(solId){
+  var s=SOLICITUDES.find(function(x){return x.id===solId;});if(!s)return;
+  var edicion=s.ediciones&&s.ediciones[0];
+  document.getElementById("mrv-sol-id").value=solId;
+  document.getElementById("mrv-edicion-id").value=edicion?edicion.id||"":"";
+  document.getElementById("mr-title").textContent="Revisar edici\u00f3n \u2014 "+(s.categoria||"Contenido");
+  var modelo=s.modelos?s.modelos.nombre:"-";
+  var fecha=s.fecha_entrega?new Date(s.fecha_entrega+"T12:00").toLocaleDateString("es-AR"):"";
+  document.getElementById("mrv-info").innerHTML=
+    "<div class='info-item'><div class='info-key'>Modelo</div><div class='info-val'>"+modelo+"</div></div>"
+    +"<div class='info-item'><div class='info-key'>Formato</div><div class='info-val'>"+(s.formato||"-")+"</div></div>"
+    +"<div class='info-item'><div class='info-key'>Fecha entrega</div><div class='info-val'>"+fecha+"</div></div>"
+    +"<div class='info-item'><div class='info-key'>Editora</div><div class='info-val'>"+(edicion&&edicion.editora_id?"Asignada":"Sin asignar")+"</div></div>";
+  document.getElementById("mrv-indicaciones").textContent=s.indicaciones_editora||"Sin indicaciones extra.";
+  var driveUrl=edicion&&edicion.drive_url_editado;
+  var dw=document.getElementById("mrv-drive");
+  dw.textContent=driveUrl||"Sin link todav\u00eda";
+  if(driveUrl)dw.onclick=function(){window.open(driveUrl,"_blank");};
+  var nw=document.getElementById("mrv-notas-wrap");
+  var ne=document.getElementById("mrv-notas-editora");
+  if(edicion&&edicion.notas){nw.style.display="block";ne.textContent=edicion.notas;}
+  else{nw.style.display="none";}
+  mrvOpcion(null);
+  openModal("modal-revisar");
+}
+
+function mrvOpcion(tipo){
+  mrvOpcionActual=tipo;
+  var formDesap=document.getElementById("mrv-form-desap");
+  var btnWrap=document.getElementById("mrv-btn-wrap");
+  formDesap.style.display="none";
+  if(tipo){
+    btnWrap.style.display="flex";
+    if(tipo==="desaprobado")formDesap.style.display="block";
+    var btn=document.getElementById("mrv-btn-confirmar");
+    btn.textContent=tipo==="aprobado"?"\u2713 Aprobar edici\u00f3n":"Desaprobar y notificar";
+  }else{
+    btnWrap.style.display="none";
+  }
+}
+
+async function confirmarRevision(){
+  var solId=document.getElementById("mrv-sol-id").value;
+  var edicionId=document.getElementById("mrv-edicion-id").value;
+  var s=SOLICITUDES.find(function(x){return x.id===solId;});if(!s)return;
+  var btn=document.getElementById("mrv-btn-confirmar");btn.disabled=true;btn.textContent="Guardando...";
+  try{
+    if(mrvOpcionActual==="aprobado"){
+      // Aprobar la edicion -> solicitud pasa a aprobado_listo
+      await sbPatch("solicitudes",solId,{sub_estado:"aprobado_listo",estado:"listo"});
+      if(edicionId)await sbPatch("ediciones",edicionId,{aprobada:true,estado:"aprobado"});
+      // Notificar editora
+      var edicion=s.ediciones&&s.ediciones[0];
+      if(edicion&&edicion.editora_id){
+        await sbPost("notificaciones",{para_usuario_id:edicion.editora_id,tipo:"aprobado",titulo:"Edicion aprobada",mensaje:"Tu edicion de "+(s.categoria||"Contenido")+" fue aprobada."});
+      }
+      // Notificar modelo
+      var modeloUser=await sbFetch("usuarios?modelo_id=eq."+s.modelo_id+"&rol=eq.modelo&select=id");
+      if(modeloUser.length){
+        await sbPost("notificaciones",{para_usuario_id:modeloUser[0].id,tipo:"aprobado",titulo:"Contenido aprobado",mensaje:"Tu contenido "+(s.categoria||"")+" fue aprobado y esta listo."});
+      }
+      closeModal("modal-revisar");await loadData();showToast("Edicion aprobada - pasa a contenido aprobado");
+    }
+    else if(mrvOpcionActual==="desaprobado"){
+      var motivo=document.getElementById("mrv-motivo").value.trim();
+      var indicaciones=document.getElementById("mrv-indicaciones-new").value.trim();
+      if(!motivo){showToast("Ingresa el motivo");btn.disabled=false;btn.textContent="Desaprobar y notificar";return;}
+      // Desaprobar edicion -> vuelve a la editora con nuevo plazo
+      await sbPatch("solicitudes",solId,{sub_estado:"aprobado_edicion",estado:"en_edicion"});
+      if(edicionId){
+        await sbPatch("ediciones",edicionId,{
+          aprobada:false,estado:"pendiente",
+          motivo_desaprobacion:motivo,
+          indicaciones_cm:indicaciones||null,
+          fecha_desaprobacion:new Date().toISOString()
+        });
+      }
+      // Notificar editora
+      var edicion2=s.ediciones&&s.ediciones[0];
+      if(edicion2&&edicion2.editora_id){
+        await sbPost("notificaciones",{para_usuario_id:edicion2.editora_id,tipo:"desaprobado",titulo:"Edicion desaprobada - corregir",mensaje:"Motivo: "+motivo+(indicaciones?" / "+indicaciones:"")});
+      }
+      closeModal("modal-revisar");await loadData();showToast("Desaprobado - la editora fue notificada");
+    }
+  }catch(e){showToast("Error al guardar.");}
+  finally{btn.disabled=false;}
+}
+
+function populateFlowFilters(){
+  var nichos=[...new Set(MIS_MODELOS.map(function(m){return m.niche;}).filter(Boolean))].sort();
+  var nichoOpts="<option value='all'>Todos los nichos</option>"+nichos.map(function(n){return "<option value='"+n+"'>"+n+"</option>";}).join("");
+  FLOW_VIEWS.forEach(function(v){
+    var ne=document.getElementById("filt-nicho-"+v);
+    if(ne)ne.innerHTML=nichoOpts;
+    // set current month default
+    var me=document.getElementById("filt-mes-"+v);
+    if(me)me.value=String(new Date().getMonth());
+  });
+}
+
+function onFlowNichoChange(v){
+  var nicho=(document.getElementById("filt-nicho-"+v)||{}).value||"all";
+  var models=nicho==="all"?MIS_MODELOS:MIS_MODELOS.filter(function(m){return m.niche===nicho;});
+  var el=document.getElementById("filt-modelo-"+v);
+  if(el)el.innerHTML="<option value='all'>Todas las modelos</option>"+models.map(function(m){return "<option value='"+m.id+"'>"+m.nombre+"</option>";}).join("");
+  renderFlow(v);
+}
+
+function getFlowFilters(v){
+  return {
+    nicho:(document.getElementById("filt-nicho-"+v)||{}).value||"all",
+    modelo:(document.getElementById("filt-modelo-"+v)||{}).value||"all",
+    mes:(document.getElementById("filt-mes-"+v)||{}).value||"all",
+    sem:(document.getElementById("filt-sem-"+v)||{}).value||"all"
+  };
+}
+
+function matchFlowPeriodo(fecha, mes, sem){
+  if(mes==="all"&&sem==="all")return true;
+  if(!fecha)return false;
+  var d=new Date(fecha+"T12:00");
+  if(mes!=="all"&&d.getMonth()!==parseInt(mes))return false;
+  if(sem!=="all"){
+    var day=d.getDate();
+    var semN=parseInt(sem);
+    if(semN===1&&day>7)return false;
+    if(semN===2&&(day<8||day>14))return false;
+    if(semN===3&&(day<15||day>21))return false;
+    if(semN===4&&day<22)return false;
+  }
+  return true;
+}
+
+function filterFlowSols(v, estados, subEstados){
+  var f=getFlowFilters(v);
+  var items=SOLICITUDES.filter(function(s){
+    if(!estados.includes(s.estado))return false;
+    if(subEstados!==null){
+      if(subEstados===false&&s.sub_estado)return false;
+      if(subEstados!==false&&subEstados!==null&&!subEstados.includes(s.sub_estado))return false;
+    }
+    if(f.nicho!=="all"){
+      if(!s.modelos||s.modelos.niche!==f.nicho)return false;
+    }
+    if(f.modelo!=="all"&&s.modelo_id!==f.modelo)return false;
+    if(!matchFlowPeriodo(s.fecha_entrega,f.mes,f.sem))return false;
+    return true;
+  });
+  return items;
+}
+
+function renderFlow(v){
+  if(v==="analisis")renderAnalisis();
+  else if(v==="reentregas")renderReentregas();
+  else if(v==="enedicion")renderEnEdicion();
+  else if(v==="desap")renderDesaprobados();
+  else if(v==="descartados")renderDescartados();
+  else if(v==="aprobados")renderAprobados();
+}
+
+var VMAP={dashboard:"Dashboard",mapa:"Mapa / Historial",solicitar:"Nueva solicitud",analisis:"En an\u00e1lisis",reentregas:"Re-entregas",desaprobados:"Desaprobados",descartados:"Descartados",aprobados:"Contenido aprobado",seguimiento:"Seguimiento",demorados:"Demorados",boveda:"B\u00f3veda","cal-entregas":"Calendario de entregas","cal-reuniones":"Reuniones",config:"Plantillas de solicitud",guia:"Guía del panel"};
 function nav(id,el){
   document.querySelectorAll(".view").forEach(function(v){v.classList.remove("active");});
   var v=document.getElementById("view-"+id);if(v)v.classList.add("active");
@@ -961,7 +2195,7 @@ function backToAdmin(){
 }
 
 
-// ── NOTIFICACIONES ──
+// \u2500\u2500 NOTIFICACIONES \u2500\u2500
 var NOTIFICACIONES=[];
 var notifOpen=false;
 
