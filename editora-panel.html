@@ -171,7 +171,7 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
       <div class="nav-item" onclick="nav('of-editar',this)"><span class="nav-ico">&#9988;</span> Para editar<span class="nav-badge nb-amber" id="badge-of-editar">0</span></div>
       <div class="nav-item" onclick="nav('of-correccion',this)"><span class="nav-ico">&#8635;</span> Correcciones<span class="nav-badge nb-red" id="badge-of-correccion">0</span></div>
       <div class="nav-item" onclick="nav('of-demorados',this)"><span class="nav-ico">&#9888;</span> Demorados<span class="nav-badge nb-red" id="badge-of-dem">0</span></div>
-      <div class="nav-item" onclick="nav('of-editado',this)"><span class="nav-ico">&#10003;</span> Ya editado</div>
+      <div class="nav-item" onclick="nav('of-editado',this)"><span class="nav-ico">&#10003;</span> Ya editado<span class="nav-badge" id="badge-of-enviado" style="background:rgba(192,120,32,0.25);color:#d4924a">0</span></div>
     </div>
     <div class="nav-group">
       <div class="nav-label">Redes Sociales</div>
@@ -1326,9 +1326,11 @@ function updateEditoraBadges(){
   var editar=EDICIONES.filter(function(e){return e.estado==="pendiente"&&e.aprobada!==false;}).length;
   var corr=EDICIONES.filter(function(e){return e.aprobada===false;}).length;
   var dem=EDICIONES.filter(function(e){return e.estado==="pendiente"&&e.solicitudes&&e.solicitudes.fecha_entrega&&e.solicitudes.fecha_entrega<hoy;}).length;
+  var enviados=EDICIONES.filter(function(e){return e.estado==="editado"&&e.aprobada===null;}).length;
   var b1=document.getElementById("badge-of-editar");if(b1)b1.textContent=editar;
   var b2=document.getElementById("badge-of-correccion");if(b2)b2.textContent=corr;
   var b3=document.getElementById("badge-of-dem");if(b3)b3.textContent=dem;
+  var b4=document.getElementById("badge-of-enviado");if(b4)b4.textContent=enviados;
 }
 
 // ── EVENT DELEGATION ──
