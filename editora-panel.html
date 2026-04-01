@@ -163,14 +163,26 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
   </div>
   <div class="nav-scroll">
     <div class="nav-group">
-      <div class="nav-label">Mi trabajo</div>
+      <div class="nav-label">General</div>
       <div class="nav-item active" onclick="nav('dashboard',this)"><span class="nav-ico">&#8862;</span> Dashboard</div>
-      <div class="nav-item" onclick="nav('para-editar',this)"><span class="nav-ico">&#9988;</span> Para editar<span class="nav-badge nb-amber" id="badge-editar">0</span></div>
-      <div class="nav-item" onclick="nav('demorados',this)"><span class="nav-ico">&#9888;</span> Demorados<span class="nav-badge nb-red" id="badge-demorados">0</span></div>
-      <div class="nav-item" onclick="nav('editado',this)"><span class="nav-ico">&#10003;</span> Ya editado<span class="nav-badge nb-green" id="badge-editado">0</span></div>
-      <div class="nav-item" onclick="nav('calendario',this)"><span class="nav-ico">&#128197;</span> Calendario</div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-label">OnlyFans</div>
+      <div class="nav-item" onclick="nav('of-editar',this)"><span class="nav-ico">&#9988;</span> Para editar<span class="nav-badge nb-amber" id="badge-of-editar">0</span></div>
+      <div class="nav-item" onclick="nav('of-correccion',this)"><span class="nav-ico">&#8635;</span> Correcciones<span class="nav-badge nb-red" id="badge-of-correccion">0</span></div>
+      <div class="nav-item" onclick="nav('of-demorados',this)"><span class="nav-ico">&#9888;</span> Demorados<span class="nav-badge nb-red" id="badge-of-dem">0</span></div>
+      <div class="nav-item" onclick="nav('of-editado',this)"><span class="nav-ico">&#10003;</span> Ya editado</div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-label">Redes Sociales</div>
+      <div class="nav-item" style="opacity:0.35;pointer-events:none"><span class="nav-ico">&#8230;</span> Pr&oacute;ximamente</div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-label">Config</div>
+      <div class="nav-item" onclick="nav('guia',this)"><span class="nav-ico">&#128218;</span> Gu&iacute;a del panel</div>
     </div>
   </div>
+    </div>
   <div class="sidebar-footer">
     <div class="user-avatar" id="sb-avatar">ED</div>
     <div><div class="user-name" id="sb-nombre">Editora</div><div class="user-role">Editora</div></div>
@@ -200,107 +212,101 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
 
     <!-- DASHBOARD -->
     <div class="view active" id="view-dashboard">
-      <div class="sec-hd"><div class="sec-hd-title">Mi actividad de edici&oacute;n</div><div class="sec-hd-line"></div></div>
-      <div class="stats-row">
-        <div class="stat-card sc-amber"><div class="stat-label">Para editar</div><div class="stat-value" id="stat-pending">&#8212;</div><div class="stat-sub">en cola</div></div>
-        <div class="stat-card sc-red"><div class="stat-label">Demorados</div><div class="stat-value" id="stat-late">&#8212;</div><div class="stat-sub">pasaron la fecha</div></div>
-        <div class="stat-card sc-green"><div class="stat-label">Editados</div><div class="stat-value" id="stat-done">&#8212;</div><div class="stat-sub">marcados como listos</div></div>
-        <div class="stat-card sc-gold"><div class="stat-label">Cumplimiento</div><div class="stat-value" id="stat-pct">&#8212;</div><div class="stat-sub"><div class="prog-wrap"><div class="prog-bar" id="stat-prog-bar" style="width:0%;background:var(--gold)"></div></div></div></div>
+      <div class="sec-hd"><div class="sec-hd-title">Vista general</div><div class="sec-hd-line"></div></div>
+
+      <!-- Stats generales -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px" id="dash-stats-grid"></div>
+
+      <!-- Seccion OF -->
+      <div class="sec-hd" style="margin-top:0">
+        <div style="font-size:10px;font-weight:700;color:var(--amber);letter-spacing:1px;text-transform:uppercase">&#9733; OnlyFans</div>
+        <div class="sec-hd-line"></div>
       </div>
-      <div class="sec-hd"><div class="sec-hd-title">Por modelo</div><div class="sec-hd-line"></div></div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:8px" id="dash-of-stats"></div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-hd"><div class="card-title">Actividad reciente &mdash; OF</div></div>
+        <div id="dash-recent-of"><div class="empty-state">Sin actividad reciente</div></div>
+      </div>
+
+      <!-- Seccion Redes -->
+      <div class="sec-hd">
+        <div style="font-size:10px;font-weight:700;color:var(--blue);letter-spacing:1px;text-transform:uppercase">&#9670; Redes Sociales</div>
+        <div class="sec-hd-line"></div>
+      </div>
       <div class="card">
-        <div class="model-table-row" style="background:var(--surface);border-bottom:1px solid var(--border)">
-          <div style="font-size:9px;font-weight:700;color:var(--text3);letter-spacing:1px;text-transform:uppercase">Modelo</div>
-          <div style="font-size:9px;color:var(--text3);text-align:center">Pend.</div>
-          <div style="font-size:9px;color:var(--text3);text-align:center">Demor.</div>
-          <div style="font-size:9px;color:var(--text3);text-align:center">Listo</div>
-          <div style="font-size:9px;color:var(--text3)">Progreso</div>
+        <div style="padding:24px;text-align:center">
+          <div style="font-size:24px;margin-bottom:8px">&#128274;</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:4px">Próximamente</div>
+          <div style="font-size:11px;color:var(--text3)">El flujo de redes sociales se agregará en una próxima actualización</div>
         </div>
-        <div id="dash-por-modelo"><div class="empty-state">Cargando...</div></div>
       </div>
     </div>
 
-    <!-- PARA EDITAR -->
-    <div class="view" id="view-para-editar">
+    <!-- OF: PARA EDITAR -->
+    <div class="view" id="view-of-editar">
       <div class="filter-bar">
-        <span class="filter-label">Nicho:</span>
-        <select class="filter-select" id="filt-nicho-editar" onchange="onNichoChange('editar')"><option value="all">Todos los nichos</option></select>
         <span class="filter-label">Modelo:</span>
-        <select class="filter-select" id="filt-modelo-editar" onchange="renderParaEditar()"><option value="all">Todas las modelos</option></select>
-        <span class="filter-label">Tipo:</span>
-        <select class="filter-select" id="filt-tipo-editar" onchange="renderParaEditar()">
-          <option value="all">OF + Redes</option><option value="of">OnlyFans</option><option value="redes">Redes</option>
+        <select class="filter-select" id="filt-modelo-of-editar" onchange="renderOFEditar()"><option value="all">Todas</option></select>
+        <span class="filter-label">Mes:</span>
+        <select class="filter-select" id="filt-mes-of-editar" onchange="renderOFEditar()">
+          <option value="all">Todos</option>
+          <option value="0">Ene</option><option value="1">Feb</option><option value="2">Mar</option><option value="3">Abr</option>
+          <option value="4">May</option><option value="5">Jun</option><option value="6">Jul</option><option value="7">Ago</option>
+          <option value="8">Sep</option><option value="9">Oct</option><option value="10">Nov</option><option value="11">Dic</option>
         </select>
       </div>
       <div class="card">
-        <div class="card-hd"><div class="card-title">Material para editar</div><span id="count-editar" style="margin-left:auto;font-size:10px;color:var(--text3)"></span></div>
-        <div id="list-para-editar"><div class="empty-state">Cargando...</div></div>
+        <div class="card-hd"><div class="card-title">&#9988; Material asignado para editar</div><span id="count-of-editar" style="margin-left:auto;font-size:10px;color:var(--text3)"></span></div>
+        <div id="list-of-editar"><div class="empty-state">Sin material para editar</div></div>
       </div>
     </div>
 
-    <!-- DEMORADOS -->
-    <div class="view" id="view-demorados">
+    <!-- OF: CORRECCIONES -->
+    <div class="view" id="view-of-correccion">
+      <div class="card">
+        <div class="card-hd"><div class="card-title">&#8635; Correcciones &mdash; el CM desaprobó tu edición</div><span id="count-of-correccion" style="margin-left:auto;font-size:10px;color:var(--red)"></span></div>
+        <div id="list-of-correccion"><div class="empty-state">Sin correcciones pendientes ✓</div></div>
+      </div>
+    </div>
+
+    <!-- OF: DEMORADOS -->
+    <div class="view" id="view-of-demorados">
+      <div class="card">
+        <div class="card-hd"><div class="card-title">&#9888; Demorados &mdash; pasaron la fecha</div><span id="count-of-dem" style="margin-left:auto;font-size:10px;color:var(--red)"></span></div>
+        <div id="list-of-demorados"><div class="empty-state">Sin demorados ✓</div></div>
+      </div>
+    </div>
+
+    <!-- OF: YA EDITADO -->
+    <div class="view" id="view-of-editado">
       <div class="filter-bar">
-        <span class="filter-label">Nicho:</span>
-        <select class="filter-select" id="filt-nicho-demorados" onchange="onNichoChange('demorados')"><option value="all">Todos los nichos</option></select>
-        <span class="filter-label">Modelo:</span>
-        <select class="filter-select" id="filt-modelo-demorados" onchange="renderDemorados()"><option value="all">Todas las modelos</option></select>
+        <span class="filter-label">Mes:</span>
+        <select class="filter-select" id="filt-mes-of-editado" onchange="renderOFEditado()">
+          <option value="all">Todos</option>
+          <option value="0">Ene</option><option value="1">Feb</option><option value="2">Mar</option><option value="3">Abr</option>
+          <option value="4">May</option><option value="5">Jun</option><option value="6">Jul</option><option value="7">Ago</option>
+          <option value="8">Sep</option><option value="9">Oct</option><option value="10">Nov</option><option value="11">Dic</option>
+        </select>
+      </div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-hd"><div class="card-title">&#10003; Aprobados por el CM</div><span id="count-of-aprobados" style="margin-left:auto;font-size:10px;color:var(--green)"></span></div>
+        <div id="list-of-aprobados"><div class="empty-state">Sin ediciones aprobadas todavía</div></div>
       </div>
       <div class="card">
-        <div class="card-hd"><div class="card-title">Demorados &mdash; pasaron la fecha de entrega de edici&oacute;n</div><span id="count-demorados" style="margin-left:auto;font-size:10px;color:var(--red)"></span></div>
-        <div id="list-demorados"><div class="empty-state">Cargando...</div></div>
+        <div class="card-hd"><div class="card-title">&#128190; Ya en bóveda</div><span id="count-of-boveda" style="margin-left:auto;font-size:10px;color:var(--text3)"></span></div>
+        <div id="list-of-boveda"><div class="empty-state">Sin material en bóveda todavía</div></div>
       </div>
     </div>
 
-    <!-- YA EDITADO -->
-    <div class="view" id="view-editado">
-      <div class="filter-bar">
-        <span class="filter-label">Nicho:</span>
-        <select class="filter-select" id="filt-nicho-editado" onchange="onNichoChange('editado')"><option value="all">Todos los nichos</option></select>
-        <span class="filter-label">Modelo:</span>
-        <select class="filter-select" id="filt-modelo-editado" onchange="renderEditado()"><option value="all">Todas las modelos</option></select>
-      </div>
-      <div class="card">
-        <div class="card-hd"><div class="card-title">Contenido ya editado</div><span id="count-editado" style="margin-left:auto;font-size:10px;color:var(--text3)"></span></div>
-        <div id="list-editado"><div class="empty-state">Cargando...</div></div>
-      </div>
+    <!-- GUIA -->
+    <div class="view" id="view-guia">
+      <div class="sec-hd"><div class="sec-hd-title">&#128218; Guía del panel</div><div class="sec-hd-line"></div></div>
+      <p style="font-size:12px;color:var(--text3);margin-bottom:20px">Guía preparada por el equipo WHYnot. Cubre el flujo de OnlyFans. La sección de Redes Sociales se agregará cuando ese flujo esté disponible.</p>
+      <div id="guia-loading" class="empty-state">Cargando guía...</div>
+      <div id="guia-content" style="display:none"></div>
     </div>
 
 
-    <!-- CALENDARIO -->
-    <div class="view" id="view-calendario">
-      <div class="sec-hd">
-        <div class="sec-hd-title">Calendario de edici&#243;n</div>
-        <div class="sec-hd-line"></div>
-        <button onclick="refreshAndRenderCal()" class="btn-ghost" style="font-size:10px;padding:4px 12px;margin-left:8px">&#8635; Actualizar</button>
-      </div>
-      <div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap">
-        <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><span style="width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block"></span>Demorado</div>
-        <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><span style="width:8px;height:8px;border-radius:50%;background:var(--amber);display:inline-block"></span>Pendiente</div>
-        <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><span style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block"></span>Listo</div>
-      </div>
-      <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center">
-        <button onclick="calPrev()" class="btn-ghost" style="padding:5px 14px;font-size:16px">&#8249;</button>
-        <div id="cal-month-label" style="font-family:'Fraunces',serif;font-size:16px;color:var(--text);min-width:180px;text-align:center;font-weight:500"></div>
-        <button onclick="calNext()" class="btn-ghost" style="padding:5px 14px;font-size:16px">&#8250;</button>
-        <button onclick="calGoToday()" class="btn-ghost" style="margin-left:auto;font-size:10px;padding:4px 12px">Hoy</button>
-      </div>
-      <div id="cal-grid" style="margin-bottom:16px"></div>
-      <div id="cal-day-detail" style="display:none;margin-bottom:16px">
-        <div class="sec-hd"><div class="sec-hd-title" id="cal-day-title">&#8212;</div><div class="sec-hd-line"></div></div>
-        <div class="card"><div id="cal-day-list"></div></div>
-      </div>
-      <div id="cal-sin-fecha-wrap">
-        <div class="sec-hd">
-          <div class="sec-hd-title" style="font-size:13px;color:var(--text3)">Sin fecha de edici&#243;n asignada</div>
-          <div class="sec-hd-line"></div>
-        </div>
-        <div class="card"><div id="cal-sin-fecha-list"></div></div>
-      </div>
-    </div>
-
-  </div>
-</div>
 
 <!-- MODAL -->
 <div class="modal-overlay" id="task-modal" onclick="if(event.target===this)closeModal()">
@@ -350,6 +356,40 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
   </div>
 </div>
 
+<!-- MODAL MARCAR EDITADO -->
+<div class="modal-overlay" id="modal-marcar-editado" onclick="if(event.target===this)closeEditoraModal('modal-marcar-editado')">
+  <div class="modal">
+    <div class="modal-hd"><span id="mme-title">Marcar como editado</span><button class="modal-close" onclick="closeEditoraModal('modal-marcar-editado')">&#215;</button></div>
+    <input type="hidden" id="mme-sol-id">
+    <input type="hidden" id="mme-edicion-id">
+    <div class="info-grid" id="mme-info"></div>
+    <div class="form-group">
+      <label class="form-label">Brief original</label>
+      <div id="mme-concepto" style="font-size:12px;color:var(--text2);line-height:1.6;background:var(--bg);border-radius:8px;padding:10px 12px;"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Indicaciones del CM</label>
+      <div id="mme-indicaciones" style="font-size:12px;color:var(--blue);line-height:1.6;background:var(--blue-bg);border-radius:8px;padding:10px 12px;"></div>
+    </div>
+    <div id="mme-drive-original-wrap" style="margin-bottom:13px">
+      <label class="form-label">Material original (Drive)</label>
+      <div class="drive-box" id="mme-drive-original" style="cursor:pointer">&#8212;</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Link del material editado (Drive) *</label>
+      <input class="form-input" id="mme-drive-editado" placeholder="https://drive.google.com/...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notas para el CM (opcional)</label>
+      <textarea class="form-textarea" id="mme-notas" placeholder="Qué hiciste, aclaraciones, etc..."></textarea>
+    </div>
+    <div class="form-actions">
+      <button class="btn-ghost" onclick="closeEditoraModal('modal-marcar-editado')">Cancelar</button>
+      <button class="btn-primary" id="mme-btn" onclick="confirmarEditado()">&#10003; Marcar como editado</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -382,11 +422,7 @@ async function init(){
 }
 
 function initDemo(){
-  SESSION={id:'b1000000-0000-0000-0000-000000000004',nombre:'Lucas',rol:'editora'};
-  document.getElementById('sb-nombre').textContent='Lucas';
-  document.getElementById('sb-avatar').textContent='LU';
-  document.getElementById('today-date').textContent=new Date().toLocaleDateString('es-AR',{day:'numeric',month:'short',year:'numeric'});
-  loadData();
+  loadDemoEditora();
 }
 
 async function loadData(){
@@ -599,7 +635,9 @@ async function marcarListo(){
   finally{btn.disabled=false;btn.textContent='✓ Marcar como editado';}
 }
 
-var VIEWS_MAP={dashboard:'Dashboard','para-editar':'Para editar',demorados:'Demorados',editado:'Ya editado',calendario:'Calendario'};
+
+
+var VMAP={dashboard:"Dashboard","of-editar":"Para editar OF","of-correccion":"Correcciones OF","of-demorados":"Demorados OF","of-editado":"Ya editado OF",guia:"Guía del panel"};
 function nav(id,el){
   document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
   var v=document.getElementById('view-'+id);if(v)v.classList.add('active');
@@ -899,6 +937,409 @@ async function marcarTodasLeidas(){
 }
 
 setInterval(loadNotificaciones,30000);
+
+
+// ── EDITORA STATE ──
+var EDICIONES=[], GUIA_ED=[];
+
+// ── HELPERS ──
+function openEditoraModal(id){var el=document.getElementById(id);if(el)el.classList.add("open");}
+function closeEditoraModal(id){var el=document.getElementById(id);if(el)el.classList.remove("open");}
+function todayStrEd(){return new Date().toISOString().split("T")[0];}
+function matchMesEd(fecha,selId){
+  var mes=(document.getElementById(selId)||{}).value||"all";
+  if(mes==="all")return true;
+  if(!fecha)return false;
+  return new Date(fecha+"T12:00").getMonth()===parseInt(mes);
+}
+
+// ── POPULATE SELECTS ──
+function populateEditoraSelects(){
+  var modelos=[...new Set(EDICIONES.map(function(e){return e.solicitudes&&e.solicitudes.modelos?e.solicitudes.modelos.nombre:null;}).filter(Boolean))];
+  var opts="<option value='all'>Todas las modelos</option>"+modelos.map(function(n){return "<option value='"+n+"'>"+n+"</option>";}).join("");
+  var el=document.getElementById("filt-modelo-of-editar");
+  if(el)el.innerHTML=opts;
+  // default to current month
+  var curMon=String(new Date().getMonth());
+  ["filt-mes-of-editar","filt-mes-of-editado"].forEach(function(id){
+    var e=document.getElementById(id);if(e)e.value=curMon;
+  });
+}
+
+// ── RENDER FUNCTIONS ──
+function renderOFEditar(){
+  var modeloFilt=(document.getElementById("filt-modelo-of-editar")||{}).value||"all";
+  var items=EDICIONES.filter(function(e){
+    if(e.estado==="editado"||e.aprobada===true)return false; // already done
+    if(e.aprobada===false&&e.estado==="pendiente")return false; // correction pending, shown elsewhere
+    if(!e.solicitudes)return false;
+    if(modeloFilt!=="all"&&(!e.solicitudes.modelos||e.solicitudes.modelos.nombre!==modeloFilt))return false;
+    if(!matchMesEd(e.solicitudes.fecha_entrega,"filt-mes-of-editar"))return false;
+    return true;
+  });
+  var cnt=document.getElementById("count-of-editar");if(cnt)cnt.textContent=items.length+(items.length===1?" item":" items");
+  var el=document.getElementById("list-of-editar");if(!el)return;
+  if(!items.length){el.innerHTML="<div class='empty-state'>Sin material para editar ✓</div>";return;}
+  el.innerHTML="";
+  items.forEach(function(e){
+    var s=e.solicitudes;
+    var modelo=s&&s.modelos?s.modelos.nombre:"-";
+    var fecha=s&&s.fecha_entrega?new Date(s.fecha_entrega+"T12:00").toLocaleDateString("es-AR",{day:"numeric",month:"short"}):"";
+    var isLate=s&&s.fecha_entrega&&s.fecha_entrega<todayStrEd();
+    var row=document.createElement("div");row.className="task-row";
+    row.innerHTML="<div class='task-modelo'>"+modelo+"</div>"
+      +"<div class='task-name'>"
+      +"<div class='task-title'>"+(s?s.categoria||"Contenido":"")+"</div>"
+      +"<div class='task-meta'>"+(s?s.formato||"-":"-")+" · Entrega: "+fecha+"</div>"
+      +(e.indicaciones_cm?"<div class='task-meta' style='color:var(--blue);margin-top:2px'>CM: "+e.indicaciones_cm.substring(0,60)+(e.indicaciones_cm.length>60?"...":"")+"</div>":"")
+      +"</div>"
+      +(isLate?"<span class='status-pill sp-demorado'>Demorado</span>":"")
+      +"<button class='btn-primary' style='font-size:10px;padding:4px 14px;flex-shrink:0' data-editar-id='"+e.id+"'>Marcar editado</button>";
+    el.appendChild(row);
+  });
+}
+
+function renderOFCorreccion(){
+  var items=EDICIONES.filter(function(e){
+    return e.aprobada===false&&e.estado==="pendiente";
+  });
+  var cnt=document.getElementById("count-of-correccion");if(cnt)cnt.textContent=items.length+(items.length===1?" item":" items");
+  var el=document.getElementById("list-of-correccion");if(!el)return;
+  if(!items.length){el.innerHTML="<div class='empty-state'>Sin correcciones pendientes ✓</div>";return;}
+  el.innerHTML="";
+  items.forEach(function(e){
+    var s=e.solicitudes;
+    var modelo=s&&s.modelos?s.modelos.nombre:"-";
+    var fechaDesap=e.fecha_desaprobacion?new Date(e.fecha_desaprobacion).toLocaleDateString("es-AR",{day:"numeric",month:"short"}):"";
+    var diasRestantes=e.fecha_desaprobacion?3-Math.floor((new Date()-new Date(e.fecha_desaprobacion))/86400000):3;
+    var esDemorado=diasRestantes<0;
+    var row=document.createElement("div");row.className="task-row";
+    row.innerHTML="<div class='task-modelo'>"+modelo+"</div>"
+      +"<div class='task-name'>"
+      +"<div class='task-title'>"+(s?s.categoria||"Contenido":"")+"</div>"
+      +"<div class='task-meta'>Desaprobado el "+fechaDesap+"</div>"
+      +(e.motivo_desaprobacion?"<div class='task-meta' style='color:var(--red)'>Motivo: "+e.motivo_desaprobacion+"</div>":"")
+      +(e.indicaciones_cm?"<div class='task-meta' style='color:var(--blue)'>Corregir: "+e.indicaciones_cm+"</div>":"")
+      +"</div>"
+      +"<span class='status-pill "+(esDemorado?"sp-demorado":"sp-pendiente")+"'>"+(esDemorado?"Demorado":diasRestantes+"d restantes")+"</span>"
+      +"<button class='btn-primary' style='font-size:10px;padding:4px 14px;flex-shrink:0' data-editar-id='"+e.id+"'>Corregir</button>";
+    el.appendChild(row);
+  });
+}
+
+function renderOFDemorados(){
+  var items=EDICIONES.filter(function(e){
+    if(e.estado==="editado"||e.aprobada===true)return false;
+    var s=e.solicitudes;
+    return s&&s.fecha_entrega&&s.fecha_entrega<todayStrEd();
+  });
+  var cnt=document.getElementById("count-of-dem");if(cnt)cnt.textContent=items.length+(items.length===1?" item":" items");
+  var el=document.getElementById("list-of-demorados");if(!el)return;
+  if(!items.length){el.innerHTML="<div class='empty-state'>Sin demorados ✓</div>";return;}
+  el.innerHTML="";
+  items.forEach(function(e){
+    var s=e.solicitudes;
+    var modelo=s&&s.modelos?s.modelos.nombre:"-";
+    var fecha=s&&s.fecha_entrega?new Date(s.fecha_entrega+"T12:00").toLocaleDateString("es-AR",{day:"numeric",month:"short"}):"";
+    var diasVencido=s&&s.fecha_entrega?Math.floor((new Date()-new Date(s.fecha_entrega+"T12:00"))/86400000):0;
+    var row=document.createElement("div");row.className="task-row";
+    row.innerHTML="<div class='task-modelo'>"+modelo+"</div>"
+      +"<div class='task-name'><div class='task-title'>"+(s?s.categoria||"Contenido":"")+"</div>"
+      +"<div class='task-meta'>Fecha límite: "+fecha+"</div></div>"
+      +"<span class='status-pill sp-demorado'>+"+diasVencido+" días</span>"
+      +"<button class='btn-primary' style='font-size:10px;padding:4px 14px;flex-shrink:0' data-editar-id='"+e.id+"'>Entregar igual</button>";
+    el.appendChild(row);
+  });
+}
+
+function renderOFEditado(){
+  var mes=document.getElementById("filt-mes-of-editado");
+  // Aprobados
+  var aprobados=EDICIONES.filter(function(e){
+    return e.aprobada===true&&matchMesEd(e.solicitudes&&e.solicitudes.fecha_entrega,"filt-mes-of-editado");
+  });
+  var cntA=document.getElementById("count-of-aprobados");if(cntA)cntA.textContent=aprobados.length+(aprobados.length===1?" item":" items");
+  var elA=document.getElementById("list-of-aprobados");
+  if(elA){
+    elA.innerHTML=aprobados.length?aprobados.map(function(e){
+      var s=e.solicitudes;var modelo=s&&s.modelos?s.modelos.nombre:"-";
+      return "<div class='task-row'>"
+        +"<div class='task-modelo'>"+modelo+"</div>"
+        +"<div class='task-name'><div class='task-title'>"+(s?s.categoria||"Contenido":"")+"</div>"
+        +"<div class='task-meta'>"+(s?s.formato||"-":"-")+"</div></div>"
+        +"<span class='status-pill sp-listo'>Aprobado</span>"
+        +(e.drive_url_editado?"<button class='btn-ghost' style='font-size:10px;padding:4px 12px' data-open-drive='"+e.drive_url_editado+"'>Ver Drive</button>":"")
+        +"</div>";
+    }).join(""):"<div class='empty-state'>Sin aprobados todavía</div>";
+  }
+  // Boveda
+  var boveda=EDICIONES.filter(function(e){
+    return e.solicitudes&&e.solicitudes.subido_boveda_at&&matchMesEd(e.solicitudes.fecha_entrega,"filt-mes-of-editado");
+  });
+  var cntB=document.getElementById("count-of-boveda");if(cntB)cntB.textContent=boveda.length+(boveda.length===1?" item":" items");
+  var elB=document.getElementById("list-of-boveda");
+  if(elB){
+    elB.innerHTML=boveda.length?boveda.map(function(e){
+      var s=e.solicitudes;var modelo=s&&s.modelos?s.modelos.nombre:"-";
+      var fechaSub=s&&s.subido_boveda_at?new Date(s.subido_boveda_at).toLocaleDateString("es-AR",{day:"numeric",month:"short"}):"";
+      return "<div class='task-row'>"
+        +"<div class='task-modelo'>"+modelo+"</div>"
+        +"<div class='task-name'><div class='task-title'>"+(s?s.categoria||"Contenido":"")+"</div>"
+        +"<div class='task-meta'>Subido el "+fechaSub+"</div></div>"
+        +"<span class='status-pill sp-boveda'>En bóveda</span>"
+        +"</div>";
+    }).join(""):"<div class='empty-state'>Sin material en bóveda</div>";
+  }
+}
+
+// ── DASHBOARD GENERAL ──
+function renderDashboardEditora(){
+  var hoy=todayStrEd();
+  var paraEditar=EDICIONES.filter(function(e){return e.estado!=="editado"&&e.aprobada!==true&&e.aprobada!==false;}).length;
+  var correcciones=EDICIONES.filter(function(e){return e.aprobada===false&&e.estado==="pendiente";}).length;
+  var demorados=EDICIONES.filter(function(e){return e.estado!=="editado"&&e.aprobada!==true&&e.solicitudes&&e.solicitudes.fecha_entrega&&e.solicitudes.fecha_entrega<hoy;}).length;
+  var aprobados=EDICIONES.filter(function(e){return e.aprobada===true;}).length;
+  var boveda=EDICIONES.filter(function(e){return e.solicitudes&&e.solicitudes.subido_boveda_at;}).length;
+
+  // Stats generales
+  var sg=document.getElementById("dash-stats-grid");
+  if(sg){
+    var stats=[
+      {label:"Para editar",value:paraEditar,color:"var(--amber)"},
+      {label:"Correcciones",value:correcciones,color:"var(--red)"},
+      {label:"Demorados",value:demorados,color:"var(--red)"},
+      {label:"Aprobados",value:aprobados,color:"var(--green)"}
+    ];
+    sg.innerHTML=stats.map(function(st){
+      return "<div class='stat-card'><div class='stat-label'>"+st.label+"</div>"
+        +"<div style='font-family:Fraunces,serif;font-size:28px;font-weight:300;color:"+st.color+";line-height:1'>"+st.value+"</div>"
+        +"</div>";
+    }).join("");
+  }
+
+  // OF mini-stats
+  var of=document.getElementById("dash-of-stats");
+  if(of){
+    var ofStats=[
+      {label:"Pendientes",value:paraEditar+correcciones,color:"var(--amber)"},
+      {label:"Editados",value:EDICIONES.filter(function(e){return e.estado==="editado";}).length,color:"var(--blue)"},
+      {label:"En bóveda",value:boveda,color:"var(--gold)"}
+    ];
+    of.innerHTML=ofStats.map(function(st){
+      return "<div class='stat-card'><div class='stat-label'>"+st.label+"</div>"
+        +"<div style='font-family:Fraunces,serif;font-size:22px;font-weight:300;color:"+st.color+";line-height:1'>"+st.value+"</div>"
+        +"</div>";
+    }).join("");
+  }
+
+  // Recent OF activity
+  var recent=EDICIONES.slice().sort(function(a,b){return (b.updated_at||"").localeCompare(a.updated_at||"");}).slice(0,5);
+  var rl=document.getElementById("dash-recent-of");
+  if(rl){
+    rl.innerHTML=recent.length?recent.map(function(e){
+      var s=e.solicitudes;var modelo=s&&s.modelos?s.modelos.nombre:"-";
+      var estadoLabel=e.aprobada===true?"Aprobado":e.aprobada===false?"Corregir":e.estado==="editado"?"Enviado al CM":"En edición";
+      var estadoCls=e.aprobada===true?"sp-listo":e.aprobada===false?"sp-demorado":e.estado==="editado"?"sp-entregado":"sp-pendiente";
+      return "<div class='task-row'>"
+        +"<div class='task-modelo'>"+modelo+"</div>"
+        +"<div class='task-name'><div class='task-title'>"+(s?s.categoria||"Contenido":"")+"</div>"
+        +"<div class='task-meta'>"+(s?s.formato||"-":"-")+"</div></div>"
+        +"<span class='status-pill "+estadoCls+"'>"+estadoLabel+"</span>"
+        +"</div>";
+    }).join(""):"<div class='empty-state'>Sin actividad reciente</div>";
+  }
+}
+
+// ── MODAL MARCAR EDITADO ──
+function openModalMarcarEditado(edicionId){
+  var e=EDICIONES.find(function(x){return x.id===edicionId;});if(!e)return;
+  var s=e.solicitudes;
+  document.getElementById("mme-sol-id").value=s?s.id||"":"";
+  document.getElementById("mme-edicion-id").value=edicionId;
+  document.getElementById("mme-title").textContent=(e.aprobada===false?"Corregir edición":"Marcar como editado")+" — "+(s?s.categoria||"Contenido":"");
+  var modelo=s&&s.modelos?s.modelos.nombre:"-";
+  var fecha=s&&s.fecha_entrega?new Date(s.fecha_entrega+"T12:00").toLocaleDateString("es-AR"):"";
+  document.getElementById("mme-info").innerHTML=
+    "<div class='info-item'><div class='info-key'>Modelo</div><div class='info-val'>"+modelo+"</div></div>"
+    +"<div class='info-item'><div class='info-key'>Formato</div><div class='info-val'>"+(s?s.formato||"-":"-")+"</div></div>"
+    +"<div class='info-item'><div class='info-key'>Entrega</div><div class='info-val'>"+fecha+"</div></div>";
+  document.getElementById("mme-concepto").textContent=s?s.concepto||"Sin brief":"";
+  document.getElementById("mme-indicaciones").textContent=e.indicaciones_cm||"Sin indicaciones extra del CM.";
+  var driveOrig=s&&s.entregas&&s.entregas[0]?s.entregas[0].drive_url:"";
+  var ddo=document.getElementById("mme-drive-original");
+  if(driveOrig){ddo.textContent=driveOrig;ddo.onclick=function(){window.open(driveOrig,"_blank");};}
+  else{ddo.textContent="Sin link de material original";}
+  document.getElementById("mme-drive-editado").value=e.drive_url_editado||"";
+  document.getElementById("mme-notas").value="";
+  openEditoraModal("modal-marcar-editado");
+}
+
+async function confirmarEditado(){
+  var edicionId=document.getElementById("mme-edicion-id").value;
+  var driveEditado=document.getElementById("mme-drive-editado").value.trim();
+  var notas=document.getElementById("mme-notas").value.trim();
+  if(!driveEditado){showToast("Ingresá el link del material editado");return;}
+  var btn=document.getElementById("mme-btn");btn.disabled=true;btn.textContent="Guardando...";
+  try{
+    await sbPatch("ediciones",edicionId,{
+      estado:"editado",
+      drive_url_editado:driveEditado,
+      notas:notas||null,
+      aprobada:null,
+      fecha_desaprobacion:null
+    });
+    // Notificar al CM
+    var e=EDICIONES.find(function(x){return x.id===edicionId;});
+    if(e&&e.solicitudes){
+      var cms=await sbFetch("usuarios?rol=eq.cm&select=id&limit=1");
+      if(cms.length){
+        await sbPost("notificaciones",{
+          para_usuario_id:cms[0].id,
+          tipo:"edicion",
+          titulo:"Edicion lista para revisar",
+          mensaje:"La editora terminó el material de "+(e.solicitudes.categoria||"contenido")+".",
+          solicitud_id:e.solicitud_id
+        });
+      }
+    }
+    closeEditoraModal("modal-marcar-editado");
+    await loadEditoraData();
+    showToast("✓ Marcado como editado — el CM fue notificado");
+  }catch(err){showToast("Error al guardar.");}
+  finally{btn.disabled=false;btn.textContent="✓ Marcar como editado";}
+}
+
+// ── GUIA ──
+function renderGuiaEditora(){
+  var loading=document.getElementById("guia-loading");
+  var gc=document.getElementById("guia-content");
+  if(!loading||!gc)return;
+  if(!GUIA_ED.length){
+    loading.textContent="Sin guía configurada todavía. El admin puede agregarla desde el panel de administración.";
+    loading.style.display="block";gc.style.display="none";return;
+  }
+  loading.style.display="none";gc.style.display="block";
+  var colors=[
+    {bg:"var(--gold-bg)",c:"var(--amber)"},{bg:"var(--blue-bg)",c:"var(--blue)"},
+    {bg:"var(--amber-bg)",c:"var(--amber)"},{bg:"var(--green-bg)",c:"var(--green)"},
+    {bg:"var(--blue-bg)",c:"var(--blue)"},{bg:"var(--gold-bg)",c:"var(--amber)"},
+    {bg:"var(--purple-bg)",c:"var(--purple)"}
+  ];
+  gc.innerHTML="<div style='background:var(--gold-bg);border:1px solid rgba(201,169,110,0.25);border-radius:10px;padding:12px 16px;font-size:12px;color:var(--amber);margin-bottom:20px;line-height:1.7'>"
+    +"&#9432; Como Editora, tu función es recibir material asignado por el CM, editarlo según las indicaciones, y enviarlo de vuelta para su aprobación."
+    +"</div>"
+    +GUIA_ED.map(function(paso,i){
+      var c=colors[i%colors.length];
+      return "<div class='card' style='margin-bottom:12px'>"
+        +"<div class='card-hd' style='background:"+c.bg+"'>"
+        +"<div style='width:24px;height:24px;border-radius:50%;background:"+c.c+";color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0'>"+(paso.orden||i+1)+"</div>"
+        +"<div class='card-title' style='color:"+c.c+";margin-left:8px'>"+paso.titulo+"</div>"
+        +"</div>"
+        +"<div style='padding:14px 16px;font-size:12px;color:var(--text2);line-height:1.8'>"+paso.contenido+"</div>"
+        +"</div>";
+    }).join("");
+}
+
+// ── LOAD DATA ──
+async function loadEditoraData(){
+  if(!SESSION||!SESSION.id)return;
+  EDICIONES=await sbFetch("ediciones?editora_id=eq."+SESSION.id
+    +"&select=*,solicitudes(id,categoria,formato,fecha_entrega,concepto,subido_boveda_at,modelos(nombre,niche),entregas(drive_url))");
+  GUIA_ED=await sbFetch("guia_panel?select=*&order=orden");
+  renderAll();
+}
+
+function renderAll(){
+  renderDashboardEditora();
+  renderOFEditar();
+  renderOFCorreccion();
+  renderOFDemorados();
+  renderOFEditado();
+  renderGuiaEditora();
+  populateEditoraSelects();
+  updateEditoraBadges();
+}
+
+function updateEditoraBadges(){
+  var hoy=todayStrEd();
+  var editar=EDICIONES.filter(function(e){return e.estado!=="editado"&&e.aprobada!==true&&e.aprobada!==false;}).length;
+  var corr=EDICIONES.filter(function(e){return e.aprobada===false&&e.estado==="pendiente";}).length;
+  var dem=EDICIONES.filter(function(e){return e.estado!=="editado"&&e.aprobada!==true&&e.solicitudes&&e.solicitudes.fecha_entrega&&e.solicitudes.fecha_entrega<hoy;}).length;
+  var b1=document.getElementById("badge-of-editar");if(b1)b1.textContent=editar;
+  var b2=document.getElementById("badge-of-correccion");if(b2)b2.textContent=corr;
+  var b3=document.getElementById("badge-of-dem");if(b3)b3.textContent=dem;
+}
+
+// ── EVENT DELEGATION ──
+document.addEventListener("click",function(e){
+  var editarBtn=e.target.closest("[data-editar-id]");
+  if(editarBtn){openModalMarcarEditado(editarBtn.dataset.editarId);return;}
+  var driveBtn=e.target.closest("[data-open-drive]");
+  if(driveBtn){window.open(driveBtn.dataset.openDrive,"_blank");return;}
+});
+
+// ── DEMO DATA ──
+function loadDemoEditora(){
+  SESSION={id:"u-editora",nombre:"Editora",rol:"editora"};
+  var today=todayStrEd();
+  var in5=new Date(Date.now()+5*86400000).toISOString().split("T")[0];
+  var ago2=new Date(Date.now()-2*86400000).toISOString().split("T")[0];
+  var ago5=new Date(Date.now()-5*86400000).toISOString().split("T")[0];
+
+  EDICIONES=[
+    // Para editar - normal
+    {id:"e1",solicitud_id:"s7",editora_id:"u-editora",estado:"pendiente",aprobada:null,
+     indicaciones_cm:"Aplicar LUT warm, suavizar piel, ajustar contraste. Exportar 1080p.",
+     drive_url_editado:null,notas:null,fecha_desaprobacion:null,
+     solicitudes:{id:"s7",categoria:"Banner / Perfil",formato:"Foto",fecha_entrega:in5,
+       concepto:"Foto perfil y banner OF.",subido_boveda_at:null,
+       modelos:{nombre:"Sofia M.",niche:"Talking Girl"},
+       entregas:[{drive_url:"https://drive.google.com/folders/demo-banner"}]}},
+    // Para editar - demorado
+    {id:"e2",solicitud_id:"s11",editora_id:"u-editora",estado:"pendiente",aprobada:null,
+     indicaciones_cm:"Aplicar LUT warm, suavizar piel. Exportar 1080p.",
+     drive_url_editado:null,notas:null,fecha_desaprobacion:null,
+     solicitudes:{id:"s11",categoria:"Lenceria",formato:"Video",fecha_entrega:ago2,
+       concepto:"Video lenceria con color grading.",subido_boveda_at:null,
+       modelos:{nombre:"Camila R.",niche:"Talking Girl"},
+       entregas:[{drive_url:"https://drive.google.com/folders/demo-lenceria"}]}},
+    // Correccion pendiente
+    {id:"e3",solicitud_id:"s12",editora_id:"u-editora",estado:"pendiente",aprobada:false,
+     indicaciones_cm:"Los cortes son muy abruptos, suavizalos. Ajustar volumen de la musica.",
+     motivo_desaprobacion:"Los cortes son muy abruptos y la musica tapa el audio.",
+     drive_url_editado:"https://drive.google.com/folders/demo-fitness-v1",notas:"Version 1",
+     fecha_desaprobacion:new Date(Date.now()-86400000).toISOString(),
+     solicitudes:{id:"s12",categoria:"Fitness",formato:"Video",fecha_entrega:ago2,
+       concepto:"Video fitness con musica y transiciones.",subido_boveda_at:null,
+       modelos:{nombre:"Juli Mussi",niche:"Lifestyle"},
+       entregas:[{drive_url:"https://drive.google.com/folders/demo-fitness-orig"}]}},
+    // Aprobado
+    {id:"e4",solicitud_id:"s9",editora_id:"u-editora",estado:"editado",aprobada:true,
+     drive_url_editado:"https://drive.google.com/folders/demo-lenceria-final",notas:"Listo",
+     fecha_desaprobacion:null,indicaciones_cm:"Retocar piel.",
+     solicitudes:{id:"s9",categoria:"Lenceria",formato:"Foto",fecha_entrega:ago5,
+       concepto:"Set lenceria negra.",subido_boveda_at:null,
+       modelos:{nombre:"Angelica Santanna",niche:"Fitness"},
+       entregas:[{drive_url:"https://drive.google.com/folders/demo-lenceria-orig"}]}},
+    // En boveda
+    {id:"e5",solicitud_id:"s10",editora_id:"u-editora",estado:"editado",aprobada:true,
+     drive_url_editado:"https://drive.google.com/folders/demo-fitness-final",notas:null,
+     fecha_desaprobacion:null,indicaciones_cm:"Agregar transiciones.",
+     solicitudes:{id:"s10",categoria:"Fitness",formato:"Video",fecha_entrega:ago5,
+       concepto:"Video fitness.",subido_boveda_at:new Date(Date.now()-3*86400000).toISOString(),
+       modelos:{nombre:"Sofia M.",niche:"Talking Girl"},
+       entregas:[{drive_url:"https://drive.google.com/folders/demo-fitness-orig2"}]}}
+  ];
+  GUIA_ED=[
+    {orden:1,titulo:"RECIBIR MATERIAL — Para editar",contenido:"Cuando el CM aprueba un contenido con edicion, te aparece automaticamente en 'Para editar' con las indicaciones de lo que debes hacer. Abri el Drive original para ver el material antes de editarlo."},
+    {orden:2,titulo:"EDITAR EL MATERIAL",contenido:"Descarga el material del Drive original. Edita segun las indicaciones del CM (color grading, cortes, musica, retoques, etc.). Exporta el resultado y subilo a tu Drive personal o al Drive compartido del equipo."},
+    {orden:3,titulo:"MARCAR COMO EDITADO — Boton 'Marcar editado'",contenido:"Una vez que termines, hace click en 'Marcar editado'. Se abre un modal donde pegas el link del material editado y podes dejar notas para el CM. El CM recibe una notificacion automatica."},
+    {orden:4,titulo:"EL CM REVISA TU TRABAJO",contenido:"El CM va a revisar el material editado. Tiene dos opciones: APROBAR (recibes una notificacion de aprobado, el material pasa a 'Ya editado') o DESAPROBAR (te aparece en 'Correcciones' con el motivo y las indicaciones de como corregirlo)."},
+    {orden:5,titulo:"CORRECCIONES — Si el CM desaprueba",contenido:"Si el CM desaprueba tu edicion, aparece en la seccion 'Correcciones' con el motivo y las indicaciones. Tenes 3 dias para corregirlo y re-enviarlo. Si superas los 3 dias pasa a 'Demorados'."},
+    {orden:6,titulo:"YA EDITADO — Historial",contenido:"En 'Ya editado' encontras todo el material que el CM aprobo, separado en dos listas: Aprobados (esperando que el CM lo suba a Infloww) y En boveda (ya subido). Es tu historial de trabajo aprobado."}
+  ];
+  renderAll();
+}
 
 </script>
 </body>
