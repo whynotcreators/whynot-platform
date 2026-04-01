@@ -430,7 +430,7 @@ async function init(){
   document.getElementById('today-date').textContent=new Date().toLocaleDateString('es-AR',{day:'numeric',month:'short',year:'numeric'});
   var th=localStorage.getItem('wn-theme');
   if(th==='dark'){document.documentElement.setAttribute('data-theme','dark');document.getElementById('theme-btn').textContent='🌙';}
-  await loadData();
+  await loadEditoraData();
   loadNotificaciones();
 }
 
