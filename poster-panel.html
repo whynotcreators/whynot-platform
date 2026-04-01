@@ -156,7 +156,17 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
 
     <!-- DASHBOARD -->
     <div class="view active" id="view-dashboard">
-      <div class="sec-hd"><div class="sec-hd-title">Mi actividad de posteo</div><div class="sec-hd-line"></div></div>
+      <div class="sec-hd">
+        <div class="sec-hd-title">Mi actividad de posteo</div>
+        <div class="sec-hd-line"></div>
+        <select id="filt-mes" class="filter-select" style="font-size:10px;padding:4px 26px 4px 10px" onchange="renderDashboard()">
+          <option value="all">Todos los meses</option>
+          <option value="0">Enero</option><option value="1">Febrero</option><option value="2">Marzo</option>
+          <option value="3">Abril</option><option value="4">Mayo</option><option value="5">Junio</option>
+          <option value="6">Julio</option><option value="7">Agosto</option><option value="8">Septiembre</option>
+          <option value="9">Octubre</option><option value="10">Noviembre</option><option value="11">Diciembre</option>
+        </select>
+      </div>
       <div class="stats-row">
         <div class="stat-card sc-green"><div class="stat-label">Para postear</div><div class="stat-value" id="stat-postear">&#8212;</div><div class="stat-sub">listos para subir</div></div>
         <div class="stat-card sc-amber"><div class="stat-label">Demorados</div><div class="stat-value" id="stat-hoy">&#8212;</div><div class="stat-sub">pasaron la fecha</div></div>
@@ -347,7 +357,13 @@ async function init(){
   document.getElementById("today-date").textContent=new Date().toLocaleDateString("es-AR",{day:"numeric",month:"short",year:"numeric"});
   var th=localStorage.getItem("wn-theme");
   if(th==="dark"){document.documentElement.setAttribute("data-theme","dark");document.getElementById("theme-btn").textContent="🌙";}
+  setDefaultMonth();
   await loadData();
+}
+
+function setDefaultMonth(){
+  var sel=document.getElementById("filt-mes");
+  if(sel)sel.value=String(new Date().getMonth());
 }
 
 function initDemo(){
@@ -355,6 +371,7 @@ function initDemo(){
   document.getElementById("sb-nombre").textContent="Poster 1";
   document.getElementById("sb-avatar").textContent="PO";
   document.getElementById("today-date").textContent=new Date().toLocaleDateString("es-AR",{day:"numeric",month:"short",year:"numeric"});
+  setDefaultMonth();
   loadData();
 }
 
@@ -469,9 +486,17 @@ function renderDemoradosFull(){
 
 function renderDashboard(){
   var todayS=todayStr();
-  var postear=SOLICITUDES.filter(function(s){return s.estado==="listo";}).length;
-  var demorados=SOLICITUDES.filter(function(s){return s.estado==="listo"&&s.fecha_posteo&&s.fecha_posteo<todayS;}).length;
-  var total=SOLICITUDES.filter(function(s){return s.estado==="publicado";}).length;
+  var mesFilt=(document.getElementById("filt-mes")||{}).value||"all";
+  function matchMes(s){
+    if(mesFilt==="all")return true;
+    var fecha=s.fecha_posteo||s.publicado_at;
+    if(!fecha)return false;
+    return new Date(fecha).getMonth()===parseInt(mesFilt);
+  }
+  var solsMes=SOLICITUDES.filter(matchMes);
+  var postear=solsMes.filter(function(s){return s.estado==="listo";}).length;
+  var demorados=solsMes.filter(function(s){return s.estado==="listo"&&s.fecha_posteo&&s.fecha_posteo<todayS;}).length;
+  var total=solsMes.filter(function(s){return s.estado==="publicado";}).length;
   document.getElementById("stat-postear").textContent=postear;
   document.getElementById("stat-hoy").textContent=demorados;
   document.getElementById("stat-total").textContent=total;
@@ -479,7 +504,7 @@ function renderDashboard(){
   renderDemoradosDash();
 
   // Para postear hoy — listo con fecha_posteo = today
-  var listHoy=SOLICITUDES.filter(function(s){return s.estado==="listo"&&s.fecha_posteo===todayS;});
+  var listHoy=solsMes.filter(function(s){return s.estado==="listo"&&s.fecha_posteo===todayS;});
   document.getElementById("count-hoy").textContent=listHoy.length+(listHoy.length===1?" item":" items");
   var elHoy=document.getElementById("list-hoy");
   elHoy.innerHTML=listHoy.length?listHoy.map(function(s){return postRow(s,true);}).join(""):"<div class='empty-state'>Sin contenido para postear hoy</div>";
@@ -488,7 +513,7 @@ function renderDashboard(){
   var el=document.getElementById("dash-por-modelo");
   if(!MIS_MODELOS.length){el.innerHTML="<div class='empty-state'>Sin modelos asignadas</div>";return;}
   el.innerHTML=MIS_MODELOS.map(function(m){
-    var sols=SOLICITUDES.filter(function(s){return s.modelo_id===m.id;});
+    var sols=solsMes.filter(function(s){return s.modelo_id===m.id;});
     var pend=sols.filter(function(s){return s.estado==="listo";}).length;
     var pub=sols.filter(function(s){return s.estado==="publicado";}).length;
     var tot=sols.length;
@@ -674,6 +699,17 @@ async function marcarPublicado(){
   finally{btn.disabled=false;btn.textContent="&#10003; Marcar como publicado";}
 }
 
+async function eliminarSolicitud(id){
+  var s=SOLICITUDES.find(function(x){return x.id===id;});
+  if(!s)return;
+  var nombre=(s.modelos?s.modelos.nombre:"este contenido");
+  if(!confirm("¿Eliminar "+nombre+" de la lista? Esta acción no se puede deshacer."))return;
+  await fetch(SB+"/rest/v1/solicitudes?id=eq."+id,{method:"DELETE",headers:H});
+  SOLICITUDES=SOLICITUDES.filter(function(x){return x.id!==id;});
+  renderAll();
+  showToast("Solicitud eliminada");
+}
+
 async function quickPublicar(id){
   var s=SOLICITUDES.find(function(x){return x.id===id;});if(!s)return;
   await sbPatch("solicitudes",id,{estado:"publicado",fecha_posteo:todayStr(),publicado_at:new Date().toISOString()});
@@ -683,6 +719,9 @@ async function quickPublicar(id){
 }
 
 document.addEventListener("click",function(e){
+  // Delete button (admin)
+  var dbtn=e.target.closest("[data-del]");
+  if(dbtn){e.stopPropagation();eliminarSolicitud(dbtn.dataset.del);return;}
   // Quick publish button
   var qbtn=e.target.closest("[data-quick]");
   if(qbtn){e.stopPropagation();quickPublicar(qbtn.dataset.quick);return;}
