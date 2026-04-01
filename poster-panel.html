@@ -132,7 +132,7 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
       <div class="nav-item" onclick="nav('para-postear',this)"><span class="nav-ico">&#128228;</span> Para postear<span class="nav-badge nb-green" id="badge-postear">0</span></div>
       <div class="nav-item" onclick="nav('calendario',this)"><span class="nav-ico">&#128197;</span> Calendario</div>
       <div class="nav-item" onclick="nav('demorados',this)"><span class="nav-ico">&#9888;</span> Demorados<span class="nav-badge nb-amber" id="badge-demorados">0</span></div>
-      <div class="nav-item" onclick="nav('publicado',this)"><span class="nav-ico">&#10003;</span> Ya publicado<span class="nav-badge nb-amber" id="badge-publicado">0</span></div>
+      <div class="nav-item" onclick="nav('publicado',this)"><span class="nav-ico">✓</span> Ya publicado<span class="nav-badge nb-amber" id="badge-publicado">0</span></div>
     </div>
   </div>
   <div class="sidebar-footer">
@@ -274,7 +274,7 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
         <select class="filter-select" id="filt-modelo-publicado" onchange="renderPublicado()"><option value="all">Todas las modelos</option></select>
       </div>
       <div class="card">
-        <div class="card-hd"><div class="card-title">&#10003; Ya publicado</div><span id="count-publicado" style="margin-left:auto;font-size:10px;color:var(--text3)"></span></div>
+        <div class="card-hd"><div class="card-title">✓ Ya publicado</div><span id="count-publicado" style="margin-left:auto;font-size:10px;color:var(--text3)"></span></div>
         <div id="list-publicado"><div class="empty-state">Cargando...</div></div>
       </div>
     </div>
@@ -317,7 +317,7 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
         <div style="display:flex;gap:8px;justify-content:flex-end">
           <button class="btn-ghost" onclick="closeModal()">Cancelar</button>
           <button class="btn-ghost" id="modal-btn-fecha" onclick="guardarFechaPosteo()" style="color:var(--blue);border-color:rgba(42,95,168,0.3)">Guardar fecha</button>
-          <button class="btn-success" id="modal-btn-publicar" onclick="marcarPublicado()">&#10003; Marcar como publicado</button>
+          <button class="btn-success" id="modal-btn-publicar" onclick="marcarPublicado()">✓ Marcar como publicado</button>
         </div>
       </div>
     </div>
@@ -481,7 +481,7 @@ function renderDemoradosFull(){
   if(count)count.textContent=items.length+(items.length===1?" item":" items");
   if(badge)badge.textContent=getDemorados().length;
   if(!list)return;
-  list.innerHTML=items.length?items.map(function(s){return demoradoRow(s);}).join(""):"<div class='empty-state'>Sin posteos demorados &#10003;</div>";
+  list.innerHTML=items.length?items.map(function(s){return demoradoRow(s);}).join(""):"<div class='empty-state'>Sin posteos demorados ✓</div>";
 }
 
 function renderDashboard(){
@@ -536,7 +536,7 @@ function postRow(s,showBtn){
   var isPublicado=s.estado==="publicado";
   var fechaPosteo=s.fecha_posteo?new Date(s.fecha_posteo+"T12:00").toLocaleDateString("es-AR",{day:"numeric",month:"short"}):"Sin fecha";
   var badge=isPublicado
-    ?"<span class='status-pill sp-publicado'>Publicado &#10003;</span>"
+    ?"<span class='status-pill sp-publicado'>Publicado ✓</span>"
     :"<span class='status-pill sp-listo'>Listo</span>";
   var btn=showBtn&&!isPublicado
     ?"<button class=\"btn-success\" style=\"font-size:10px;padding:4px 10px;white-space:nowrap\" data-quick='"+s.id+"'>&amp;#10003; Publicar</button>"
@@ -746,7 +746,7 @@ function toggleTheme(){
   else{root.setAttribute("data-theme","dark");btn.textContent="🌙";localStorage.setItem("wn-theme","dark");}
 }
 
-async function refreshAll(){showToast("Actualizando...");await loadData();showToast("&#10003; Actualizado");}
+async function refreshAll(){showToast("Actualizando...");await loadData();showToast("✓ Actualizado");}
 
 function showToast(msg){
   var t=document.getElementById("toast");t.innerHTML=msg;t.classList.add("show");
