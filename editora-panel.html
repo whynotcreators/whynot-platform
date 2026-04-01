@@ -59,7 +59,7 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
 .live-chip{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;background:var(--blue-bg);border:1px solid rgba(42,95,168,0.2);font-size:10px;font-weight:700;color:var(--blue);}
 .live-dot{width:5px;height:5px;border-radius:50%;background:var(--blue);animation:blink 2s steps(1) infinite;}
 @keyframes blink{50%{opacity:0.3}}
-.content{flex:1;overflow-y:auto;padding:12px 22px 32px;scrollbar-width:thin;}
+.content{flex:1;overflow-y:auto;padding:20px 22px 32px;scrollbar-width:thin;}
 .view{display:none;}
 .view.active{display:block;animation:fadeUp 0.2s ease;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
@@ -212,8 +212,8 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
 
     <!-- DASHBOARD -->
     <div class="view active" id="view-dashboard">
-      <!-- Filtros igual que admin -->
-      <div class="filter-bar" style="margin-bottom:14px;padding:0">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px;flex-wrap:wrap">
+        <div style="font-family:Fraunces,serif;font-size:22px;font-weight:300;color:var(--text)">Vista general</div>
         <span class="filter-label">MES:</span>
         <select class="filter-select" id="dash-mes" onchange="renderDashboardEditora()" style="min-width:100px">
           <option value="all">Todos los meses</option>
