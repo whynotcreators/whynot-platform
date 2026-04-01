@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WHYnot Creators — Acceso</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Fraunces:ital,wght@0,300;0,500;0,700;1,300;1,500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: #0a0a0e;
+  color: #f0eee8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Background atmosphere */
+.bg-orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+  opacity: 0.35;
+}
+.orb-1 { width:600px;height:600px;background:#c9a96e;top:-200px;left:-200px;animation:drift1 20s ease-in-out infinite; }
+.orb-2 { width:400px;height:400px;background:#3d6b3f;bottom:-100px;right:-100px;animation:drift2 15s ease-in-out infinite; }
+.orb-3 { width:300px;height:300px;background:#2a5fa8;top:50%;left:50%;transform:translate(-50%,-50%);animation:drift3 25s ease-in-out infinite; }
+
+@keyframes drift1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(40px,30px)} }
+@keyframes drift2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-30px,-40px)} }
+@keyframes drift3 { 0%,100%{transform:translate(-50%,-50%)} 50%{transform:translate(-48%,-52%)} }
+
+/* Noise overlay */
+body::before {
+  content:'';
+  position:fixed;inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:0.4;
+}
+
+/* Card */
+.login-wrap {
+  position:relative;z-index:10;
+  width: 380px;
+  animation: appear 0.6s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+@keyframes appear {
+  from { opacity:0; transform:translateY(24px) scale(0.97); }
+  to   { opacity:1; transform:translateY(0) scale(1); }
+}
+
+.brand {
+  text-align:center;
+  margin-bottom: 32px;
+}
+
+.brand-mark {
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg, #c9a96e, #e8c98a);
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #0a0a0e;
+  margin-bottom: 14px;
+  box-shadow: 0 8px 32px rgba(201,169,110,0.35);
+}
+
+.brand-name {
+  font-family: 'Fraunces', serif;
+  font-size: 26px;
+  font-weight: 500;
+  color: #f0eee8;
+  letter-spacing: 0.3px;
+  margin-bottom: 4px;
+}
+
+.brand-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 32px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.field { margin-bottom: 14px; }
+
+.field label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.field input {
+  width: 100%;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 11px 14px;
+  color: #f0eee8;
+  font-size: 13px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.field input:focus {
+  border-color: rgba(201,169,110,0.5);
+  background: rgba(255,255,255,0.08);
+  box-shadow: 0 0 0 3px rgba(201,169,110,0.1);
+}
+
+.field input::placeholder { color: rgba(255,255,255,0.2); }
+
+.btn-login {
+  width: 100%;
+  padding: 13px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #c9a96e, #e8c98a);
+  color: #0a0a0e;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.3px;
+  margin-top: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-login:hover { transform:translateY(-1px); box-shadow: 0 8px 24px rgba(201,169,110,0.4); }
+.btn-login:active { transform:translateY(0); }
+.btn-login:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+
+/* Loading spinner inside button */
+.btn-login .spinner {
+  display: none;
+  width: 16px; height: 16px;
+  border: 2px solid rgba(0,0,0,0.3);
+  border-top-color: #0a0a0e;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin { to { transform:rotate(360deg); } }
+
+.btn-login.loading .spinner { display: block; }
+.btn-login.loading .btn-text { display: none; }
+
+/* Error */
+.error-msg {
+  background: rgba(184,50,50,0.15);
+  border: 1px solid rgba(184,50,50,0.3);
+  border-radius: 8px;
+  padding: 10px 13px;
+  font-size: 12px;
+  color: #ff9090;
+  margin-top: 12px;
+  display: none;
+  text-align: center;
+}
+
+.error-msg.show { display: block; animation: shake 0.3s ease; }
+
+@keyframes shake {
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-4px)}
+  75%{transform:translateX(4px)}
+}
+
+/* Role badges shown after credentials found */
+.role-redirect {
+  text-align: center;
+  margin-top: 20px;
+  display: none;
+}
+
+.role-redirect.show { display: block; animation: appear 0.4s ease; }
+
+.role-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.rc-admin   { background:rgba(201,169,110,0.15);color:#c9a96e;border:1px solid rgba(201,169,110,0.3); }
+.rc-cm      { background:rgba(192,120,32,0.15); color:#d4924a;border:1px solid rgba(192,120,32,0.3); }
+.rc-editora { background:rgba(42,95,168,0.15);  color:#6a9adb;border:1px solid rgba(42,95,168,0.3); }
+.rc-poster  { background:rgba(61,107,63,0.15);  color:#6aaa6e;border:1px solid rgba(61,107,63,0.3); }
+.rc-modelo  { background:rgba(107,63,160,0.15); color:#a87edb;border:1px solid rgba(107,63,160,0.3); }
+
+.redirect-msg {
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  margin-top: 8px;
+}
+
+.dots::after {
+  content: '';
+  animation: dots 1.2s steps(3,end) infinite;
+}
+@keyframes dots {
+  0%   { content: '.'; }
+  33%  { content: '..'; }
+  66%  { content: '...'; }
+  100% { content: ''; }
+}
+
+/* Footer */
+.login-footer {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 10px;
+  color: rgba(255,255,255,0.15);
+  letter-spacing: 1px;
+}
+</style>
+</head>
+<body>
+
+<div class="bg-orb orb-1"></div>
+<div class="bg-orb orb-2"></div>
+<div class="bg-orb orb-3"></div>
+
+<div class="login-wrap">
+
+  <div class="brand">
+    <div class="brand-mark" id="brand-mark-el">WN</div>
+    <div class="brand-name" id="brand-name-el">WHYnot</div>
+    <div class="brand-sub">Creators Platform</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Iniciar sesión</div>
+
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="inp-email" placeholder="tu@email.com" autocomplete="email" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+
+    <div class="field">
+      <label>Contraseña</label>
+      <input type="password" id="inp-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+
+    <button class="btn-login" id="btn-login" onclick="doLogin()">
+      <span class="btn-text">Entrar</span>
+      <div class="spinner"></div>
+    </button>
+
+    <div class="error-msg" id="error-msg">Email o contraseña incorrectos</div>
+
+    <div class="role-redirect" id="role-redirect">
+      <div class="role-chip" id="role-chip">—</div>
+      <div class="redirect-msg">Redirigiendo<span class="dots"></span></div>
+    </div>
+  </div>
+
+  <div class="login-footer">WHYnot Creators © 2026</div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://mltzngfkhsuwpwuuyfim.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1sdHpuZ2ZraHN1d3B3dXV5ZmltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwMDk0OTcsImV4cCI6MjA5MDU4NTQ5N30.mU7K8Tf7tNOQoebxktbMLMgmFhKGzLLR0YEemo0jams';
+
+// Panel URLs — update these to your actual deployed URLs
+const PANEL_URLS = {
+  admin:   'agency-panel.html',
+  cm:      'cm-panel.html',
+  editora: 'editora-panel.html',
+  poster:  'poster-panel.html',
+  modelo:  'model-dashboard.html',
+};
+
+const ROL_LABELS = {
+  admin:   { label:'Admin',           cls:'rc-admin'   },
+  cm:      { label:'Content Manager', cls:'rc-cm'      },
+  editora: { label:'Editora',         cls:'rc-editora' },
+  poster:  { label:'Póster',          cls:'rc-poster'  },
+  modelo:  { label:'Modelo',          cls:'rc-modelo'  },
+};
+
+async function doLogin() {
+  const email = document.getElementById('inp-email').value.trim();
+  const pass  = document.getElementById('inp-pass').value;
+  const btn   = document.getElementById('btn-login');
+  const err   = document.getElementById('error-msg');
+
+  if(!email || !pass) { showError('Completá email y contraseña'); return; }
+
+  // Loading state
+  btn.disabled = true;
+  btn.classList.add('loading');
+  err.classList.remove('show');
+
+  try {
+    // Query usuarios table
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/usuarios?email=eq.${encodeURIComponent(email)}&password_hash=eq.${encodeURIComponent(pass)}&activo=eq.true&select=*`,
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+    );
+
+    const users = await res.json();
+
+    if(!users || !users.length) {
+      showError('Email o contraseña incorrectos');
+      return;
+    }
+
+    const user = users[0];
+
+    // Save session to localStorage
+    localStorage.setItem('wn_session', JSON.stringify({
+      id:     user.id,
+      nombre: user.nombre,
+      email:  user.email,
+      rol:    user.rol,
+      avatar: user.avatar_url || '',
+      modelo_id: user.modelo_id || null,
+      logged_at: Date.now()
+    }));
+
+    // Show role chip and redirect
+    const rolCfg = ROL_LABELS[user.rol] || { label: user.rol, cls: 'rc-admin' };
+    const chip = document.getElementById('role-chip');
+    chip.textContent = rolCfg.label;
+    chip.className = `role-chip ${rolCfg.cls}`;
+    document.getElementById('role-redirect').classList.add('show');
+
+    // Redirect after short delay
+    setTimeout(() => {
+      const url = PANEL_URLS[user.rol] || 'agency-panel.html';
+      window.location.href = url;
+    }, 1400);
+
+  } catch(e) {
+    showError('Error de conexión. Intentá de nuevo.');
+  } finally {
+    btn.disabled = false;
+    btn.classList.remove('loading');
+  }
+}
+
+function showError(msg) {
+  const err = document.getElementById('error-msg');
+  err.textContent = msg;
+  err.classList.remove('show');
+  void err.offsetWidth; // reflow for animation
+  err.classList.add('show');
+}
+
+// Auto-focus email
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('inp-email').focus();
+
+  // If already logged in, redirect
+  const session = localStorage.getItem('wn_session');
+  if(session) {
+    try {
+      const s = JSON.parse(session);
+      // Session valid for 8 hours
+      if(s.logged_at && (Date.now() - s.logged_at) < 8 * 60 * 60 * 1000) {
+        const url = PANEL_URLS[s.rol] || 'agency-panel.html';
+        window.location.href = url;
+      } else {
+        localStorage.removeItem('wn_session');
+      }
+    } catch(e) {
+      localStorage.removeItem('wn_session');
+    }
+  }
+});
+</script>
+</body>
+</html>
