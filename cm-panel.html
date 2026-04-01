@@ -136,6 +136,25 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
 .back-admin-btn{position:fixed;bottom:22px;left:calc(var(--sidebar-w,220px) + 16px);z-index:100;display:none;align-items:center;gap:6px;padding:8px 14px;background:var(--sidebar);color:var(--gold2);border:1px solid rgba(201,169,110,0.25);border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,0.2);transition:all 0.15s;font-family:'Plus Jakarta Sans',sans-serif;}
 .back-admin-btn:hover{background:rgba(30,26,20,0.9);transform:translateY(-1px);}
 .back-admin-btn.show{display:flex;}
+
+
+
+.notif-bell{position:relative;width:32px;height:32px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--text2);}
+.notif-bell:hover{background:var(--bg2);}
+.notif-dot{position:absolute;top:4px;right:4px;width:8px;height:8px;border-radius:50%;background:var(--red);border:2px solid var(--surface);display:none;}
+.notif-dot.show{display:block;}
+.notif-panel{position:fixed;top:50px;right:12px;width:320px;max-height:480px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r);box-shadow:var(--shadow-lg);z-index:300;display:none;flex-direction:column;overflow:hidden;}
+.notif-panel.open{display:flex;}
+.notif-panel-hd{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface);}
+.notif-panel-title{font-size:12px;font-weight:700;color:var(--text);}
+.notif-list{flex:1;overflow-y:auto;max-height:380px;}
+.notif-item{padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.1s;}
+.notif-item:hover{background:var(--bg);}
+.notif-item.unread{background:var(--gold-bg);}
+.notif-item-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.notif-item-msg{font-size:11px;color:var(--text3);line-height:1.4;}
+.notif-item-time{font-size:10px;color:var(--text3);margin-top:4px;}
+.notif-empty{text-align:center;padding:24px;font-size:12px;color:var(--text3);}
 </style>
 </head>
 <body>
@@ -172,7 +191,15 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
     <div class="topbar-bc">WHYnot <span style="color:var(--text3);padding:0 4px">&rsaquo;</span> <span id="bc-text">Dashboard</span></div>
     <div class="topbar-right">
       <div class="live-chip"><div class="live-dot"></div><span id="today-date">cargando...</span></div>
-<button onclick="toggleTheme()" id="theme-btn" style="width:32px;height:32px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;">&#9728;&#65039;</button>
+<button class="notif-bell" id="notif-bell" onclick="toggleNotifPanel()" title="Notificaciones">&#128276;<span class="notif-dot" id="notif-dot"></span></button>
+<div class="notif-panel" id="notif-panel">
+  <div class="notif-panel-hd">
+    <span class="notif-panel-title">Notificaciones</span>
+    <button onclick="marcarTodasLeidas()" style="background:none;border:none;font-size:10px;color:var(--text3);cursor:pointer">Marcar leídas</button>
+  </div>
+  <div class="notif-list" id="notif-list"><div class="notif-empty">Sin notificaciones</div></div>
+</div>
+      <button onclick="toggleTheme()" id="theme-btn" style="width:32px;height:32px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;">&#9728;&#65039;</button>
       <button onclick="refreshAll()" style="width:32px;height:32px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--text2);">&#8635;</button>
     </div>
   </div>
@@ -463,6 +490,7 @@ async function init(){
   if(th==="dark"){document.documentElement.setAttribute("data-theme","dark");document.getElementById("theme-btn").textContent="\uD83C\uDF19";}
   setDefaultMonths();
   await loadData();
+  loadNotificaciones();
 }
 
 function initDemo(){
@@ -915,7 +943,7 @@ function toggleTheme(){
   else{root.setAttribute("data-theme","dark");btn.textContent="\uD83C\uDF19";localStorage.setItem("wn-theme","dark");}
 }
 
-async function refreshAll(){showToast("Actualizando...");await loadData();showToast("\u2713 Actualizado");}
+async function refreshAll(){loadNotificaciones();showToast("Actualizando...");await loadData();showToast("\u2713 Actualizado");}
 function showToast(msg){var t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(function(){t.classList.remove("show");},2800);}
 
 init();
@@ -931,6 +959,132 @@ function backToAdmin(){
   localStorage.removeItem("wn_from_admin");
   window.location.href="admin-panel.html";
 }
+
+
+// ── NOTIFICACIONES ──
+var NOTIFICACIONES=[];
+var notifOpen=false;
+
+async function loadNotificaciones(){
+  if(!SESSION||!SESSION.id)return;
+  NOTIFICACIONES=await sbFetch("notificaciones?para_usuario_id=eq."+SESSION.id+"&order=created_at.desc&limit=20");
+  renderNotificaciones();
+}
+
+function renderNotificaciones(){
+  var dot=document.getElementById("notif-dot");
+  var list=document.getElementById("notif-list");
+  if(!dot||!list)return;
+  var unread=NOTIFICACIONES.filter(function(n){return !n.leida;});
+  if(unread.length){dot.classList.add("show");}else{dot.classList.remove("show");}
+  if(!NOTIFICACIONES.length){list.innerHTML="<div class='notif-empty'>Sin notificaciones</div>";return;}
+  var html="";
+  NOTIFICACIONES.forEach(function(n){
+    var time=new Date(n.created_at).toLocaleDateString("es-AR",{day:"numeric",month:"short"});
+    var cls="notif-item"+(n.leida?"":" unread");
+    html+="<div class='"+cls+"' data-notif-id='"+n.id+"'>"
+      +"<div class='notif-item-title'>"+n.titulo+"</div>"
+      +(n.mensaje?"<div class='notif-item-msg'>"+n.mensaje+"</div>":"")
+      +"<div class='notif-item-time'>"+time+"</div>"
+      +"</div>";
+  });
+  list.innerHTML=html;
+}
+
+function toggleNotifPanel(){
+  var panel=document.getElementById("notif-panel");
+  notifOpen=!notifOpen;
+  if(notifOpen){panel.classList.add("open");}else{panel.classList.remove("open");}
+}
+
+document.addEventListener("click",function(e){
+  if(!e.target.closest("#notif-panel")&&!e.target.closest("#notif-bell")){
+    var panel=document.getElementById("notif-panel");
+    if(panel){panel.classList.remove("open");notifOpen=false;}
+  }
+});
+
+async function marcarLeida(id){
+  var n=NOTIFICACIONES.find(function(x){return x.id===id;});
+  if(n&&!n.leida){
+    n.leida=true;
+    await fetch(SB+"/rest/v1/notificaciones?id=eq."+id,{method:"PATCH",headers:H,body:JSON.stringify({leida:true})});
+    renderNotificaciones();
+  }
+}
+
+async function marcarTodasLeidas(){
+  if(!SESSION||!SESSION.id)return;
+  NOTIFICACIONES.forEach(function(n){n.leida=true;});
+  await fetch(SB+"/rest/v1/notificaciones?para_usuario_id=eq."+SESSION.id+"&leida=eq.false",{method:"PATCH",headers:H,body:JSON.stringify({leida:true})});
+  renderNotificaciones();
+}
+
+// Poll for new notifications every 30 seconds
+setInterval(loadNotificaciones, 30000);
+
+
+var NOTIFICACIONES=[];
+var notifOpen=false;
+
+async function loadNotificaciones(){
+  if(!SESSION||!SESSION.id)return;
+  NOTIFICACIONES=await sbFetch("notificaciones?para_usuario_id=eq."+SESSION.id+"&order=created_at.desc&limit=20");
+  renderNotificaciones();
+}
+
+function renderNotificaciones(){
+  var dot=document.getElementById("notif-dot");
+  var list=document.getElementById("notif-list");
+  if(!dot||!list)return;
+  var unread=NOTIFICACIONES.filter(function(n){return !n.leida;});
+  if(unread.length){dot.classList.add("show");}else{dot.classList.remove("show");}
+  if(!NOTIFICACIONES.length){list.innerHTML="<div class='notif-empty'>Sin notificaciones</div>";return;}
+  list.innerHTML=NOTIFICACIONES.map(function(n){
+    var time=new Date(n.created_at).toLocaleDateString("es-AR",{day:"numeric",month:"short"});
+    var cls="notif-item"+(n.leida?"":" unread");
+    var div=document.createElement("div");
+    div.className=cls;
+    div.innerHTML="<div class='notif-item-title'>"+n.titulo+"</div>"
+      +(n.mensaje?"<div class='notif-item-msg'>"+n.mensaje+"</div>":"")
+      +"<div class='notif-item-time'>"+time+"</div>";
+    div.dataset.notifId=n.id;
+    return div.outerHTML;
+  }).join("");
+}
+
+document.addEventListener("click",function(e){
+  var ni=e.target.closest("[data-notif-id]");
+  if(ni){marcarLeida(ni.dataset.notifId);return;}
+  if(!e.target.closest("#notif-panel")&&!e.target.closest("#notif-bell")){
+    var p=document.getElementById("notif-panel");
+    if(p){p.classList.remove("open");notifOpen=false;}
+  }
+});
+
+function toggleNotifPanel(){
+  var p=document.getElementById("notif-panel");
+  notifOpen=!notifOpen;
+  if(notifOpen){p.classList.add("open");}else{p.classList.remove("open");}
+}
+
+async function marcarLeida(id){
+  var n=NOTIFICACIONES.find(function(x){return x.id===id;});
+  if(n&&!n.leida){
+    n.leida=true;
+    await fetch(SB+"/rest/v1/notificaciones?id=eq."+id,{method:"PATCH",headers:H,body:JSON.stringify({leida:true})});
+    renderNotificaciones();
+  }
+}
+
+async function marcarTodasLeidas(){
+  if(!SESSION||!SESSION.id)return;
+  NOTIFICACIONES.forEach(function(n){n.leida=true;});
+  await fetch(SB+"/rest/v1/notificaciones?para_usuario_id=eq."+SESSION.id+"&leida=eq.false",{method:"PATCH",headers:H,body:JSON.stringify({leida:true})});
+  renderNotificaciones();
+}
+
+setInterval(loadNotificaciones,30000);
 
 </script>
 </body>
