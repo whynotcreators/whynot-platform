@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WHYnot - Panel Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Fraunces:ital,wght@0,300;0,500;1,300;1,500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f0ece3;--bg2:#e8e2d8;--bg3:#e0d9ce;--surface:#faf8f4;--surface2:#fff;--sidebar:#1e1a14;--border:rgba(30,26,20,0.1);--border2:rgba(30,26,20,0.18);--text:#1a1610;--text2:#6b6254;--text3:#a89e90;--gold:#c9a96e;--gold2:#e8c98a;--gold-light:#f7f0e4;--gold-bg:rgba(201,169,110,0.12);--green:#3d6b3f;--green-bg:#edf5ed;--red:#b83232;--red-bg:#fdf0f0;--amber:#c07820;--amber-bg:#fef5e8;--blue:#2a5fa8;--blue-bg:#eef3fc;--purple:#6b3fa0;--purple-bg:#f5effe;--r:14px;--shadow:0 2px 8px rgba(30,26,20,0.07),0 1px 2px rgba(30,26,20,0.05);--shadow-lg:0 8px 32px rgba(30,26,20,0.12);--sidebar-w:220px;}
+:root[data-theme="dark"]{--bg:#0e0e12;--bg2:#141418;--bg3:#1a1a20;--surface:#181820;--surface2:#1e1e28;--sidebar:#0a0a0e;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--text:#f0eee8;--text2:#8a8898;--text3:#44445a;--gold-light:rgba(201,169,110,0.15);}
+*{margin:0;padding:0;box-sizing:border-box;}html,body{height:100%;overflow:hidden;}
+body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(--text);display:flex;height:100vh;}
+.sidebar{width:var(--sidebar-w);min-width:var(--sidebar-w);background:var(--sidebar);display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+.brand{padding:16px 16px 13px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:10px;}
+.brand-mark{width:30px;height:30px;background:var(--gold);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--sidebar);flex-shrink:0;}
+.brand-name{font-family:"Fraunces",serif;font-size:16px;color:rgba(255,255,255,0.9);}
+.brand-role{font-size:9px;color:rgba(255,255,255,0.3);letter-spacing:2px;text-transform:uppercase;margin-top:1px;}
+.nav-scroll{flex:1;overflow-y:auto;scrollbar-width:none;}
+.nav-group{padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+.nav-label{font-size:9px;color:rgba(255,255,255,0.2);letter-spacing:2px;text-transform:uppercase;padding:6px 16px 3px;font-weight:600;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 16px;font-size:13px;color:rgba(255,255,255,0.4);cursor:pointer;transition:all 0.15s;position:relative;}
+.nav-item:hover{color:rgba(255,255,255,0.75);background:rgba(255,255,255,0.03);}
+.nav-item.active{color:var(--gold2);background:rgba(201,169,110,0.08);}
+.nav-item.active::before{content:"";position:absolute;left:0;top:5px;bottom:5px;width:2px;background:var(--gold);border-radius:0 2px 2px 0;}
+.nav-ico{font-size:14px;width:18px;text-align:center;flex-shrink:0;}
+.sidebar-footer{margin-top:auto;padding:12px 14px;border-top:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;gap:9px;flex-shrink:0;}
+.user-avatar{width:28px;height:28px;border-radius:50%;background:var(--gold-bg);border:1px solid rgba(201,169,110,0.4);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--gold);flex-shrink:0;overflow:hidden;}
+.user-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.user-name{font-size:12px;font-weight:600;color:rgba(255,255,255,0.7);}
+.user-role{font-size:9px;color:rgba(255,255,255,0.25);margin-top:1px;}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{height:50px;min-height:50px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 22px;gap:12px;}
+.topbar-bc{font-size:12px;color:var(--text3);}
+.topbar-bc span{color:var(--text2);font-weight:500;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.live-chip{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;background:var(--gold-bg);border:1px solid rgba(201,169,110,0.2);font-size:10px;font-weight:700;color:var(--amber);}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--amber);animation:blink 2s steps(1) infinite;}
+@keyframes blink{50%{opacity:0.3}}
+.content{flex:1;overflow-y:auto;padding:20px 22px 32px;scrollbar-width:thin;}
+.view{display:none;}.view.active{display:block;animation:fadeUp 0.2s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.btn-primary{padding:7px 16px;border-radius:20px;background:var(--gold);color:var(--sidebar);border:none;font-size:11px;font-weight:700;cursor:pointer;font-family:"Plus Jakarta Sans",sans-serif;transition:all 0.15s;}
+.btn-primary:hover{background:var(--gold2);}.btn-primary:disabled{opacity:0.6;cursor:not-allowed;}
+.btn-ghost{padding:6px 14px;border-radius:20px;background:transparent;color:var(--text2);border:1px solid var(--border2);font-size:11px;font-weight:600;cursor:pointer;font-family:"Plus Jakarta Sans",sans-serif;transition:all 0.15s;}
+.btn-ghost:hover{background:var(--bg2);}
+.btn-danger{padding:6px 14px;border-radius:20px;background:transparent;color:var(--red);border:1px solid rgba(184,50,50,0.3);font-size:11px;font-weight:600;cursor:pointer;font-family:"Plus Jakarta Sans",sans-serif;transition:all 0.15s;}
+.btn-danger:hover{background:var(--red-bg);}
+.card{background:var(--surface2);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow);}
+.card-hd{padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;background:var(--surface);}
+.card-title{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:1.2px;text-transform:uppercase;}
+.sec-hd{display:flex;align-items:center;gap:8px;margin-bottom:10px;margin-top:20px;}
+.sec-hd:first-child{margin-top:0;}
+.sec-hd-title{font-family:"Fraunces",serif;font-size:15px;font-weight:500;color:var(--text);white-space:nowrap;}
+.sec-hd-line{flex:1;height:1px;background:var(--border);}
+.stats-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px;}
+.stat-card{background:var(--surface2);border-radius:var(--r);border:1px solid var(--border);padding:14px 16px;box-shadow:var(--shadow);position:relative;overflow:hidden;}
+.stat-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--r) var(--r) 0 0;}
+.sc-gold::before{background:linear-gradient(90deg,var(--gold),var(--gold2));}
+.sc-green::before{background:var(--green);}
+.sc-amber::before{background:var(--amber);}
+.sc-red::before{background:var(--red);}
+.sc-blue::before{background:var(--blue);}
+.stat-label{font-size:9px;font-weight:700;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;}
+.stat-value{font-family:"Fraunces",serif;font-size:28px;font-weight:300;color:var(--text);line-height:1;margin-bottom:3px;}
+.stat-sub{font-size:10px;color:var(--text3);}
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center;}
+.filter-label{font-size:9px;font-weight:700;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;}
+.filter-select{padding:6px 26px 6px 10px;border-radius:8px;font-size:11px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);font-family:"Plus Jakarta Sans",sans-serif;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23a89e90'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;}
+.filter-select:focus{border-color:var(--gold);}
+/* Table */
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{font-size:9px;font-weight:700;color:var(--text3);letter-spacing:1px;text-transform:uppercase;padding:8px 14px;border-bottom:1px solid var(--border);background:var(--surface);text-align:left;}
+.tbl td{font-size:12px;color:var(--text2);padding:10px 14px;border-bottom:1px solid var(--border);}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:var(--bg);}
+.tbl-name{font-weight:600;color:var(--text);}
+.tbl-actions{display:flex;gap:6px;justify-content:flex-end;}
+/* Badges */
+.rol-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;}
+.rb-admin{background:var(--gold-light);color:#7a5520;}
+.rb-cm{background:var(--amber-bg);color:var(--amber);}
+.rb-editora{background:var(--blue-bg);color:var(--blue);}
+.rb-poster{background:var(--green-bg);color:var(--green);}
+.rb-modelo{background:var(--purple-bg);color:var(--purple);}
+.status-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px;}
+.dot-green{background:var(--green);}
+.dot-red{background:var(--red);}
+.dot-amber{background:var(--amber);}
+/* Status pills */
+.status-pill{font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;flex-shrink:0;}
+.sp-pendiente{background:var(--amber-bg);color:var(--amber);}
+.sp-entregado{background:var(--blue-bg);color:var(--blue);}
+.sp-listo{background:var(--green-bg);color:var(--green);}
+.sp-publicado{background:var(--bg2);color:var(--text3);}
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--surface2);border:1px solid var(--border2);border-radius:16px;width:540px;max-width:94vw;max-height:90vh;overflow-y:auto;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,0.25);}
+.modal-lg{width:680px;}
+.modal-hd{font-family:"Fraunces",serif;font-size:18px;font-weight:500;color:var(--text);margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal-close{background:none;border:none;color:var(--text3);font-size:22px;cursor:pointer;line-height:1;}
+.form-label{display:block;font-size:9px;font-weight:700;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px;}
+.form-input,.form-textarea,.form-select{width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:8px 11px;color:var(--text);font-size:12px;font-family:"Plus Jakarta Sans",sans-serif;outline:none;transition:border-color 0.15s;}
+.form-input:focus,.form-textarea:focus,.form-select:focus{border-color:var(--gold);}
+.form-textarea{height:72px;resize:vertical;line-height:1.5;}
+.form-group{margin-bottom:13px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.form-actions{display:flex;gap:8px;justify-content:flex-end;padding-top:12px;border-top:1px solid var(--border);margin-top:4px;}
+/* Asignaciones chips */
+.asig-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+.asig-chip{display:flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600;}
+.ac-editora{background:var(--blue-bg);color:var(--blue);}
+.ac-poster{background:var(--green-bg);color:var(--green);}
+.ac-cm{background:var(--amber-bg);color:var(--amber);}
+.toast{position:fixed;bottom:22px;right:22px;background:var(--sidebar);color:var(--gold2);border:1px solid rgba(201,169,110,0.25);padding:10px 18px;border-radius:20px;font-size:12px;font-weight:600;box-shadow:var(--shadow-lg);z-index:999;opacity:0;transform:translateY(6px);transition:all 0.2s;pointer-events:none;}
+.toast.show{opacity:1;transform:translateY(0);}
+.empty-state{text-align:center;padding:36px;color:var(--text3);font-size:12px;}
+.nav-group-hd{display:flex;align-items:center;justify-content:space-between;padding:8px 16px 4px;cursor:pointer;transition:background 0.15s;}
+.nav-group-hd:hover{background:rgba(255,255,255,0.03);}
+.nav-group-arrow{font-size:9px;color:rgba(255,255,255,0.2);transition:transform 0.2s;}
+.nav-group-arrow.collapsed{transform:rotate(-90deg);}
+.nav-group-body{overflow:hidden;transition:max-height 0.25s ease;}
+.nav-group-body.collapsed{max-height:0!important;}
+.model-avatar{width:32px;height:32px;border-radius:50%;object-fit:cover;border:1px solid var(--border);flex-shrink:0;}
+.model-avatar-placeholder{width:32px;height:32px;border-radius:50%;background:var(--purple-bg);border:1px solid rgba(107,63,160,0.3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--purple);flex-shrink:0;}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="brand">
+    <div class="brand-mark">WN</div>
+    <div><div class="brand-name">WHYnot</div><div class="brand-role">Admin</div></div>
+  </div>
+  <div class="nav-scroll">
+    <!-- ADMIN -->
+    <div class="nav-group">
+      <div class="nav-group-hd" onclick="toggleGroup('g-admin')">
+        <span class="nav-label" style="margin:0;padding:0">Admin</span>
+        <span class="nav-group-arrow" id="arr-g-admin">&#9660;</span>
+      </div>
+      <div class="nav-group-body" id="g-admin">
+        <div class="nav-item active" onclick="nav('dashboard',this)"><span class="nav-ico" style="font-size:6px;opacity:0.6">&#9679;</span> Dashboard</div>
+      </div>
+    </div>
+    <!-- EQUIPO -->
+    <div class="nav-group">
+      <div class="nav-group-hd" onclick="toggleGroup('g-equipo')">
+        <span class="nav-label" style="margin:0;padding:0">Equipo</span>
+        <span class="nav-group-arrow" id="arr-g-equipo">&#9660;</span>
+      </div>
+      <div class="nav-group-body" id="g-equipo">
+        <div class="nav-item" onclick="nav('roles',this)"><span class="nav-ico" style="font-size:6px;opacity:0.6">&#9679;</span> Roles</div>
+        <div class="nav-item" onclick="nav('modelos',this)"><span class="nav-ico" style="font-size:6px;opacity:0.6">&#9679;</span> Modelos</div>
+        <div class="nav-item" onclick="nav('usuarios',this)"><span class="nav-ico" style="font-size:6px;opacity:0.6">&#9679;</span> Usuarios</div>
+        <div class="nav-item" onclick="nav('asignaciones',this)"><span class="nav-ico" style="font-size:6px;opacity:0.6">&#9679;</span> Asignaciones</div>
+      </div>
+    </div>
+    <!-- CONTENIDO -->
+    <div class="nav-group">
+      <div class="nav-group-hd" onclick="toggleGroup('g-contenido')">
+        <span class="nav-label" style="margin:0;padding:0">Contenido</span>
+        <span class="nav-group-arrow" id="arr-g-contenido">&#9660;</span>
+      </div>
+      <div class="nav-group-body" id="g-contenido">
+        <div class="nav-item" onclick="nav('solicitudes',this)"><span class="nav-ico" style="font-size:6px;opacity:0.6">&#9679;</span> Solicitudes</div>
+        <div class="nav-item" onclick="nav('reuniones',this)"><span class="nav-ico" style="font-size:6px;opacity:0.6">&#9679;</span> Calendario</div>
+      </div>
+    </div>
+    <!-- PANELES -->
+    <div class="nav-group">
+      <div class="nav-group-hd" onclick="toggleGroup('g-paneles')">
+        <span class="nav-label" style="margin:0;padding:0">Paneles</span>
+        <span class="nav-group-arrow" id="arr-g-paneles">&#9660;</span>
+      </div>
+      <div class="nav-group-body" id="g-paneles">
+        <div class="nav-item" onclick="openPanel('cm-panel.html')"><span class="nav-ico" style="font-size:6px;opacity:0.6">&#9679;</span> Panel CM</div>
+        <div class="nav-item" onclick="openPanel('editora-panel.html')"><span class="nav-ico" style="font-size:6px;opacity:0.6">&#9679;</span> Panel Editora</div>
+        <div class="nav-item" onclick="openPanel('poster-panel.html')"><span class="nav-ico" style="font-size:6px;opacity:0.6">&#9679;</span> Panel Poster</div>
+        <div class="nav-item" onclick="openPanel('model-dashboard.html')"><span class="nav-ico" style="font-size:6px;opacity:0.6">&#9679;</span> Panel Modelo</div>
+      </div>
+    </div>
+  </div>
+  <div class="sidebar-footer">
+    <div class="user-avatar" id="sb-avatar">A</div>
+    <div><div class="user-name" id="sb-nombre">Admin</div><div class="user-role">Administrador</div></div>
+    <button onclick="logout()" style="margin-left:auto;background:none;border:none;color:rgba(255,255,255,0.2);cursor:pointer;font-size:15px;" onmouseover="this.style.color='rgba(255,255,255,0.5)'" onmouseout="this.style.color='rgba(255,255,255,0.2)'">&#9211;</button>
+  </div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-bc">WHYnot <span style="color:var(--text3);padding:0 4px">&rsaquo;</span> <span id="bc-text">Dashboard</span></div>
+    <div class="topbar-right">
+      <div class="live-chip"><div class="live-dot"></div><span id="today-date">cargando...</span></div>
+      <button onclick="toggleTheme()" id="theme-btn" style="width:32px;height:32px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;">&#9728;&#65039;</button>
+      <button onclick="refreshAll()" style="width:32px;height:32px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--text2);">&#8635;</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="view active" id="view-dashboard">
+      <div class="sec-hd"><div class="sec-hd-title">Vista global</div><div class="sec-hd-line"></div></div>
+      <!-- Filtro periodo dashboard -->
+      <div class="filter-bar" style="margin-bottom:14px">
+        <span class="filter-label">Mes:</span>
+        <select class="filter-select" id="dash-mes" onchange="renderDashboard()">
+          <option value="all">Todos los meses</option>
+          <option value="0">Enero</option><option value="1">Febrero</option><option value="2">Marzo</option><option value="3">Abril</option>
+          <option value="4">Mayo</option><option value="5">Junio</option><option value="6">Julio</option><option value="7">Agosto</option>
+          <option value="8">Septiembre</option><option value="9">Octubre</option><option value="10">Noviembre</option><option value="11">Diciembre</option>
+        </select>
+        <span class="filter-label">Semana:</span>
+        <select class="filter-select" id="dash-semana" onchange="renderDashboard()">
+          <option value="all">Todas</option>
+          <option value="1">Semana 1 (días 1-7)</option>
+          <option value="2">Semana 2 (días 8-14)</option>
+          <option value="3">Semana 3 (días 15-21)</option>
+          <option value="4">Semana 4 (días 22-31)</option>
+        </select>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card sc-gold"><div class="stat-label">Modelos activas</div><div class="stat-value" id="st-modelos">&#8212;</div><div class="stat-sub">en la plataforma</div></div>
+        <div class="stat-card sc-red"><div class="stat-label">Demorados</div><div class="stat-value" id="st-dem">&#8212;</div><div class="stat-sub">pendientes vencidos</div></div>
+        <div class="stat-card sc-green"><div class="stat-label">Realizados</div><div class="stat-value" id="st-real">&#8212;</div><div class="stat-sub">entregados + publicados</div></div>
+        <div class="stat-card sc-blue"><div class="stat-label">Margen S/E</div><div class="stat-value" id="st-margen">&#8212;</div><div class="stat-sub">solicitado vs entregado</div></div>
+      </div>
+
+      <!-- Por modelo -->
+      <div class="sec-hd"><div class="sec-hd-title">Estado por modelo</div><div class="sec-hd-line"></div></div>
+      <div class="filter-bar" style="margin-bottom:10px">
+        <span class="filter-label">Nicho:</span>
+        <select class="filter-select" id="dash-nicho" onchange="renderDashboard()">
+          <option value="all">Todos los nichos</option>
+        </select>
+      </div>
+      <div class="card" style="margin-bottom:16px">
+        <div style="display:grid;grid-template-columns:36px 1fr 80px 70px 70px 70px 80px;gap:8px;padding:8px 14px 6px;border-bottom:1px solid var(--border);background:var(--surface)">
+          <div></div>
+          <div style="font-size:9px;font-weight:700;color:var(--text3);letter-spacing:1px;text-transform:uppercase">Modelo</div>
+          <div style="font-size:9px;color:var(--text3);text-align:center">OF Pend.</div>
+          <div style="font-size:9px;color:var(--text3);text-align:center">En edic.</div>
+          <div style="font-size:9px;color:var(--text3);text-align:center">Listos</div>
+          <div style="font-size:9px;color:var(--text3);text-align:center">Publicados</div>
+          <div style="font-size:9px;color:var(--text3)">Estado</div>
+        </div>
+        <div id="dash-modelos"><div class="empty-state">Cargando...</div></div>
+      </div>
+
+      <!-- Reuniones hoy y semana -->
+      <div class="sec-hd"><div class="sec-hd-title">Reuniones</div><div class="sec-hd-line"></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+        <div class="card">
+          <div class="card-hd"><div class="card-title">Hoy</div><span id="dash-reu-hoy-count" style="margin-left:auto;font-size:10px;color:var(--text3)"></span></div>
+          <div id="dash-reu-hoy"><div class="empty-state" style="padding:20px">Sin reuniones hoy</div></div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><div class="card-title">Esta semana</div><span id="dash-reu-sem-count" style="margin-left:auto;font-size:10px;color:var(--text3)"></span></div>
+          <div id="dash-reu-sem"><div class="empty-state" style="padding:20px">Sin reuniones esta semana</div></div>
+        </div>
+      </div>
+
+      <!-- Actividad reciente -->
+      <div class="sec-hd"><div class="sec-hd-title">Actividad reciente</div><div class="sec-hd-line"></div></div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title">&#218;ltimas solicitudes</div><span id="dash-rec-count" style="margin-left:auto;font-size:10px;color:var(--text3)"></span></div>
+        <div id="dash-recientes"><div class="empty-state">Cargando...</div></div>
+      </div>
+    </div>
+
+    <!-- MODELOS -->
+    <div class="view" id="view-modelos">
+      <div class="sec-hd">
+        <div class="sec-hd-title">Modelos</div>
+        <div class="sec-hd-line"></div>
+        <button onclick="openModalModelo(null)" class="btn-primary" style="font-size:11px;margin-left:8px">+ Nueva modelo</button>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title">Todas las modelos</div><span id="count-modelos" style="margin-left:auto;font-size:10px;color:var(--text3)"></span></div>
+        <table class="tbl" id="tbl-modelos">
+          <thead><tr>
+            <th></th><th>Nombre</th><th>Nicho</th><th>Estado</th><th>Plataformas</th><th>Asignaciones</th><th style="text-align:right">Acciones</th>
+          </tr></thead>
+          <tbody id="tbody-modelos"><tr><td colspan="7" class="empty-state">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- USUARIOS -->
+    <div class="view" id="view-usuarios">
+      <div class="sec-hd">
+        <div class="sec-hd-title">Usuarios</div>
+        <div class="sec-hd-line"></div>
+        <button onclick="openModalUsuario(null)" class="btn-primary" style="font-size:11px;margin-left:8px">+ Nuevo usuario</button>
+      </div>
+      <div class="filter-bar">
+        <span class="filter-label">Rol:</span>
+        <select class="filter-select" id="filt-rol-usr" onchange="renderUsuarios()">
+          <option value="all">Todos los roles</option>
+          <option value="admin">Admin</option>
+          <option value="cm">Content Manager</option>
+          <option value="editora">Editora</option>
+          <option value="poster">P&#243;ster</option>
+          <option value="modelo">Modelo</option>
+        </select>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title">Equipo WHYnot</div><span id="count-usuarios" style="margin-left:auto;font-size:10px;color:var(--text3)"></span></div>
+        <table class="tbl">
+          <thead><tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Estado</th><th style="text-align:right">Acciones</th></tr></thead>
+          <tbody id="tbody-usuarios"><tr><td colspan="5" class="empty-state">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ASIGNACIONES -->
+    <div class="view" id="view-asignaciones">
+      <div class="sec-hd"><div class="sec-hd-title">Asignaciones</div><div class="sec-hd-line"></div></div>
+      <p style="font-size:12px;color:var(--text3);margin-bottom:14px">Define qui&#233;n trabaja con cada modelo. Click en una modelo para gestionar su equipo.</p>
+      <div class="card">
+        <div class="card-hd"><div class="card-title">Modelo &#8594; Equipo asignado</div></div>
+        <div id="list-asignaciones"><div class="empty-state">Cargando...</div></div>
+      </div>
+    </div>
+
+    <!-- SOLICITUDES -->
+    <div class="view" id="view-solicitudes">
+      <div class="filter-bar">
+        <span class="filter-label">Nicho:</span>
+        <select class="filter-select" id="filt-nicho-sol" onchange="onSolNichoChange()"><option value="all">Todos los nichos</option></select>
+        <span class="filter-label">Modelo:</span>
+        <select class="filter-select" id="filt-modelo-sol" onchange="renderSolicitudes()"><option value="all">Todas las modelos</option></select>
+        <span class="filter-label">Tipo:</span>
+        <select class="filter-select" id="filt-tipo-sol" onchange="renderSolicitudes()">
+          <option value="all">OF + Redes</option><option value="of">OnlyFans</option><option value="redes">Redes</option>
+        </select>
+        <span class="filter-label">Estado:</span>
+        <select class="filter-select" id="filt-estado-sol" onchange="renderSolicitudes()">
+          <option value="all">Todos</option>
+          <option value="pendiente">Pendiente</option><option value="entregado">Entregado</option>
+          <option value="en_edicion">En edición</option><option value="listo">Listo</option><option value="publicado">Publicado</option>
+        </select>
+        <span class="filter-label">Mes:</span>
+        <select class="filter-select" id="filt-mes-sol" onchange="renderSolicitudes()">
+          <option value="all">Todos</option>
+          <option value="0">Ene</option><option value="1">Feb</option><option value="2">Mar</option><option value="3">Abr</option>
+          <option value="4">May</option><option value="5">Jun</option><option value="6">Jul</option><option value="7">Ago</option>
+          <option value="8">Sep</option><option value="9">Oct</option><option value="10">Nov</option><option value="11">Dic</option>
+        </select>
+        <span class="filter-label">Semana:</span>
+        <select class="filter-select" id="filt-sem-sol" onchange="renderSolicitudes()">
+          <option value="all">Todas</option><option value="1">S1 (1-7)</option><option value="2">S2 (8-14)</option>
+          <option value="3">S3 (15-21)</option><option value="4">S4 (22-31)</option>
+        </select>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title">Todas las solicitudes</div><span id="count-sol" style="margin-left:auto;font-size:10px;color:var(--text3)"></span></div>
+        <table class="tbl">
+          <thead><tr><th>Modelo</th><th>Tipo</th><th>Contenido</th><th>Estado</th><th>Fecha entrega</th><th>Solicita</th></tr></thead>
+          <tbody id="tbody-sol"><tr><td colspan="6" class="empty-state">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- REUNIONES / CALENDARIO -->
+    <div class="view" id="view-reuniones">
+      <div class="sec-hd">
+        <div class="sec-hd-title">Calendario de reuniones</div>
+        <div class="sec-hd-line"></div>
+        <button onclick="openModalReunion(null)" class="btn-primary" style="font-size:11px;margin-left:8px">+ Nueva reunión</button>
+        <button onclick="refreshAll()" class="btn-ghost" style="font-size:10px;padding:4px 12px;margin-left:6px">&#8635;</button>
+      </div>
+      <!-- Navegacion mes -->
+      <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center">
+        <button onclick="reuCalPrev()" class="btn-ghost" style="padding:5px 14px;font-size:16px">&#8249;</button>
+        <div id="reu-cal-label" style="font-family:'Fraunces',serif;font-size:16px;color:var(--text);min-width:180px;text-align:center;font-weight:500"></div>
+        <button onclick="reuCalNext()" class="btn-ghost" style="padding:5px 14px;font-size:16px">&#8250;</button>
+        <button onclick="reuCalToday()" class="btn-ghost" style="margin-left:auto;font-size:10px;padding:4px 12px">Hoy</button>
+      </div>
+      <div id="reu-cal-grid" style="margin-bottom:16px"></div>
+      <div id="reu-cal-detail" style="display:none;margin-bottom:16px">
+        <div class="sec-hd"><div class="sec-hd-title" id="reu-cal-day-title">&#8212;</div><div class="sec-hd-line"></div></div>
+        <div id="reu-cal-day-list"></div>
+      </div>
+      <!-- Lista del mes -->
+      <div class="sec-hd"><div class="sec-hd-title">Reuniones del mes</div><div class="sec-hd-line"></div></div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title">Programadas</div><span id="count-reu" style="margin-left:auto;font-size:10px;color:var(--text3)"></span></div>
+        <table class="tbl">
+          <thead><tr><th>Título</th><th>Para</th><th>Fecha</th><th>Hora</th><th>Área</th><th style="text-align:right">Acciones</th></tr></thead>
+          <tbody id="tbody-reu"><tr><td colspan="6" class="empty-state">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ROLES -->
+    <div class="view" id="view-roles">
+      <div class="sec-hd">
+        <div class="sec-hd-title">Gestión de roles</div>
+        <div class="sec-hd-line"></div>
+        <button onclick="openModalUsuario(null)" class="btn-primary" style="font-size:11px;margin-left:8px">+ Nuevo usuario</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
+        <div class="card" style="padding:16px">
+          <div style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Content Managers</div>
+          <div id="rol-cms"><div class="empty-state" style="padding:12px">Cargando...</div></div>
+        </div>
+        <div class="card" style="padding:16px">
+          <div style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Editoras</div>
+          <div id="rol-editoras"><div class="empty-state" style="padding:12px">Cargando...</div></div>
+        </div>
+        <div class="card" style="padding:16px">
+          <div style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Posters</div>
+          <div id="rol-posters"><div class="empty-state" style="padding:12px">Cargando...</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title">Todos los usuarios del equipo</div><span id="count-roles" style="margin-left:auto;font-size:10px;color:var(--text3)"></span></div>
+        <table class="tbl">
+          <thead><tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Modelos asignadas</th><th>Estado</th><th style="text-align:right">Acciones</th></tr></thead>
+          <tbody id="tbody-roles"><tr><td colspan="6" class="empty-state">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL MODELO -->
+<div class="modal-overlay" id="modal-modelo" onclick="if(event.target===this)closeModal('modal-modelo')">
+  <div class="modal">
+    <div class="modal-hd"><span id="modal-modelo-title">Nueva modelo</span><button class="modal-close" onclick="closeModal('modal-modelo')">&#215;</button></div>
+    <input type="hidden" id="mm-id">
+    <div class="form-row" style="margin-bottom:13px">
+      <div class="form-group" style="margin:0"><label class="form-label">Nombre *</label><input class="form-input" id="mm-nombre" placeholder="Sofia M."></div>
+      <div class="form-group" style="margin:0"><label class="form-label">Nicho *</label><input class="form-input" id="mm-niche" placeholder="Talking Girl"></div>
+    </div>
+    <div class="form-row" style="margin-bottom:13px">
+      <div class="form-group" style="margin:0">
+        <label class="form-label">Estado</label>
+        <select class="form-select" id="mm-activa">
+          <option value="true">Activa</option>
+          <option value="false">Inactiva</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin:0"><label class="form-label">Foto URL</label><input class="form-input" id="mm-foto" placeholder="https://..."></div>
+    </div>
+    <div class="form-group"><label class="form-label">Plataformas (separadas por coma)</label><input class="form-input" id="mm-plataformas" placeholder="OnlyFans, Instagram, TikTok"></div>
+    <div class="form-group"><label class="form-label">Notas</label><textarea class="form-textarea" id="mm-notas" placeholder="Notas internas sobre la modelo..."></textarea></div>
+    <div class="form-actions">
+      <button class="btn-ghost" onclick="closeModal('modal-modelo')">Cancelar</button>
+      <button class="btn-danger" id="mm-btn-del" onclick="eliminarModelo()" style="display:none">Eliminar</button>
+      <button class="btn-primary" id="mm-btn-save" onclick="guardarModelo()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL USUARIO -->
+<div class="modal-overlay" id="modal-usuario" onclick="if(event.target===this)closeModal('modal-usuario')">
+  <div class="modal">
+    <div class="modal-hd"><span id="modal-usr-title">Nuevo usuario</span><button class="modal-close" onclick="closeModal('modal-usuario')">&#215;</button></div>
+    <input type="hidden" id="mu-id">
+    <div class="form-row" style="margin-bottom:13px">
+      <div class="form-group" style="margin:0"><label class="form-label">Nombre *</label><input class="form-input" id="mu-nombre" placeholder="Lucas"></div>
+      <div class="form-group" style="margin:0">
+        <label class="form-label">Rol *</label>
+        <select class="form-select" id="mu-rol">
+          <option value="admin">Admin</option>
+          <option value="cm">Content Manager</option>
+          <option value="editora">Editora</option>
+          <option value="poster">P&#243;ster</option>
+          <option value="modelo">Modelo</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row" style="margin-bottom:13px">
+      <div class="form-group" style="margin:0"><label class="form-label">Email *</label><input class="form-input" id="mu-email" type="email" placeholder="lucas@whynot.com"></div>
+      <div class="form-group" style="margin:0"><label class="form-label">Contrase&#241;a *</label><input class="form-input" id="mu-pass" placeholder="password123"></div>
+    </div>
+    <div class="form-group" id="mu-modelo-wrap" style="display:none">
+      <label class="form-label">Modelo vinculada (si rol = modelo)</label>
+      <select class="form-select" id="mu-modelo-id"><option value="">Ninguna</option></select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Estado</label>
+      <select class="form-select" id="mu-activo">
+        <option value="true">Activo</option>
+        <option value="false">Inactivo</option>
+      </select>
+    </div>
+    <div class="form-actions">
+      <button class="btn-ghost" onclick="closeModal('modal-usuario')">Cancelar</button>
+      <button class="btn-danger" id="mu-btn-del" onclick="eliminarUsuario()" style="display:none">Desactivar</button>
+      <button class="btn-primary" id="mu-btn-save" onclick="guardarUsuario()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ASIGNACIONES -->
+<div class="modal-overlay" id="modal-asig" onclick="if(event.target===this)closeModal('modal-asig')">
+  <div class="modal modal-lg">
+    <div class="modal-hd"><span id="modal-asig-title">Asignar equipo</span><button class="modal-close" onclick="closeModal('modal-asig')">&#215;</button></div>
+    <p style="font-size:12px;color:var(--text3);margin-bottom:14px">Seleccion&#225; qu&#233; usuarios trabajan con esta modelo. Pueden haber m&#250;ltiples editoras y p&#243;steres.</p>
+    <div class="form-group">
+      <label class="form-label">Content Manager (OF)</label>
+      <select class="form-select" id="asig-cm"></select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Editora/s</label>
+      <div id="asig-editoras" style="display:flex;flex-direction:column;gap:6px"></div>
+      <button onclick="addEditoraRow()" class="btn-ghost" style="font-size:10px;padding:4px 12px;margin-top:6px">+ Agregar editora</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">P&#243;ster/s</label>
+      <div id="asig-posters" style="display:flex;flex-direction:column;gap:6px"></div>
+      <button onclick="addPosterRow()" class="btn-ghost" style="font-size:10px;padding:4px 12px;margin-top:6px">+ Agregar p&#243;ster</button>
+    </div>
+    <input type="hidden" id="asig-modelo-id">
+    <div class="form-actions">
+      <button class="btn-ghost" onclick="closeModal('modal-asig')">Cancelar</button>
+      <button class="btn-primary" onclick="guardarAsignaciones()">Guardar asignaciones</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL REUNION -->
+<div class="modal-overlay" id="modal-reunion" onclick="if(event.target===this)closeModal('modal-reunion')">
+  <div class="modal">
+    <div class="modal-hd"><span id="modal-reu-title">Nueva reuni&#243;n</span><button class="modal-close" onclick="closeModal('modal-reunion')">&#215;</button></div>
+    <input type="hidden" id="mr-id">
+    <div class="form-group"><label class="form-label">T&#237;tulo *</label><input class="form-input" id="mr-titulo" placeholder="Call semanal OF"></div>
+    <div class="form-row" style="margin-bottom:13px">
+      <div class="form-group" style="margin:0"><label class="form-label">Para (usuario) *</label><select class="form-select" id="mr-usuario"></select></div>
+      <div class="form-group" style="margin:0">
+        <label class="form-label">&#193;rea</label>
+        <select class="form-select" id="mr-area">
+          <option value="general">General</option>
+          <option value="of">OnlyFans</option>
+          <option value="redes">Redes</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row" style="margin-bottom:13px">
+      <div class="form-group" style="margin:0"><label class="form-label">Fecha *</label><input class="form-input" type="date" id="mr-fecha"></div>
+      <div class="form-group" style="margin:0"><label class="form-label">Hora</label><input class="form-input" type="time" id="mr-hora"></div>
+    </div>
+    <div class="form-row" style="margin-bottom:13px">
+      <div class="form-group" style="margin:0"><label class="form-label">Duraci&#243;n (min)</label><input class="form-input" type="number" id="mr-duracion" placeholder="60" value="60"></div>
+      <div class="form-group" style="margin:0"><label class="form-label">Link (Meet/Zoom)</label><input class="form-input" id="mr-link" placeholder="https://meet.google.com/..."></div>
+    </div>
+    <div class="form-group"><label class="form-label">Descripci&#243;n</label><textarea class="form-textarea" id="mr-desc" placeholder="Agenda de la reuni&#243;n..."></textarea></div>
+    <div class="form-actions">
+      <button class="btn-ghost" onclick="closeModal('modal-reunion')">Cancelar</button>
+      <button class="btn-danger" id="mr-btn-del" onclick="eliminarReunion()" style="display:none">Eliminar</button>
+      <button class="btn-primary" id="mr-btn-save" onclick="guardarReunion()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var SB="https://mltzngfkhsuwpwuuyfim.supabase.co";
+var KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1sdHpuZ2ZraHN1d3B3dXV5ZmltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwMDk0OTcsImV4cCI6MjA5MDU4NTQ5N30.mU7K8Tf7tNOQoebxktbMLMgmFhKGzLLR0YEemo0jams";
+var H={"apikey":KEY,"Authorization":"Bearer "+KEY,"Content-Type":"application/json","Prefer":"return=representation"};
+var SESSION=null,MODELOS=[],USUARIOS=[],SOLICITUDES=[],ASIGNACIONES=[],REUNIONES=[];
+
+function getSession(){try{return JSON.parse(localStorage.getItem("wn_session")||"null");}catch(e){return null;}}
+function logout(){localStorage.removeItem("wn_session");window.location.href="login.html";}
+function todayStr(){return new Date().toISOString().split("T")[0];}
+
+async function sbFetch(p){var r=await fetch(SB+"/rest/v1/"+p,{headers:H});return r.json();}
+async function sbPost(t,d){var r=await fetch(SB+"/rest/v1/"+t,{method:"POST",headers:H,body:JSON.stringify(d)});return r.json();}
+async function sbPatch(t,id,d){var r=await fetch(SB+"/rest/v1/"+t+"?id=eq."+id,{method:"PATCH",headers:H,body:JSON.stringify(d)});return r.json();}
+async function sbDelete(t,id){await fetch(SB+"/rest/v1/"+t+"?id=eq."+id,{method:"DELETE",headers:H});}
+async function sbDeleteWhere(t,where){await fetch(SB+"/rest/v1/"+t+"?"+where,{method:"DELETE",headers:H});}
+
+async function init(){
+  SESSION=getSession();
+  if(!SESSION||SESSION.rol!=="admin"){window.location.href="login.html";return;}
+  document.getElementById("sb-nombre").textContent=SESSION.nombre;
+  var ini=SESSION.nombre.split(" ").map(function(w){return w[0];}).join("").substring(0,2).toUpperCase();
+  var av=document.getElementById("sb-avatar");
+  if(SESSION.avatar){av.innerHTML="<img src='"+SESSION.avatar+"'>";}else{av.textContent=ini;}
+  var now=new Date();
+  var months=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+  document.getElementById("today-date").textContent="Hoy: "+now.getDate()+" "+months[now.getMonth()]+" "+now.getFullYear();
+  var th=localStorage.getItem("wn-theme");
+  if(th==="dark"){document.documentElement.setAttribute("data-theme","dark");document.getElementById("theme-btn").textContent="🌙";}
+  // Set default month
+  var curMon=String(new Date().getMonth());
+  ["dash-mes","filt-mes-sol"].forEach(function(id){var el=document.getElementById(id);if(el)el.value=curMon;});
+  // Set nav group heights
+  document.querySelectorAll(".nav-group-body").forEach(function(b){
+    b.style.maxHeight=b.scrollHeight+"px";
+  });
+  await loadData();
+}
+
+async function loadData(){
+  MODELOS=await sbFetch("modelos?select=*&order=nombre");
+  USUARIOS=await sbFetch("usuarios?select=*&order=nombre");
+  ASIGNACIONES=await sbFetch("asignaciones?select=*,usuarios(nombre,rol)");
+  SOLICITUDES=await sbFetch("solicitudes?select=*,modelos(nombre)&order=created_at.desc&limit=200");
+  REUNIONES=await sbFetch("reuniones?select=*,usuarios(nombre,rol)&order=fecha.desc");
+  renderAll();
+}
+
+function renderRoles(){
+  var cms=USUARIOS.filter(function(u){return u.rol==="cm"&&u.activo;});
+  var eds=USUARIOS.filter(function(u){return u.rol==="editora"&&u.activo;});
+  var pos=USUARIOS.filter(function(u){return u.rol==="poster"&&u.activo;});
+  function userCard(u){
+    var asigs=ASIGNACIONES.filter(function(a){return a.usuario_id===u.id;});
+    var modelos=asigs.length+" modelo"+(asigs.length===1?"":"s");
+    return "<div style='display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)'>"
+      +"<div><div style='font-size:12px;font-weight:600;color:var(--text)'>"+u.nombre+"</div>"
+      +"<div style='font-size:10px;color:var(--text3)'>"+modelos+"</div></div>"
+      +"<button class='btn-ghost' style='font-size:10px;padding:3px 10px' data-edit-usr='"+u.id+"'>Editar</button>"
+      +"</div>";
+  }
+  document.getElementById("rol-cms").innerHTML=cms.length?cms.map(userCard).join(""):"<div style='font-size:11px;color:var(--text3)'>Sin CMs</div>";
+  document.getElementById("rol-editoras").innerHTML=eds.length?eds.map(userCard).join(""):"<div style='font-size:11px;color:var(--text3)'>Sin editoras</div>";
+  document.getElementById("rol-posters").innerHTML=pos.length?pos.map(userCard).join(""):"<div style='font-size:11px;color:var(--text3)'>Sin posters</div>";
+  // Full table
+  var noAdminNoModelo=USUARIOS.filter(function(u){return u.rol!=="modelo"&&u.rol!=="admin";});
+  document.getElementById("count-roles").textContent=noAdminNoModelo.length+" usuarios";
+  var rolLabels={admin:"Admin",cm:"Content Manager",editora:"Editora",poster:"Póster",modelo:"Modelo"};
+  var rolCls={admin:"rb-admin",cm:"rb-cm",editora:"rb-editora",poster:"rb-poster",modelo:"rb-modelo"};
+  document.getElementById("tbody-roles").innerHTML=noAdminNoModelo.map(function(u){
+    var asigs=ASIGNACIONES.filter(function(a){return a.usuario_id===u.id;}).map(function(a){
+      var m=MODELOS.find(function(x){return x.id===a.modelo_id;});
+      return m?m.nombre:"-";
+    });
+    return "<tr>"
+      +"<td><div class='tbl-name'>"+u.nombre+"</div></td>"
+      +"<td>"+( u.email||"-")+"</td>"
+      +"<td><span class='rol-badge "+(rolCls[u.rol]||"")+"'>"+(rolLabels[u.rol]||u.rol)+"</span></td>"
+      +"<td style='font-size:11px;color:var(--text3)'>"+(asigs.join(", ")||"Sin modelos")+"</td>"
+      +"<td><span class='status-dot "+(u.activo?"dot-green":"dot-red")+"'></span>"+(u.activo?"Activo":"Inactivo")+"</td>"
+      +"<td><div class='tbl-actions'><button class='btn-ghost' style='font-size:10px;padding:4px 10px' data-edit-usr='"+u.id+"'>Editar</button></div></td>"
+      +"</tr>";
+  }).join("")||"<tr><td colspan='6' class='empty-state'>Sin usuarios</td></tr>";
+}
+
+function renderAll(){
+  renderDashboard();renderModelos();renderUsuarios();renderRoles();
+  renderAsignaciones();renderSolicitudes();renderReuniones();
+  populateSelects();
+}
+
+// ââ DASHBOARD ââ
+function renderDashboard(){
+  var activas=MODELOS.filter(function(m){return m.activa;}).length;
+  var pend=SOLICITUDES.filter(function(s){return s.estado==="pendiente";}).length;
+  var pub=SOLICITUDES.filter(function(s){return s.estado==="publicado"&&s.publicado_at&&s.publicado_at.startsWith(todayStr());}).length;
+  var users=USUARIOS.filter(function(u){return u.activo;}).length;
+  document.getElementById("st-modelos").textContent=activas;
+  document.getElementById("st-pend").textContent=pend;
+  document.getElementById("st-pub").textContent=pub;
+  document.getElementById("st-users").textContent=users;
+
+  // Por modelo table
+  var el=document.getElementById("dash-modelos");
+  el.innerHTML=MODELOS.map(function(m){
+    var sols=SOLICITUDES.filter(function(s){return s.modelo_id===m.id;});
+    var ofPend=sols.filter(function(s){return s.tipo==="of"&&s.estado==="pendiente";}).length;
+    var enEd=sols.filter(function(s){return s.estado==="en_edicion";}).length;
+    var listos=sols.filter(function(s){return s.estado==="listo";}).length;
+    var pubTotal=sols.filter(function(s){return s.estado==="publicado";}).length;
+    var av=m.foto_url
+      ?"<img src='"+m.foto_url+"' class='model-avatar'>"
+      :"<div class='model-avatar-placeholder'>"+(m.nombre||"M").substring(0,2).toUpperCase()+"</div>";
+    return "<div style='display:grid;grid-template-columns:36px 1fr 80px 70px 70px 70px 80px;gap:8px;align-items:center;padding:9px 14px;border-bottom:1px solid var(--border)'>"
+      +"<div>"+av+"</div>"
+      +"<div><div style='font-size:12px;font-weight:600;color:var(--text)'>"+m.nombre+"</div>"
+      +"<div style='font-size:9px;color:var(--text3)'>"+(m.niche||"")+"</div></div>"
+      +"<div style='text-align:center;font-size:13px;font-weight:700;color:"+(ofPend?"var(--amber)":"var(--text3)")+"'>"+ofPend+"</div>"
+      +"<div style='text-align:center;font-size:13px;font-weight:700;color:"+(enEd?"var(--blue)":"var(--text3)")+"'>"+enEd+"</div>"
+      +"<div style='text-align:center;font-size:13px;font-weight:700;color:"+(listos?"var(--green)":"var(--text3)")+"'>"+listos+"</div>"
+      +"<div style='text-align:center;font-size:13px;font-weight:700;color:"+(pubTotal?"var(--text2)":"var(--text3)")+"'>"+pubTotal+"</div>"
+      +"<div><span class='status-dot "+(m.activa?"dot-green":"dot-red")+"'></span>"
+      +"<span style='font-size:11px;color:var(--text3)'>"+(m.activa?"Activa":"Inactiva")+"</span></div>"
+      +"</div>";
+  }).join("")||"<div class='empty-state'>Sin modelos</div>";
+
+  // Actividad reciente
+  var rec=SOLICITUDES.slice(0,8);
+  document.getElementById("dash-rec-count").textContent=rec.length+" recientes";
+  document.getElementById("dash-recientes").innerHTML=rec.map(function(s){
+    var modelo=s.modelos?s.modelos.nombre:"-";
+    var fecha=s.fecha_entrega?new Date(s.fecha_entrega+"T12:00").toLocaleDateString("es-AR",{day:"numeric",month:"short"}):"";
+    var statusCls={pendiente:"sp-pendiente",entregado:"sp-entregado",en_edicion:"sp-entregado",listo:"sp-listo",publicado:"sp-publicado"};
+    var statusLbl={pendiente:"Pendiente",entregado:"Entregado",en_edicion:"En edición",listo:"Listo",publicado:"Publicado"};
+    return "<div style='display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid var(--border)'>"
+      +"<div style='font-size:12px;font-weight:600;color:var(--text);min-width:100px;flex-shrink:0'>"+modelo+"</div>"
+      +"<div style='flex:1;font-size:12px;color:var(--text2)'>"+(s.categoria||s.formato||"Contenido")
+      +" <span style='color:var(--text3);font-size:10px'>· "+(s.tipo==="of"?"OF":"Redes")+"</span></div>"
+      +"<span style='font-size:10px;color:var(--text3)'>"+fecha+"</span>"
+      +"<span class='status-pill "+(statusCls[s.estado]||"")+"'>"+(statusLbl[s.estado]||s.estado)+"</span>"
+      +"</div>";
+  }).join("")||"<div class='empty-state'>Sin actividad</div>";
+}
+
+// ââ MODELOS ââ
+function renderModelos(){
+  document.getElementById("count-modelos").textContent=MODELOS.length+" modelos";
+  var tbody=document.getElementById("tbody-modelos");
+  tbody.innerHTML=MODELOS.map(function(m){
+    var av=m.foto_url
+      ?"<img src='"+m.foto_url+"' class='model-avatar'>"
+      :"<div class='model-avatar-placeholder'>"+(m.nombre||"M").substring(0,2).toUpperCase()+"</div>";
+    var asigs=ASIGNACIONES.filter(function(a){return a.modelo_id===m.id;});
+    var chips=asigs.map(function(a){
+      var rol=a.usuarios?a.usuarios.rol:"";
+      var cls=rol==="cm"?"ac-cm":rol==="editora"?"ac-editora":"ac-poster";
+      return "<span class='asig-chip "+cls+"'>"+(a.usuarios?a.usuarios.nombre:"-")+"</span>";
+    }).join("");
+    var plats=(m.plataformas||[]).join(", ")||"-";
+    return "<tr>"
+      +"<td>"+av+"</td>"
+      +"<td><div class='tbl-name'>"+m.nombre+"</div></td>"
+      +"<td>"+( m.niche||"-")+"</td>"
+      +"<td><span class='status-dot "+(m.activa?"dot-green":"dot-red")+"'></span>"+(m.activa?"Activa":"Inactiva")+"</td>"
+      +"<td style='font-size:11px'>"+plats+"</td>"
+      +"<td><div class='asig-grid'>"+(chips||"<span style='font-size:10px;color:var(--text3)'>Sin asignar</span>")+"</div></td>"
+      +"<td><div class='tbl-actions'>"
+      +"<button class='btn-ghost' style='font-size:10px;padding:4px 10px' data-asig='"+m.id+"'>Equipo</button>"
+      +"<button class='btn-ghost' style='font-size:10px;padding:4px 10px' data-edit-mod='"+m.id+"'>Editar</button>"
+      +"</div></td>"
+      +"</tr>";
+  }).join("")||"<tr><td colspan='7' class='empty-state'>Sin modelos</td></tr>";
+}
+
+// ââ USUARIOS ââ
+function renderUsuarios(){
+  var rol=document.getElementById("filt-rol-usr").value||"all";
+  var items=rol==="all"?USUARIOS:USUARIOS.filter(function(u){return u.rol===rol;});
+  document.getElementById("count-usuarios").textContent=items.length+" usuarios";
+  var rolLabels={admin:"Admin",cm:"Content Manager",editora:"Editora",poster:"Póster",modelo:"Modelo"};
+  var rolCls={admin:"rb-admin",cm:"rb-cm",editora:"rb-editora",poster:"rb-poster",modelo:"rb-modelo"};
+  document.getElementById("tbody-usuarios").innerHTML=items.map(function(u){
+    return "<tr>"
+      +"<td><div class='tbl-name'>"+u.nombre+"</div></td>"
+      +"<td>"+( u.email||"-")+"</td>"
+      +"<td><span class='rol-badge "+(rolCls[u.rol]||"")+"'>"+(rolLabels[u.rol]||u.rol)+"</span></td>"
+      +"<td><span class='status-dot "+(u.activo?"dot-green":"dot-red")+"'></span>"+(u.activo?"Activo":"Inactivo")+"</td>"
+      +"<td><div class='tbl-actions'><button class='btn-ghost' style='font-size:10px;padding:4px 10px' data-edit-usr='"+u.id+"'>Editar</button></div></td>"
+      +"</tr>";
+  }).join("")||"<tr><td colspan='5' class='empty-state'>Sin usuarios</td></tr>";
+}
+
+// ââ ASIGNACIONES ââ
+function renderAsignaciones(){
+  var el=document.getElementById("list-asignaciones");
+  el.innerHTML=MODELOS.map(function(m){
+    var asigs=ASIGNACIONES.filter(function(a){return a.modelo_id===m.id;});
+    var chips=asigs.map(function(a){
+      var rol=a.usuarios?a.usuarios.rol:"";
+      var cls=rol==="cm"?"ac-cm":rol==="editora"?"ac-editora":"ac-poster";
+      var rolLabel=rol==="cm"?"CM":rol==="editora"?"Editora":rol==="poster"?"Póster":rol;
+      return "<span class='asig-chip "+cls+"'>"+rolLabel+": "+(a.usuarios?a.usuarios.nombre:"-")+"</span>";
+    }).join("");
+    var av=m.foto_url
+      ?"<img src='"+m.foto_url+"' class='model-avatar'>"
+      :"<div class='model-avatar-placeholder'>"+(m.nombre||"M").substring(0,2).toUpperCase()+"</div>";
+    return "<div style='display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer' data-asig='"+m.id+"'>"
+      +av
+      +"<div style='min-width:120px'><div style='font-size:12px;font-weight:600;color:var(--text)'>"+m.nombre+"</div>"
+      +"<div style='font-size:9px;color:var(--text3)'>"+(m.niche||"")+"</div></div>"
+      +"<div class='asig-grid' style='flex:1'>"+(chips||"<span style='font-size:10px;color:var(--text3)'>Sin equipo asignado</span>")+"</div>"
+      +"<button class='btn-ghost' style='font-size:10px;padding:4px 12px;flex-shrink:0' data-asig='"+m.id+"'>Gestionar</button>"
+      +"</div>";
+  }).join("")||"<div class='empty-state'>Sin modelos</div>";
+}
+
+// ââ SOLICITUDES ââ
+function onSolNichoChange(){
+  var nicho=document.getElementById("filt-nicho-sol").value||"all";
+  var models=nicho==="all"?MODELOS:MODELOS.filter(function(m){return m.niche===nicho;});
+  var modelIds=models.map(function(m){return m.id;});
+  var opts="<option value='all'>Todas las modelos</option>"+models.map(function(m){return "<option value='"+m.id+"'>"+m.nombre+"</option>";}).join("");
+  document.getElementById("filt-modelo-sol").innerHTML=opts;
+  renderSolicitudes();
+}
+
+function renderSolicitudes(){
+  var nicho=document.getElementById("filt-nicho-sol").value||"all";
+  var tipo=document.getElementById("filt-tipo-sol").value||"all";
+  var estado=document.getElementById("filt-estado-sol").value||"all";
+  var modeloId=document.getElementById("filt-modelo-sol").value||"all";
+  var mesId=document.getElementById("filt-mes-sol").value||"all";
+  var semId=document.getElementById("filt-sem-sol").value||"all";
+  var items=SOLICITUDES.slice();
+  if(nicho!=="all"){
+    var nichoModels=MODELOS.filter(function(m){return m.niche===nicho;}).map(function(m){return m.id;});
+    items=items.filter(function(s){return nichoModels.indexOf(s.modelo_id)!==-1;});
+  }
+  if(tipo!=="all")items=items.filter(function(s){return s.tipo===tipo;});
+  if(estado!=="all")items=items.filter(function(s){return s.estado===estado;});
+  if(modeloId!=="all")items=items.filter(function(s){return s.modelo_id===modeloId;});
+  items=items.filter(function(s){return matchPeriodo(s.fecha_entrega,mesId,semId);});
+  document.getElementById("count-sol").textContent=items.length+" solicitudes";
+  var statusCls={pendiente:"sp-pendiente",entregado:"sp-entregado",en_edicion:"sp-entregado",listo:"sp-listo",publicado:"sp-publicado"};
+  var statusLbl={pendiente:"Pendiente",entregado:"Entregado",en_edicion:"En edición",listo:"Listo",publicado:"Publicado"};
+  document.getElementById("tbody-sol").innerHTML=items.map(function(s){
+    var modelo=s.modelos?s.modelos.nombre:"-";
+    var fecha=s.fecha_entrega?new Date(s.fecha_entrega+"T12:00").toLocaleDateString("es-AR",{day:"numeric",month:"short"}):"";
+    return "<tr>"
+      +"<td><div class='tbl-name'>"+modelo+"</div></td>"
+      +"<td><span style='font-size:10px;font-weight:700;color:"+(s.tipo==="of"?"var(--amber)":"var(--green)")+"'>"+(s.tipo==="of"?"OF":"Redes")+"</span></td>"
+      +"<td>"+(s.categoria||s.formato||"-")+"</td>"
+      +"<td><span class='status-pill "+(statusCls[s.estado]||"")+"'>"+(statusLbl[s.estado]||s.estado)+"</span></td>"
+      +"<td>"+fecha+"</td>"
+      +"<td>"+(s.solicita_quien==="cm"?"CM":"Agencia")+"</td>"
+      +"</tr>";
+  }).join("")||"<tr><td colspan='6' class='empty-state'>Sin solicitudes</td></tr>";
+}
+
+// ââ REUNIONES ââ
+// ── CALENDARIO REUNIONES ──
+var reuCalY=new Date().getFullYear(),reuCalM=new Date().getMonth(),reuCalSelDay=null;
+var MN_REU=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+
+function renderCalReunionesAdmin(){
+  var grid=document.getElementById("reu-cal-grid");if(!grid)return;
+  document.getElementById("reu-cal-label").textContent=MN_REU[reuCalM]+" "+reuCalY;
+  var fd=new Date(reuCalY,reuCalM,1).getDay();var sd=(fd+6)%7;
+  var dim=new Date(reuCalY,reuCalM+1,0).getDate();var today=new Date();
+  var dayMap={};
+  REUNIONES.forEach(function(r){
+    if(!r.fecha)return;
+    var d=new Date(r.fecha+"T12:00");
+    if(d.getFullYear()===reuCalY&&d.getMonth()===reuCalM){
+      var day=d.getDate();if(!dayMap[day])dayMap[day]=[];dayMap[day].push(r);
+    }
+  });
+  var html="<div style='display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px'>";
+  ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"].forEach(function(d){html+="<div style='font-size:9px;font-weight:700;color:var(--text3);text-align:center;padding:4px 0'>"+d+"</div>";});
+  html+="</div><div style='display:grid;grid-template-columns:repeat(7,1fr);gap:4px'>";
+  for(var i=0;i<sd;i++)html+="<div style='min-height:70px;border-radius:8px;border:1px solid transparent'></div>";
+  for(var day=1;day<=dim;day++){
+    var isToday=today.getDate()===day&&today.getMonth()===reuCalM&&today.getFullYear()===reuCalY;
+    var isSel=reuCalSelDay===day;var reus=dayMap[day]||[];
+    var bg=isSel?"var(--gold-light)":isToday?"var(--blue-bg)":"var(--surface2)";
+    var border=isSel?"1px solid var(--gold)":isToday?"1px solid rgba(42,95,168,0.4)":"1px solid var(--border)";
+    html+="<div style='min-height:70px;border-radius:8px;border:"+border+";padding:6px;background:"+bg+";"+( reus.length?"cursor:pointer":"")+"'"+(reus.length?" onclick='reuCalSelectDay("+day+")'":"")+">";
+    html+="<div style='font-size:11px;font-weight:"+(isToday?"700":"600")+";color:"+(isToday?"var(--blue)":"var(--text2)")+";margin-bottom:4px'>"+day+"</div>";
+    reus.slice(0,2).forEach(function(r){html+="<div style='font-size:9px;font-weight:700;padding:1px 5px;border-radius:10px;background:var(--gold-bg);color:var(--amber);margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap'>"+(r.hora?r.hora.substring(0,5)+" ":"")+r.titulo.substring(0,12)+"</div>";});
+    if(reus.length>2)html+="<div style='font-size:9px;color:var(--text3)'>+"+( reus.length-2)+" más</div>";
+    html+="</div>";
+  }
+  html+="</div>";grid.innerHTML=html;
+  if(reuCalSelDay)reuCalSelectDay(reuCalSelDay);
+}
+
+function reuCalSelectDay(day){
+  reuCalSelDay=day;
+  var det=document.getElementById("reu-cal-detail");
+  document.getElementById("reu-cal-day-title").textContent=day+" de "+MN_REU[reuCalM]+" "+reuCalY;
+  var reus=REUNIONES.filter(function(r){
+    if(!r.fecha)return false;
+    var d=new Date(r.fecha+"T12:00");
+    return d.getDate()===day&&d.getMonth()===reuCalM&&d.getFullYear()===reuCalY;
+  });
+  if(!reus.length){det.style.display="none";renderCalReunionesAdmin();return;}
+  det.style.display="block";
+  det.innerHTML+="";
+  var list=document.getElementById("reu-cal-day-list");
+  list.innerHTML=reus.map(function(r){
+    var para=r.usuarios?r.usuarios.nombre:"-";
+    var areaLabel={general:"General",of:"OnlyFans",redes:"Redes"};
+    return "<div style='background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start'>"
+      +"<div style='font-family:Fraunces,serif;font-size:18px;font-weight:300;color:var(--text);min-width:48px'>"+(r.hora?r.hora.substring(0,5):"-")+"</div>"
+      +"<div style='flex:1'><div style='font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px'>"+r.titulo+"</div>"
+      +"<div style='font-size:10px;color:var(--text3)'>"+para+" · "+(areaLabel[r.area]||r.area||"-")+(r.duracion_min?" · "+r.duracion_min+" min":"")+"</div>"
+      +(r.descripcion?"<div style='font-size:11px;color:var(--text2);margin-top:4px'>"+r.descripcion+"</div>":"")+"</div>"
+      +"<div style='display:flex;gap:6px;flex-shrink:0'>"
+      +(r.link?"<button class='btn-ghost' style='font-size:10px;padding:4px 10px' data-link='"+r.link+"'>Link</button>":"")
+      +"<button class='btn-ghost' style='font-size:10px;padding:4px 10px' data-edit-reu='"+r.id+"'>Editar</button>"
+      +"</div></div>";
+  }).join("");
+  renderCalReunionesAdmin();
+}
+
+function reuCalPrev(){reuCalM--;if(reuCalM<0){reuCalM=11;reuCalY--;}reuCalSelDay=null;document.getElementById("reu-cal-detail").style.display="none";renderCalReunionesAdmin();}
+function reuCalNext(){reuCalM++;if(reuCalM>11){reuCalM=0;reuCalY++;}reuCalSelDay=null;document.getElementById("reu-cal-detail").style.display="none";renderCalReunionesAdmin();}
+function reuCalToday(){reuCalY=new Date().getFullYear();reuCalM=new Date().getMonth();reuCalSelDay=null;document.getElementById("reu-cal-detail").style.display="none";renderCalReunionesAdmin();}
+
+function renderReuniones(){
+  // Render calendar first
+  renderCalReunionesAdmin();
+  // Reuniones del mes en tabla
+  var mesReus=REUNIONES.filter(function(r){
+    if(!r.fecha)return false;
+    var d=new Date(r.fecha+"T12:00");
+    return d.getFullYear()===reuCalY&&d.getMonth()===reuCalM;
+  });
+  document.getElementById("count-reu").textContent=mesReus.length+" reuniones";
+  var areaLabel={general:"General",of:"OnlyFans",redes:"Redes"};
+  document.getElementById("tbody-reu").innerHTML=mesReus.map(function(r){
+    var para=r.usuarios?r.usuarios.nombre:"-";
+    var fecha=r.fecha?new Date(r.fecha+"T12:00").toLocaleDateString("es-AR",{day:"numeric",month:"short",year:"numeric"}):"";
+    return "<tr>"
+      +"<td><div class='tbl-name'>"+r.titulo+"</div>"+(r.descripcion?"<div style='font-size:10px;color:var(--text3)'>"+r.descripcion.substring(0,50)+"</div>":"")+"</td>"
+      +"<td>"+para+"</td>"
+      +"<td>"+fecha+"</td>"
+      +"<td>"+(r.hora?r.hora.substring(0,5):"-")+"</td>"
+      +"<td>"+(areaLabel[r.area]||r.area||"-")+"</td>"
+      +"<td><div class='tbl-actions'>"
+      +(r.link?"<button class='btn-ghost' style='font-size:10px;padding:4px 10px' data-link='"+r.link+"'>Link</button>":"")
+      +"<button class='btn-ghost' style='font-size:10px;padding:4px 10px' data-edit-reu='"+r.id+"'>Editar</button>"
+      +"</div></td>"
+      +"</tr>";
+  }).join("")||"<tr><td colspan='6' class='empty-state'>Sin reuniones</td></tr>";
+}
+
+// ââ POPULATE SELECTS ââ
+function populateSelects(){
+  // Nicho filter in solicitudes
+  var nichos=[...new Set(MODELOS.map(function(m){return m.niche;}).filter(Boolean))].sort();
+  var nichoOpts="<option value='all'>Todos los nichos</option>"+nichos.map(function(n){return "<option value='"+n+"'>"+n+"</option>";}).join("");
+  document.getElementById("filt-nicho-sol").innerHTML=nichoOpts;
+  // Modelo filter in solicitudes
+  var modOpts="<option value='all'>Todas las modelos</option>"+MODELOS.map(function(m){return "<option value='"+m.id+"'>"+m.nombre+"</option>";}).join("");
+  document.getElementById("filt-modelo-sol").innerHTML=modOpts;
+  // Usuario select for reuniones
+  var usrOpts="<option value=''>Seleccionar usuario...</option>"+USUARIOS.filter(function(u){return u.activo;}).map(function(u){return "<option value='"+u.id+"'>"+u.nombre+" ("+u.rol+")</option>";}).join("");
+  document.getElementById("mr-usuario").innerHTML=usrOpts;
+  // Modelo select for usuarios
+  var modOpts2="<option value=''>Ninguna</option>"+MODELOS.map(function(m){return "<option value='"+m.id+"'>"+m.nombre+"</option>";}).join("");
+  document.getElementById("mu-modelo-id").innerHTML=modOpts2;
+}
+
+// ââ MODAL MODELO ââ
+function updateFotoPreview(url){
+  var prev=document.getElementById("mm-foto-preview");if(!prev)return;
+  if(url){prev.innerHTML="<img src='"+url+"' style='width:100%;height:100%;object-fit:cover;border-radius:50%'>";}
+  else{prev.textContent="?";}
+}
+
+function handleFotoUpload(e){
+  var file=e.target.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    document.getElementById("mm-foto").value=ev.target.result;
+    updateFotoPreview(ev.target.result);
+  };
+  reader.readAsDataURL(file);
+}
+
+function openModalModelo(id){
+  var m=id?MODELOS.find(function(x){return x.id===id;}):null;
+  document.getElementById("modal-modelo-title").textContent=m?"Editar modelo":"Nueva modelo";
+  document.getElementById("mm-id").value=m?m.id:"";
+  document.getElementById("mm-nombre").value=m?m.nombre||"":"";
+  document.getElementById("mm-niche").value=m?m.niche||"":"";
+  document.getElementById("mm-activa").value=m?(m.activa?"true":"false"):"true";
+  document.getElementById("mm-foto").value=m?m.foto_url||"":"";
+  document.getElementById("mm-plataformas").value=m?(m.plataformas||[]).join(", "):"";
+  document.getElementById("mm-notas").value=m?m.notas||"":"";
+  document.getElementById("mm-btn-del").style.display=m?"inline-flex":"none";
+  updateFotoPreview(m?m.foto_url||"":"");
+  openModal("modal-modelo");
+}
+
+async function guardarModelo(){
+  var id=document.getElementById("mm-id").value;
+  var data={
+    nombre:document.getElementById("mm-nombre").value.trim(),
+    niche:document.getElementById("mm-niche").value.trim(),
+    activa:document.getElementById("mm-activa").value==="true",
+    foto_url:document.getElementById("mm-foto").value.trim()||null,
+    plataformas:document.getElementById("mm-plataformas").value.split(",").map(function(s){return s.trim();}).filter(Boolean),
+    notas:document.getElementById("mm-notas").value.trim()||null
+  };
+  if(!data.nombre){showToast("El nombre es requerido");return;}
+  var btn=document.getElementById("mm-btn-save");btn.disabled=true;btn.textContent="Guardando...";
+  try{
+    if(id){await sbPatch("modelos",id,data);}
+    else{await sbPost("modelos",data);}
+    closeModal("modal-modelo");await loadData();showToast("✓ Modelo guardada");
+  }catch(e){showToast("Error al guardar.");}
+  finally{btn.disabled=false;btn.textContent="Guardar";}
+}
+
+async function eliminarModelo(){
+  var id=document.getElementById("mm-id").value;
+  if(!confirm("Eliminar esta modelo? Esta acción no se puede deshacer."))return;
+  await sbDelete("modelos",id);
+  closeModal("modal-modelo");await loadData();showToast("Modelo eliminada");
+}
+
+// ââ MODAL USUARIO ââ
+function openModalUsuario(id){
+  var u=id?USUARIOS.find(function(x){return x.id===id;}):null;
+  document.getElementById("modal-usr-title").textContent=u?"Editar usuario":"Nuevo usuario";
+  document.getElementById("mu-id").value=u?u.id:"";
+  document.getElementById("mu-nombre").value=u?u.nombre||"":"";
+  document.getElementById("mu-email").value=u?u.email||"":"";
+  document.getElementById("mu-pass").value=u?u.password_hash||"":"";
+  document.getElementById("mu-rol").value=u?u.rol:"cm";
+  document.getElementById("mu-activo").value=u?(u.activo?"true":"false"):"true";
+  document.getElementById("mu-modelo-id").value=u?u.modelo_id||"":"";
+  document.getElementById("mu-modelo-wrap").style.display=(u&&u.rol==="modelo")||(document.getElementById("mu-rol").value==="modelo")?"block":"none";
+  document.getElementById("mu-btn-del").style.display=u?"inline-flex":"none";
+  openModal("modal-usuario");
+}
+
+document.getElementById("mu-rol").addEventListener("change",function(){
+  document.getElementById("mu-modelo-wrap").style.display=this.value==="modelo"?"block":"none";
+});
+
+async function guardarUsuario(){
+  var id=document.getElementById("mu-id").value;
+  var rol=document.getElementById("mu-rol").value;
+  var data={
+    nombre:document.getElementById("mu-nombre").value.trim(),
+    email:document.getElementById("mu-email").value.trim(),
+    password_hash:document.getElementById("mu-pass").value.trim(),
+    rol:rol,
+    activo:document.getElementById("mu-activo").value==="true",
+    modelo_id:rol==="modelo"?(document.getElementById("mu-modelo-id").value||null):null
+  };
+  if(!data.nombre||!data.email){showToast("Nombre y email requeridos");return;}
+  var btn=document.getElementById("mu-btn-save");btn.disabled=true;btn.textContent="Guardando...";
+  try{
+    if(id){await sbPatch("usuarios",id,data);}
+    else{await sbPost("usuarios",data);}
+    closeModal("modal-usuario");await loadData();showToast("✓ Usuario guardado");
+  }catch(e){showToast("Error al guardar.");}
+  finally{btn.disabled=false;btn.textContent="Guardar";}
+}
+
+async function eliminarUsuario(){
+  var id=document.getElementById("mu-id").value;
+  await sbPatch("usuarios",id,{activo:false});
+  closeModal("modal-usuario");await loadData();showToast("Usuario desactivado");
+}
+
+// ââ ASIGNACIONES MODAL ââ
+function openAsignaciones(modeloId){
+  var m=MODELOS.find(function(x){return x.id===modeloId;});
+  if(!m)return;
+  document.getElementById("modal-asig-title").textContent="Equipo de "+m.nombre;
+  document.getElementById("asig-modelo-id").value=modeloId;
+  var asigs=ASIGNACIONES.filter(function(a){return a.modelo_id===modeloId;});
+  var editoras=USUARIOS.filter(function(u){return u.rol==="editora"&&u.activo;});
+  var posters=USUARIOS.filter(function(u){return u.rol==="poster"&&u.activo;});
+  var cms=USUARIOS.filter(function(u){return u.rol==="cm"&&u.activo;});
+  // CM select
+  var cmAsig=asigs.find(function(a){return a.usuarios&&a.usuarios.rol==="cm";});
+  document.getElementById("asig-cm").innerHTML="<option value=''>Sin CM asignado</option>"
+    +cms.map(function(u){return "<option value='"+u.id+"'"+(cmAsig&&cmAsig.usuario_id===u.id?" selected":"")+">" +u.nombre+"</option>";}).join("");
+  // Editoras rows
+  var edAsigs=asigs.filter(function(a){return a.usuarios&&a.usuarios.rol==="editora";});
+  var edContainer=document.getElementById("asig-editoras");
+  edContainer.innerHTML="";
+  if(edAsigs.length){edAsigs.forEach(function(a){addEditoraRow(a.usuario_id);});}
+  else{addEditoraRow();}
+  // Posters rows
+  var poAsigs=asigs.filter(function(a){return a.usuarios&&a.usuarios.rol==="poster";});
+  var poContainer=document.getElementById("asig-posters");
+  poContainer.innerHTML="";
+  if(poAsigs.length){poAsigs.forEach(function(a){addPosterRow(a.usuario_id);});}
+  else{addPosterRow();}
+  openModal("modal-asig");
+}
+
+function makeUserSelect(usuarios,selectedId){
+  return "<select class='form-select' style='flex:1'><option value=''>Sin asignar</option>"
+    +usuarios.map(function(u){return "<option value='"+u.id+"'"+(u.id===selectedId?" selected":"")+">" +u.nombre+"</option>";}).join("")
+    +"</select>";
+}
+
+function addEditoraRow(selectedId){
+  var editoras=USUARIOS.filter(function(u){return u.rol==="editora"&&u.activo;});
+  var row=document.createElement("div");row.style.display="flex";row.style.gap="6px";row.style.alignItems="center";
+  row.innerHTML=makeUserSelect(editoras,selectedId)
+    +"<button onclick='this.parentElement.remove()' class='btn-danger' style='padding:4px 10px;font-size:11px;flex-shrink:0'>×</button>";
+  document.getElementById("asig-editoras").appendChild(row);
+}
+
+function addPosterRow(selectedId){
+  var posters=USUARIOS.filter(function(u){return u.rol==="poster"&&u.activo;});
+  var row=document.createElement("div");row.style.display="flex";row.style.gap="6px";row.style.alignItems="center";
+  row.innerHTML=makeUserSelect(posters,selectedId)
+    +"<button onclick='this.parentElement.remove()' class='btn-danger' style='padding:4px 10px;font-size:11px;flex-shrink:0'>×</button>";
+  document.getElementById("asig-posters").appendChild(row);
+}
+
+async function guardarAsignaciones(){
+  var modeloId=document.getElementById("asig-modelo-id").value;
+  var btn=document.querySelector("#modal-asig .btn-primary");btn.disabled=true;btn.textContent="Guardando...";
+  try{
+    // Delete all existing asignaciones for this modelo
+    await sbDeleteWhere("asignaciones","modelo_id=eq."+modeloId);
+    var nuevas=[];
+    // CM
+    var cmId=document.getElementById("asig-cm").value;
+    if(cmId)nuevas.push({usuario_id:cmId,modelo_id:modeloId});
+    // Editoras
+    document.getElementById("asig-editoras").querySelectorAll("select").forEach(function(s){
+      if(s.value)nuevas.push({usuario_id:s.value,modelo_id:modeloId});
+    });
+    // Posters
+    document.getElementById("asig-posters").querySelectorAll("select").forEach(function(s){
+      if(s.value)nuevas.push({usuario_id:s.value,modelo_id:modeloId});
+    });
+    if(nuevas.length){await sbPost("asignaciones",nuevas);}
+    closeModal("modal-asig");await loadData();showToast("✓ Asignaciones guardadas");
+  }catch(e){showToast("Error al guardar.");}
+  finally{btn.disabled=false;btn.textContent="Guardar asignaciones";}
+}
+
+// ââ MODAL REUNION ââ
+function openModalReunion(id){
+  var r=id?REUNIONES.find(function(x){return x.id===id;}):null;
+  document.getElementById("modal-reu-title").textContent=r?"Editar reunión":"Nueva reunión";
+  document.getElementById("mr-id").value=r?r.id:"";
+  document.getElementById("mr-titulo").value=r?r.titulo||"":"";
+  document.getElementById("mr-usuario").value=r?r.para_usuario_id||"":"";
+  document.getElementById("mr-area").value=r?r.area||"general":"general";
+  document.getElementById("mr-fecha").value=r?r.fecha||"":todayStr();
+  document.getElementById("mr-hora").value=r?r.hora||"":"";
+  document.getElementById("mr-duracion").value=r?r.duracion_min||60:60;
+  document.getElementById("mr-link").value=r?r.link||"":"";
+  document.getElementById("mr-desc").value=r?r.descripcion||"":"";
+  document.getElementById("mr-btn-del").style.display=r?"inline-flex":"none";
+  openModal("modal-reunion");
+}
+
+async function guardarReunion(){
+  var id=document.getElementById("mr-id").value;
+  var data={
+    titulo:document.getElementById("mr-titulo").value.trim(),
+    para_usuario_id:document.getElementById("mr-usuario").value||null,
+    area:document.getElementById("mr-area").value,
+    fecha:document.getElementById("mr-fecha").value,
+    hora:document.getElementById("mr-hora").value||null,
+    duracion_min:parseInt(document.getElementById("mr-duracion").value)||60,
+    link:document.getElementById("mr-link").value.trim()||null,
+    descripcion:document.getElementById("mr-desc").value.trim()||null,
+    created_by:SESSION.id
+  };
+  if(!data.titulo||!data.fecha){showToast("Título y fecha requeridos");return;}
+  var btn=document.getElementById("mr-btn-save");btn.disabled=true;btn.textContent="Guardando...";
+  try{
+    if(id){await sbPatch("reuniones",id,data);}
+    else{await sbPost("reuniones",data);}
+    closeModal("modal-reunion");await loadData();showToast("✓ Reunión guardada");
+  }catch(e){showToast("Error al guardar.");}
+  finally{btn.disabled=false;btn.textContent="Guardar";}
+}
+
+async function eliminarReunion(){
+  var id=document.getElementById("mr-id").value;
+  if(!confirm("Eliminar esta reunión?"))return;
+  await sbDelete("reuniones",id);
+  closeModal("modal-reunion");await loadData();showToast("Reunión eliminada");
+}
+
+// ââ EVENT DELEGATION ââ
+document.addEventListener("click",function(e){
+  var linkBtn=e.target.closest("[data-link]");
+  if(linkBtn){window.open(linkBtn.dataset.link,"_blank");return;}
+  var asigBtn=e.target.closest("[data-asig]");
+  if(asigBtn){openAsignaciones(asigBtn.dataset.asig);return;}
+  var editMod=e.target.closest("[data-edit-mod]");
+  if(editMod){openModalModelo(editMod.dataset.editMod);return;}
+  var editUsr=e.target.closest("[data-edit-usr]");
+  if(editUsr){openModalUsuario(editUsr.dataset.editUsr);return;}
+  var editReu=e.target.closest("[data-edit-reu]");
+  if(editReu){openModalReunion(editReu.dataset.editReu);return;}
+});
+
+function openModal(id){document.getElementById(id).classList.add("open");}
+function closeModal(id){document.getElementById(id).classList.remove("open");}
+
+function toggleGroup(id){
+  var body=document.getElementById(id);
+  var arrow=document.getElementById("arr-"+id);
+  if(!body)return;
+  if(body.classList.contains("collapsed")){
+    body.classList.remove("collapsed");
+    body.style.maxHeight=body.scrollHeight+"px";
+  }else{
+    body.style.maxHeight=body.scrollHeight+"px";
+    setTimeout(function(){body.style.maxHeight="0";body.classList.add("collapsed");},10);
+  }
+  if(arrow)arrow.classList.toggle("collapsed");
+}
+
+function openPanel(url){
+  // Mark that we came from admin so other panels show back button
+  localStorage.setItem("wn_from_admin","1");
+  window.location.href=url;
+}
+
+var VMAP={dashboard:"Dashboard",modelos:"Modelos",usuarios:"Usuarios",roles:"Roles",asignaciones:"Asignaciones",solicitudes:"Solicitudes",reuniones:"Calendario"};
+function nav(id,el){
+  document.querySelectorAll(".view").forEach(function(v){v.classList.remove("active");});
+  var v=document.getElementById("view-"+id);if(v)v.classList.add("active");
+  document.querySelectorAll(".nav-item").forEach(function(i){i.classList.remove("active");});
+  if(el)el.classList.add("active");
+  document.getElementById("bc-text").textContent=VMAP[id]||id;
+  if(id==="reuniones")renderCalReunionesAdmin();
+}
+
+function toggleTheme(){
+  var root=document.documentElement;var btn=document.getElementById("theme-btn");
+  if(root.getAttribute("data-theme")==="dark"){root.removeAttribute("data-theme");btn.textContent="☀️";localStorage.setItem("wn-theme","light");}
+  else{root.setAttribute("data-theme","dark");btn.textContent="🌙";localStorage.setItem("wn-theme","dark");}
+}
+
+async function refreshAll(){showToast("Actualizando...");await loadData();showToast("✓ Actualizado");}
+function showToast(msg){var t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(function(){t.classList.remove("show");},2800);}
+
+// Init with demo fallback
+function initDemo(){
+  SESSION={id:"b1000000-0000-0000-0000-000000000001",nombre:"Admin",rol:"admin"};
+  document.getElementById("sb-nombre").textContent="Admin";
+  document.getElementById("sb-avatar").textContent="AD";
+  var now=new Date();
+  var months=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+  document.getElementById("today-date").textContent="Hoy: "+now.getDate()+" "+months[now.getMonth()]+" "+now.getFullYear();
+  var th=localStorage.getItem("wn-theme");
+  if(th==="dark"){document.documentElement.setAttribute("data-theme","dark");document.getElementById("theme-btn").textContent="🌙";}
+  loadData();
+}
+
+var s=getSession();
+if(s&&s.rol==="admin"){init();}else{initDemo();}
+</script>
+</body>
+</html>
