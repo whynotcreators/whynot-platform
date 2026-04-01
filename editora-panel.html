@@ -302,6 +302,10 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
         </select>
       </div>
       <div class="card" style="margin-bottom:12px">
+        <div class="card-hd"><div class="card-title">&#9201; Enviado al CM &mdash; esperando revisi&oacute;n</div><span id="count-of-enviado" style="margin-left:auto;font-size:10px;color:var(--amber)"></span></div>
+        <div id="list-of-enviado"><div class="empty-state">Sin ediciones enviadas al CM</div></div>
+      </div>
+      <div class="card" style="margin-bottom:12px">
         <div class="card-hd"><div class="card-title">&#10003; Aprobados por el CM</div><span id="count-of-aprobados" style="margin-left:auto;font-size:10px;color:var(--green)"></span></div>
         <div id="list-of-aprobados"><div class="empty-state">Sin ediciones aprobadas todavía</div></div>
       </div>
@@ -986,8 +990,8 @@ function populateEditoraSelects(){
 function renderOFEditar(){
   var modeloFilt=(document.getElementById("filt-modelo-of-editar")||{}).value||"all";
   var items=EDICIONES.filter(function(e){
-    if(e.estado==="editado"||e.aprobada===true)return false; // already done
-    if(e.aprobada===false&&e.estado==="pendiente")return false; // correction pending, shown elsewhere
+    if(e.estado!=="pendiente")return false; // only pending ones
+    if(e.aprobada===false)return false; // corrections shown elsewhere
     if(!e.solicitudes)return false;
     if(modeloFilt!=="all"&&(!e.solicitudes.modelos||e.solicitudes.modelos.nombre!==modeloFilt))return false;
     if(!matchMesEd(e.solicitudes.fecha_entrega,"filt-mes-of-editar"))return false;
@@ -1045,7 +1049,7 @@ function renderOFCorreccion(){
 
 function renderOFDemorados(){
   var items=EDICIONES.filter(function(e){
-    if(e.estado==="editado"||e.aprobada===true)return false;
+    if(e.estado!=="pendiente")return false;
     var s=e.solicitudes;
     return s&&s.fecha_entrega&&s.fecha_entrega<todayStrEd();
   });
@@ -1070,6 +1074,29 @@ function renderOFDemorados(){
 
 function renderOFEditado(){
   var mes=document.getElementById("filt-mes-of-editado");
+
+  // Enviado al CM - esperando revision (estado=editado, aprobada=null)
+  var enviados=EDICIONES.filter(function(e){
+    return e.estado==="editado"&&e.aprobada===null&&matchMesEd(e.solicitudes&&e.solicitudes.fecha_entrega,"filt-mes-of-editado");
+  });
+  var cntE=document.getElementById("count-of-enviado");if(cntE)cntE.textContent=enviados.length+(enviados.length===1?" item":" items");
+  var elE=document.getElementById("list-of-enviado");
+  if(elE){
+    elE.innerHTML=enviados.length?enviados.map(function(e){
+      var s=e.solicitudes;var modelo=s&&s.modelos?s.modelos.nombre:"-";
+      var fecha=s&&s.fecha_entrega?new Date(s.fecha_entrega+"T12:00").toLocaleDateString("es-AR",{day:"numeric",month:"short"}):"";
+      return "<div class='task-row'>"
+        +"<div class='task-modelo'>"+modelo+"</div>"
+        +"<div class='task-name'><div class='task-title'>"+(s?s.categoria||"Contenido":"")+"</div>"
+        +"<div class='task-meta'>"+(s?s.formato||"-":"-")+" · Entrega: "+fecha+"</div>"
+        +(e.notas?"<div class='task-meta' style='color:var(--text3);font-style:italic'>"+e.notas+"</div>":"")
+        +"</div>"
+        +"<span class='status-pill' style='background:var(--amber-bg);color:var(--amber)'>Esperando CM</span>"
+        +(e.drive_url_editado?"<button class='btn-ghost' style='font-size:10px;padding:4px 12px' data-open-drive='"+e.drive_url_editado+"'>Ver Drive</button>":"")
+        +"</div>";
+    }).join(""):"<div class='empty-state'>Sin ediciones enviadas al CM</div>";
+  }
+
   // Aprobados
   var aprobados=EDICIONES.filter(function(e){
     return e.aprobada===true&&matchMesEd(e.solicitudes&&e.solicitudes.fecha_entrega,"filt-mes-of-editado");
@@ -1128,9 +1155,10 @@ function renderDashboardEditora(){
     return true;
   }
   var filtered=EDICIONES.filter(function(e){return matchDash(e.solicitudes&&e.solicitudes.fecha_entrega);});
-  var paraEditar=filtered.filter(function(e){return e.estado!=="editado"&&e.aprobada!==true&&e.aprobada!==false;}).length;
-  var correcciones=filtered.filter(function(e){return e.aprobada===false&&e.estado==="pendiente";}).length;
-  var demorados=filtered.filter(function(e){return e.estado!=="editado"&&e.aprobada!==true&&e.solicitudes&&e.solicitudes.fecha_entrega&&e.solicitudes.fecha_entrega<hoy;}).length;
+  var paraEditar=filtered.filter(function(e){return e.estado==="pendiente"&&e.aprobada!==false;}).length;
+  var correcciones=filtered.filter(function(e){return e.aprobada===false;}).length;
+  var demorados=filtered.filter(function(e){return e.estado==="pendiente"&&e.solicitudes&&e.solicitudes.fecha_entrega&&e.solicitudes.fecha_entrega<hoy;}).length;
+  var enviados=filtered.filter(function(e){return e.estado==="editado"&&e.aprobada===null;}).length;
   var aprobados=filtered.filter(function(e){return e.aprobada===true;}).length;
   var boveda=filtered.filter(function(e){return e.solicitudes&&e.solicitudes.subido_boveda_at;}).length;
 
@@ -1295,9 +1323,9 @@ function renderAll(){
 
 function updateEditoraBadges(){
   var hoy=todayStrEd();
-  var editar=EDICIONES.filter(function(e){return e.estado!=="editado"&&e.aprobada!==true&&e.aprobada!==false;}).length;
-  var corr=EDICIONES.filter(function(e){return e.aprobada===false&&e.estado==="pendiente";}).length;
-  var dem=EDICIONES.filter(function(e){return e.estado!=="editado"&&e.aprobada!==true&&e.solicitudes&&e.solicitudes.fecha_entrega&&e.solicitudes.fecha_entrega<hoy;}).length;
+  var editar=EDICIONES.filter(function(e){return e.estado==="pendiente"&&e.aprobada!==false;}).length;
+  var corr=EDICIONES.filter(function(e){return e.aprobada===false;}).length;
+  var dem=EDICIONES.filter(function(e){return e.estado==="pendiente"&&e.solicitudes&&e.solicitudes.fecha_entrega&&e.solicitudes.fecha_entrega<hoy;}).length;
   var b1=document.getElementById("badge-of-editar");if(b1)b1.textContent=editar;
   var b2=document.getElementById("badge-of-correccion");if(b2)b2.textContent=corr;
   var b3=document.getElementById("badge-of-dem");if(b3)b3.textContent=dem;
