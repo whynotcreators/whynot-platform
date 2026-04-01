@@ -306,7 +306,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 // Panel URLs — update these to your actual deployed URLs
 const PANEL_URLS = {
-  admin:   'agency-panel.html',
+  admin:   'admin-panel.html',
   cm:      'cm-panel.html',
   editora: 'editora-panel.html',
   poster:  'poster-panel.html',
@@ -370,7 +370,7 @@ async function doLogin() {
 
     // Redirect after short delay
     setTimeout(() => {
-      const url = PANEL_URLS[user.rol] || 'agency-panel.html';
+      const url = PANEL_URLS[user.rol] || 'admin-panel.html';
       window.location.href = url;
     }, 1400);
 
@@ -401,7 +401,7 @@ window.addEventListener('DOMContentLoaded', () => {
       const s = JSON.parse(session);
       // Session valid for 8 hours
       if(s.logged_at && (Date.now() - s.logged_at) < 8 * 60 * 60 * 1000) {
-        const url = PANEL_URLS[s.rol] || 'agency-panel.html';
+        const url = PANEL_URLS[s.rol] || 'admin-panel.html';
         window.location.href = url;
       } else {
         localStorage.removeItem('wn_session');
