@@ -535,19 +535,58 @@ function postRow(s,showBtn){
   var tipoCls=s.tipo==="of"?"tp-of":"tp-redes";
   var isPublicado=s.estado==="publicado";
   var fechaPosteo=s.fecha_posteo?new Date(s.fecha_posteo+"T12:00").toLocaleDateString("es-AR",{day:"numeric",month:"short"}):"Sin fecha";
-  var badge=isPublicado
-    ?"<span class='status-pill sp-publicado'>Publicado ✓</span>"
-    :"<span class='status-pill sp-listo'>Listo</span>";
-  var btn=showBtn&&!isPublicado
-    ?"<button class=\"btn-success\" style=\"font-size:10px;padding:4px 10px;white-space:nowrap\" data-quick='"+s.id+"'>&amp;#10003; Publicar</button>"
-    :"";
-  return "<div class='post-row' data-sol='"+s.id+"'>"
-    +"<div class='post-modelo'>"+modelo+"<div style='font-size:9px;color:var(--text3)'>"+niche+"</div></div>"
-    +"<div class='post-name'><div class='post-title'>"+(s.categoria||s.formato||"Contenido")+"</div>"
-    +"<div class='post-meta'>"+(s.formato||"—")+" &middot; Postear: "+fechaPosteo+"</div></div>"
-    +"<span class='tipo-pill "+tipoCls+"'>"+tipo+"</span>"
-    +badge+btn
-    +"</div>";
+
+  var div=document.createElement("div");
+  div.className="post-row";
+  div.dataset.sol=s.id;
+
+  // Modelo
+  var mDiv=document.createElement("div");
+  mDiv.className="post-modelo";
+  mDiv.innerHTML=modelo+"<div style='font-size:9px;color:var(--text3)'>"+niche+"</div>";
+
+  // Name
+  var nDiv=document.createElement("div");
+  nDiv.className="post-name";
+  nDiv.innerHTML="<div class='post-title'>"+(s.categoria||s.formato||"Contenido")+"</div>"
+    +"<div class='post-meta'>"+(s.formato||"—")+" · Postear: "+fechaPosteo+"</div>";
+
+  // Tipo pill
+  var tPill=document.createElement("span");
+  tPill.className="tipo-pill "+tipoCls;
+  tPill.textContent=tipo;
+
+  // Status badge
+  var badge=document.createElement("span");
+  badge.className="status-pill "+(isPublicado?"sp-publicado":"sp-listo");
+  badge.textContent=isPublicado?"Publicado ✓":"Listo";
+
+  div.appendChild(mDiv);
+  div.appendChild(nDiv);
+  div.appendChild(tPill);
+  div.appendChild(badge);
+
+  // Publicar button
+  if(showBtn&&!isPublicado){
+    var btn=document.createElement("button");
+    btn.className="btn-success";
+    btn.style.cssText="font-size:10px;padding:4px 10px;white-space:nowrap";
+    btn.dataset.quick=s.id;
+    btn.textContent="✓ Publicar";
+    div.appendChild(btn);
+  }
+
+  // Delete button (admin only)
+  if(SESSION&&SESSION.rol==="admin"){
+    var del=document.createElement("button");
+    del.className="btn-ghost";
+    del.style.cssText="font-size:10px;padding:4px 10px;white-space:nowrap;color:var(--red);border-color:rgba(184,50,50,0.3)";
+    del.dataset.del=s.id;
+    del.textContent="× Eliminar";
+    div.appendChild(del);
+  }
+
+  return div.outerHTML;
 }
 
 function renderParaPostear(){
