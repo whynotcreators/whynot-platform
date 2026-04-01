@@ -1099,7 +1099,7 @@ function renderOFEditado(){
         +"<div class='task-meta'>"+(s?s.formato||"-":"-")+" · Entrega: "+fecha+"</div>"
         +(e.notas?"<div class='task-meta' style='color:var(--text3);font-style:italic'>"+e.notas+"</div>":"")
         +"</div>"
-        +"<span class='status-pill' style='background:var(--amber-bg);color:var(--amber)'>Esperando CM</span>"
+        +"<span class='status-pill' style='background:"+(e.motivo_desaprobacion?"var(--blue-bg)":"var(--amber-bg)")+";color:"+(e.motivo_desaprobacion?"var(--blue)":"var(--amber)")+"'>&#8635; "+(e.motivo_desaprobacion?"Reeditado":"Esperando CM")+"</span>"
         +(e.drive_url_editado?"<button class='btn-ghost' style='font-size:10px;padding:4px 12px' data-open-drive='"+e.drive_url_editado+"'>Ver Drive</button>":"")
         +"</div>";
     }).join(""):"<div class='empty-state'>Sin ediciones enviadas al CM</div>";
