@@ -113,6 +113,10 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
 .drive-box:hover{background:var(--bg2);}
 .toast{position:fixed;bottom:22px;right:22px;background:var(--sidebar);color:var(--gold2);border:1px solid rgba(201,169,110,0.25);padding:10px 18px;border-radius:20px;font-size:12px;font-weight:600;box-shadow:var(--shadow-lg);z-index:999;opacity:0;transform:translateY(6px);transition:all 0.2s;pointer-events:none;}
 .toast.show{opacity:1;transform:translateY(0);}
+
+.back-admin-btn{position:fixed;bottom:22px;left:calc(var(--sidebar-w,220px) + 16px);z-index:100;display:none;align-items:center;gap:6px;padding:8px 14px;background:var(--sidebar);color:var(--gold2);border:1px solid rgba(201,169,110,0.25);border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,0.2);transition:all 0.15s;font-family:'Plus Jakarta Sans',sans-serif;}
+.back-admin-btn:hover{background:rgba(30,26,20,0.9);transform:translateY(-1px);}
+.back-admin-btn.show{display:flex;}
 </style>
 </head>
 <body>
@@ -794,6 +798,19 @@ function showToast(msg){
 
 // Add fecha_posteo, hora_posteo, caption columns if needed (done via Supabase)
 init();
+
+// Show back button if came from admin
+(function(){
+  if(localStorage.getItem("wn_from_admin")==="1"){
+    var btn=document.getElementById("back-admin-btn");
+    if(btn)btn.classList.add("show");
+  }
+})();
+function backToAdmin(){
+  localStorage.removeItem("wn_from_admin");
+  window.location.href="admin-panel.html";
+}
+
 </script>
 </body>
 </html>
