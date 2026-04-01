@@ -449,7 +449,7 @@ function demoradoRow(s){
     +"<div class='post-meta'>"+(s.formato||"—")+" &middot; Fecha: "+fechaPosteo+"</div></div>"
     +"<span class='tipo-pill "+tipoCls+"'>"+tipo+"</span>"
     +"<span style='font-size:10px;font-weight:700;color:var(--red);white-space:nowrap;flex-shrink:0'>+"+dias+"d</span>"
-    +"<button class='btn-success' style='font-size:10px;padding:4px 10px;white-space:nowrap' data-quick='"+s.id+"'>&#10003; Publicar</button>"
+    +"<button class='btn-success' style='font-size:10px;padding:4px 10px;white-space:nowrap' data-quick='"+s.id+"'>✓ Publicar</button>"
     +"</div>";
 }
 
@@ -696,7 +696,7 @@ async function marcarPublicado(){
     if(idx!==-1){SOLICITUDES[idx].estado="publicado";SOLICITUDES[idx].fecha_posteo=fecha;SOLICITUDES[idx].hora_posteo=hora||null;SOLICITUDES[idx].caption=caption||null;}
     closeModal();renderAll();showToast("&#127881; Marcado como publicado");
   }catch(e){showToast("Error al guardar.");}
-  finally{btn.disabled=false;btn.textContent="&#10003; Marcar como publicado";}
+  finally{btn.disabled=false;btn.textContent="✓ Marcar como publicado";}
 }
 
 async function eliminarSolicitud(id){
