@@ -165,6 +165,7 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
       <div class="nav-group-body" id="g-contenido">
         <div class="nav-item" onclick="nav('solicitudes',this)"><span class="nav-ico" style="font-size:6px;opacity:0.6">&#9679;</span> Solicitudes</div>
         <div class="nav-item" onclick="nav('reuniones',this)"><span class="nav-ico" style="font-size:6px;opacity:0.6">&#9679;</span> Calendario</div>
+        <div class="nav-item" onclick="nav('reportes',this)"><span class="nav-ico" style="font-size:6px;opacity:0.6">&#9679;</span> Reportes OF</div>
       </div>
     </div>
     <!-- PANELES -->
@@ -395,6 +396,33 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
       </div>
     </div>
 
+    <!-- REPORTES OF -->
+    <div class="view" id="view-reportes">
+      <div class="sec-hd">
+        <div class="sec-hd-title">Reportes OF</div>
+        <div class="sec-hd-line"></div>
+        <button onclick="openModalReporte(null)" class="btn-primary" style="font-size:11px;margin-left:8px">+ Nuevo reporte</button>
+      </div>
+      <div class="filter-bar">
+        <span class="filter-label">Modelo:</span>
+        <select class="filter-select" id="filt-modelo-rep" onchange="renderReportes()"><option value="all">Todas las modelos</option></select>
+        <span class="filter-label">Mes:</span>
+        <select class="filter-select" id="filt-mes-rep" onchange="renderReportes()">
+          <option value="all">Todos</option>
+          <option value="0">Ene</option><option value="1">Feb</option><option value="2">Mar</option><option value="3">Abr</option>
+          <option value="4">May</option><option value="5">Jun</option><option value="6">Jul</option><option value="7">Ago</option>
+          <option value="8">Sep</option><option value="9">Oct</option><option value="10">Nov</option><option value="11">Dic</option>
+        </select>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title">Reportes cargados</div><span id="count-rep" style="margin-left:auto;font-size:10px;color:var(--text3)"></span></div>
+        <table class="tbl">
+          <thead><tr><th>Modelo</th><th>Período</th><th>Ingresos netos</th><th>Nuevos susc.</th><th>Bajas</th><th>Retención</th><th>Mensajes</th><th style="text-align:right">Acciones</th></tr></thead>
+          <tbody id="tbody-rep"><tr><td colspan="8" class="empty-state">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- ROLES -->
     <div class="view" id="view-roles">
       <div class="sec-hd">
@@ -559,6 +587,54 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
   </div>
 </div>
 
+<!-- MODAL REPORTE OF -->
+<div class="modal-overlay" id="modal-reporte" onclick="if(event.target===this)closeModal('modal-reporte')">
+  <div class="modal modal-lg">
+    <div class="modal-hd"><span id="modal-rep-title">Nuevo reporte OF</span><button class="modal-close" onclick="closeModal('modal-reporte')">&#215;</button></div>
+    <input type="hidden" id="mrep-id">
+    <div class="form-row" style="margin-bottom:13px">
+      <div class="form-group" style="margin:0">
+        <label class="form-label">Modelo *</label>
+        <select class="form-select" id="mrep-modelo"></select>
+      </div>
+      <div class="form-group" style="margin:0">
+        <label class="form-label">Período (ej: Marzo 2026)</label>
+        <input class="form-input" id="mrep-periodo" placeholder="Marzo 2026">
+      </div>
+    </div>
+    <div class="form-row" style="margin-bottom:13px">
+      <div class="form-group" style="margin:0">
+        <label class="form-label">Mes</label>
+        <select class="form-select" id="mrep-mes">
+          <option value="0">Enero</option><option value="1">Febrero</option><option value="2">Marzo</option><option value="3">Abril</option>
+          <option value="4">Mayo</option><option value="5">Junio</option><option value="6">Julio</option><option value="7">Agosto</option>
+          <option value="8">Septiembre</option><option value="9">Octubre</option><option value="10">Noviembre</option><option value="11">Diciembre</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin:0">
+        <label class="form-label">Año</label>
+        <input class="form-input" type="number" id="mrep-anio" value="2026">
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:13px">
+      <div class="form-group" style="margin:0"><label class="form-label">Ingresos netos ($)</label><input class="form-input" type="number" id="mrep-ingresos" placeholder="0.00" step="0.01"></div>
+      <div class="form-group" style="margin:0"><label class="form-label">Nuevos suscriptores</label><input class="form-input" type="number" id="mrep-nuevos" placeholder="0"></div>
+      <div class="form-group" style="margin:0"><label class="form-label">Bajas</label><input class="form-input" type="number" id="mrep-bajas" placeholder="0"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:13px">
+      <div class="form-group" style="margin:0"><label class="form-label">Retención (%)</label><input class="form-input" type="number" id="mrep-retencion" placeholder="0.00" step="0.01"></div>
+      <div class="form-group" style="margin:0"><label class="form-label">Mensajes respondidos</label><input class="form-input" type="number" id="mrep-mensajes" placeholder="0"></div>
+      <div class="form-group" style="margin:0"><label class="form-label">PPV enviados</label><input class="form-input" type="number" id="mrep-ppv" placeholder="0"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Notas / Observaciones</label><textarea class="form-textarea" id="mrep-notas" placeholder="Resumen del mes, logros, oportunidades..."></textarea></div>
+    <div class="form-actions">
+      <button class="btn-ghost" onclick="closeModal('modal-reporte')">Cancelar</button>
+      <button class="btn-danger" id="mrep-btn-del" onclick="eliminarReporte()" style="display:none">Eliminar</button>
+      <button class="btn-primary" id="mrep-btn-save" onclick="guardarReporte()">Guardar reporte</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -605,6 +681,7 @@ async function loadData(){
   ASIGNACIONES=await sbFetch("asignaciones?select=*,usuarios(nombre,rol)");
   SOLICITUDES=await sbFetch("solicitudes?select=*,modelos(nombre)&order=created_at.desc&limit=200");
   REUNIONES=await sbFetch("reuniones?select=*,usuarios(nombre,rol)&order=fecha.desc");
+  REPORTES=await sbFetch("reportes_of?select=*&order=created_at.desc");
   renderAll();
 }
 
@@ -645,10 +722,116 @@ function renderRoles(){
   }).join("")||"<tr><td colspan='6' class='empty-state'>Sin usuarios</td></tr>";
 }
 
+var REPORTES=[];
+
 function renderAll(){
   renderDashboard();renderModelos();renderUsuarios();renderRoles();
-  renderAsignaciones();renderSolicitudes();renderReuniones();
+  renderAsignaciones();renderSolicitudes();renderReuniones();renderReportes();
   populateSelects();
+  populateReporteSelects();
+}
+
+// ── REPORTES OF ──
+function renderReportes(){
+  var modeloId=(document.getElementById("filt-modelo-rep")||{}).value||"all";
+  var mesId=(document.getElementById("filt-mes-rep")||{}).value||"all";
+  var items=REPORTES.slice();
+  if(modeloId!=="all")items=items.filter(function(r){return r.modelo_id===modeloId;});
+  if(mesId!=="all")items=items.filter(function(r){return String(r.mes)===mesId;});
+  document.getElementById("count-rep").textContent=items.length+(items.length===1?" reporte":" reportes");
+  document.getElementById("tbody-rep").innerHTML=items.map(function(r){
+    var m=MODELOS.find(function(x){return x.id===r.modelo_id;});
+    return "<tr>"
+      +"<td><div class='tbl-name'>"+(m?m.nombre:"-")+"</div></td>"
+      +"<td>"+(r.periodo||"-")+"</td>"
+      +"<td style='font-weight:600;color:var(--green)'>$"+(Number(r.ingresos_netos||0).toLocaleString("es-AR",{minimumFractionDigits:2}))+"</td>"
+      +"<td>"+(r.nuevos_suscriptores||0)+"</td>"
+      +"<td style='color:var(--red)'>"+(r.bajas||0)+"</td>"
+      +"<td>"+(r.retencion||0)+"%</td>"
+      +"<td>"+(r.mensajes_respondidos||0)+"</td>"
+      +"<td><div class='tbl-actions'><button class='btn-ghost' style='font-size:10px;padding:4px 10px' data-edit-rep='"+r.id+"'>Editar</button></div></td>"
+      +"</tr>";
+  }).join("")||"<tr><td colspan='8' class='empty-state'>Sin reportes</td></tr>";
+}
+
+function populateReporteSelects(){
+  var opts="<option value='all'>Todas las modelos</option>"+MODELOS.map(function(m){return "<option value='"+m.id+"'>"+m.nombre+"</option>";}).join("");
+  var el=document.getElementById("filt-modelo-rep");if(el)el.innerHTML=opts;
+  var opts2=MODELOS.map(function(m){return "<option value='"+m.id+"'>"+m.nombre+"</option>";}).join("");
+  var el2=document.getElementById("mrep-modelo");if(el2)el2.innerHTML=opts2;
+}
+
+function openModalReporte(id){
+  var r=id?REPORTES.find(function(x){return x.id===id;}):null;
+  document.getElementById("modal-rep-title").textContent=r?"Editar reporte":"Nuevo reporte OF";
+  document.getElementById("mrep-id").value=r?r.id:"";
+  document.getElementById("mrep-modelo").value=r?r.modelo_id:"";
+  document.getElementById("mrep-periodo").value=r?r.periodo||"":"";
+  document.getElementById("mrep-mes").value=r?String(r.mes||new Date().getMonth()):String(new Date().getMonth());
+  document.getElementById("mrep-anio").value=r?r.anio||new Date().getFullYear():new Date().getFullYear();
+  document.getElementById("mrep-ingresos").value=r?r.ingresos_netos||"":"";
+  document.getElementById("mrep-nuevos").value=r?r.nuevos_suscriptores||"":"";
+  document.getElementById("mrep-bajas").value=r?r.bajas||"":"";
+  document.getElementById("mrep-retencion").value=r?r.retencion||"":"";
+  document.getElementById("mrep-mensajes").value=r?r.mensajes_respondidos||"":"";
+  document.getElementById("mrep-ppv").value=r?r.ppv_enviados||"":"";
+  document.getElementById("mrep-notas").value=r?r.notas||"":"";
+  document.getElementById("mrep-btn-del").style.display=r?"inline-flex":"none";
+  openModal("modal-reporte");
+}
+
+async function guardarReporte(){
+  var id=document.getElementById("mrep-id").value;
+  var modeloId=document.getElementById("mrep-modelo").value;
+  var periodo=document.getElementById("mrep-periodo").value.trim();
+  if(!modeloId||!periodo){showToast("Modelo y período requeridos");return;}
+  var data={
+    modelo_id:modeloId,
+    periodo:periodo,
+    mes:parseInt(document.getElementById("mrep-mes").value),
+    anio:parseInt(document.getElementById("mrep-anio").value)||new Date().getFullYear(),
+    ingresos_netos:parseFloat(document.getElementById("mrep-ingresos").value)||0,
+    nuevos_suscriptores:parseInt(document.getElementById("mrep-nuevos").value)||0,
+    bajas:parseInt(document.getElementById("mrep-bajas").value)||0,
+    retencion:parseFloat(document.getElementById("mrep-retencion").value)||0,
+    mensajes_respondidos:parseInt(document.getElementById("mrep-mensajes").value)||0,
+    ppv_enviados:parseInt(document.getElementById("mrep-ppv").value)||0,
+    notas:document.getElementById("mrep-notas").value.trim()||null,
+    created_by:SESSION.id
+  };
+  var btn=document.getElementById("mrep-btn-save");btn.disabled=true;btn.textContent="Guardando...";
+  try{
+    if(id){await sbPatch("reportes_of",id,data);}
+    else{
+      await sbPost("reportes_of",data);
+      // Notificar a la modelo
+      var m=MODELOS.find(function(x){return x.id===modeloId;});
+      var modeloUser=USUARIOS.find(function(u){return u.modelo_id===modeloId;});
+      if(modeloUser){
+        await sbPost("notificaciones",{
+          para_usuario_id:modeloUser.id,
+          tipo:"reporte",
+          titulo:"Nuevo reporte disponible",
+          mensaje:"Tu reporte de "+periodo+" ya está disponible en tu panel."
+        });
+      }
+    }
+    closeModal("modal-reporte");
+    REPORTES=await sbFetch("reportes_of?select=*&order=created_at.desc");
+    renderReportes();
+    showToast("✓ Reporte guardado");
+  }catch(e){showToast("Error al guardar.");}
+  finally{btn.disabled=false;btn.textContent="Guardar reporte";}
+}
+
+async function eliminarReporte(){
+  var id=document.getElementById("mrep-id").value;
+  if(!confirm("Eliminar este reporte?"))return;
+  await sbDelete("reportes_of",id);
+  closeModal("modal-reporte");
+  REPORTES=await sbFetch("reportes_of?select=*&order=created_at.desc");
+  renderReportes();
+  showToast("Reporte eliminado");
 }
 
 // ââ DASHBOARD ââ
@@ -1166,6 +1349,8 @@ async function eliminarReunion(){
 document.addEventListener("click",function(e){
   var linkBtn=e.target.closest("[data-link]");
   if(linkBtn){window.open(linkBtn.dataset.link,"_blank");return;}
+  var editRep=e.target.closest("[data-edit-rep]");
+  if(editRep){openModalReporte(editRep.dataset.editRep);return;}
   var asigBtn=e.target.closest("[data-asig]");
   if(asigBtn){openAsignaciones(asigBtn.dataset.asig);return;}
   var editMod=e.target.closest("[data-edit-mod]");
@@ -1199,7 +1384,7 @@ function openPanel(url){
   window.location.href=url;
 }
 
-var VMAP={dashboard:"Dashboard",modelos:"Modelos",usuarios:"Usuarios",roles:"Roles",asignaciones:"Asignaciones",solicitudes:"Solicitudes",reuniones:"Calendario"};
+var VMAP={dashboard:"Dashboard",modelos:"Modelos",usuarios:"Usuarios",roles:"Roles",asignaciones:"Asignaciones",solicitudes:"Solicitudes",reuniones:"Calendario",reportes:"Reportes OF"};
 function nav(id,el){
   document.querySelectorAll(".view").forEach(function(v){v.classList.remove("active");});
   var v=document.getElementById("view-"+id);if(v)v.classList.add("active");
