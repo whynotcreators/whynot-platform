@@ -235,6 +235,39 @@ body{font-family:"Plus Jakarta Sans",sans-serif;background:var(--bg);color:var(-
       </div>
     </div>
 
+
+    <!-- CALENDARIO -->
+    <div class="view" id="view-calendario">
+      <div class="sec-hd">
+        <div class="sec-hd-title">Calendario de edici&#243;n</div>
+        <div class="sec-hd-line"></div>
+        <button onclick="refreshAndRenderCal()" class="btn-ghost" style="font-size:10px;padding:4px 12px;margin-left:8px">&#8635; Actualizar</button>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><span style="width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block"></span>Demorado</div>
+        <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><span style="width:8px;height:8px;border-radius:50%;background:var(--amber);display:inline-block"></span>Pendiente</div>
+        <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><span style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block"></span>Listo</div>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center">
+        <button onclick="calPrev()" class="btn-ghost" style="padding:5px 14px;font-size:16px">&#8249;</button>
+        <div id="cal-month-label" style="font-family:'Fraunces',serif;font-size:16px;color:var(--text);min-width:180px;text-align:center;font-weight:500"></div>
+        <button onclick="calNext()" class="btn-ghost" style="padding:5px 14px;font-size:16px">&#8250;</button>
+        <button onclick="calGoToday()" class="btn-ghost" style="margin-left:auto;font-size:10px;padding:4px 12px">Hoy</button>
+      </div>
+      <div id="cal-grid" style="margin-bottom:16px"></div>
+      <div id="cal-day-detail" style="display:none;margin-bottom:16px">
+        <div class="sec-hd"><div class="sec-hd-title" id="cal-day-title">&#8212;</div><div class="sec-hd-line"></div></div>
+        <div class="card"><div id="cal-day-list"></div></div>
+      </div>
+      <div id="cal-sin-fecha-wrap">
+        <div class="sec-hd">
+          <div class="sec-hd-title" style="font-size:13px;color:var(--text3)">Sin fecha de edici&#243;n asignada</div>
+          <div class="sec-hd-line"></div>
+        </div>
+        <div class="card"><div id="cal-sin-fecha-list"></div></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
